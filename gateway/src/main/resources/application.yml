@@ -1,0 +1,83 @@
+server:
+  port: 19091  # 게이트웨이 포트
+
+spring:
+  main:
+    web-application-type: reactive  # 리액티브 웹 애플리케이션 설정
+  application:
+    name: gateway-service  # 서비스명
+  cloud:
+    gateway:
+      routes:
+        # 유저 서비스 (로그인, 회원가입은 예외 처리, 나머지는 JWT 검증)
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**, Path=/api/auth/**
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        # 주문 서비스
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/orders/**
+          filters:
+            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+
+        # 상품 서비스
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - RewritePath=/product-service/(?<segment>.*), /$\{segment}
+
+        # 허브 서비스
+        - id: hub-service
+          uri: lb://hub-service
+          predicates:
+            - Path=/api/hubs/**
+          filters:
+            - RewritePath=/hub-service/(?<segment>.*), /$\{segment}
+
+        # 업체 서비스
+        - id: company-service
+          uri: lb://company-service
+          predicates:
+            - Path=/api/companies/**
+          filters:
+            - RewritePath=/company-service/(?<segment>.*), /$\{segment}
+
+        # 배송 서비스
+        - id: delivery-service
+          uri: lb://delivery-service
+          predicates:
+            - Path=/api/deliveries/**, /api/delivery-routes/**, /api/hub-to-hubs/**
+          filters:
+            - RewritePath=/delivery-service/(?<segment>.*), /$\{segment}
+
+        # 배송 관리자 서비스
+        - id: delivery-manager-service
+          uri: lb://delivery-manager-service
+          predicates:
+            - Path=/api/delivery-managers/**
+          filters:
+            - RewritePath=/delivery-manager-service/(?<segment>.*), /$\{segment}
+
+        # 슬랙 서비스
+        - id: slack-service
+          uri: lb://slack-service
+          predicates:
+            - Path=/api/slack/**, /api/ai/**
+          filters:
+            - RewritePath=/slack-service/(?<segment>.*), /$\{segment}
+
+      discovery:
+        locator:
+          enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
