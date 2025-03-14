@@ -1,9 +1,34 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 allprojects {
     repositories {
         mavenCentral()
+    }
+}
+
+subprojects { // 각 모듈에 적용할 공통 설정
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
+
+    tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
+        enabled = false
+    }
+
+    tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
+        enabled = true
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
     }
 }
