@@ -1,0 +1,8 @@
+rootProject.name = 'fifteen-night-backend-develop'
+
+include 'common'
+include 'gateway'
+include 'server'
+
+// 모듈 경로 설정
+project(':common').projectDir = file('common')
