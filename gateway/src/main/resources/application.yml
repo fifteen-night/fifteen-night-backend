@@ -13,7 +13,7 @@ spring:
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/api/users/**, Path=/api/auth/**
+            - Path=/api/users/**, /api/auth/**, /user-service/**
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
@@ -21,7 +21,7 @@ spring:
         - id: order-service
           uri: lb://order-service
           predicates:
-            - Path=/api/orders/**
+            - Path=/api/orders/**, /order-service/**
           filters:
             - RewritePath=/order-service/(?<segment>.*), /$\{segment}
 
@@ -29,7 +29,7 @@ spring:
         - id: product-service
           uri: lb://product-service
           predicates:
-            - Path=/api/products/**
+            - Path=/api/products/**, /product-service/**
           filters:
             - RewritePath=/product-service/(?<segment>.*), /$\{segment}
 
@@ -37,7 +37,7 @@ spring:
         - id: hub-service
           uri: lb://hub-service
           predicates:
-            - Path=/api/hubs/**
+            - Path=/api/hubs/**, /hub-service/**
           filters:
             - RewritePath=/hub-service/(?<segment>.*), /$\{segment}
 
@@ -45,7 +45,7 @@ spring:
         - id: company-service
           uri: lb://company-service
           predicates:
-            - Path=/api/companies/**
+            - Path=/api/companies/**, /company-service/**
           filters:
             - RewritePath=/company-service/(?<segment>.*), /$\{segment}
 
@@ -53,7 +53,7 @@ spring:
         - id: delivery-service
           uri: lb://delivery-service
           predicates:
-            - Path=/api/deliveries/**, /api/delivery-routes/**, /api/hub-to-hubs/**
+            - Path=/api/deliveries/**, /api/delivery-routes/**, /api/hub-to-hubs/**, /delivery-service/**
           filters:
             - RewritePath=/delivery-service/(?<segment>.*), /$\{segment}
 
@@ -61,7 +61,7 @@ spring:
         - id: delivery-manager-service
           uri: lb://delivery-manager-service
           predicates:
-            - Path=/api/delivery-managers/**
+            - Path=/api/delivery-managers/**, /delivery-manager-service/**
           filters:
             - RewritePath=/delivery-manager-service/(?<segment>.*), /$\{segment}
 
@@ -69,7 +69,7 @@ spring:
         - id: slack-service
           uri: lb://slack-service
           predicates:
-            - Path=/api/slack/**, /api/ai/**
+            - Path=/api/slack/**, /api/ai/**, /slack-service/**
           filters:
             - RewritePath=/slack-service/(?<segment>.*), /$\{segment}
 
@@ -81,3 +81,24 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+    urls:
+      - name: user-service
+        url: /user-service/v3/api-docs
+      - name: order-service
+        url: /order-service/v3/api-docs
+      - name: product-service
+        url: /product-service/v3/api-docs
+      - name: hub-service
+        url: /hub-service/v3/api-docs
+      - name: company-service
+        url: /company-service/v3/api-docs
+      - name: delivery-service
+        url: /delivery-service/v3/api-docs
+      - name: delivery-manager-service
+        url: /delivery-manager-service/v3/api-docs
+      - name: slack-service
+        url: /slack-service/v3/api-docs
