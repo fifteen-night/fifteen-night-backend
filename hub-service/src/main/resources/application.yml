@@ -1,0 +1,13 @@
+server:
+  port: 19092
+
+spring:
+  application:
+    name: hub-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
+    register-with-eureka: true
+    fetch-registry: true
