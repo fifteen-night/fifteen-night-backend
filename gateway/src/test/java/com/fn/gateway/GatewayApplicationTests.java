@@ -1,4 +1,4 @@
-package com.fn.eureka.gateway;
+package com.fn.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
