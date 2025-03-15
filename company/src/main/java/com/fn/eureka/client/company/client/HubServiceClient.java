@@ -12,8 +12,9 @@ import feign.FeignException;
 
 @FeignClient(name = "hub-service")
 public interface HubServiceClient {
+	// TODO hub-service랑 메서드 이름 일치시키기!!!
 
-	// 해당 허브ID가 허브 리스트에 존재하면 true, 아니면 false
+	// 허브 조회
 	@GetMapping("/hubs/{hubId}")
 	HubResponseDto getHubById(@PathVariable("hubId") UUID hubId);
 
