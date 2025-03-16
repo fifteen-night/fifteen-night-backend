@@ -1,5 +1,6 @@
 package com.fn.eureka.client.company.domain.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
