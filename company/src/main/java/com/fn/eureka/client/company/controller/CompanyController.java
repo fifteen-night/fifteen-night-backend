@@ -30,5 +30,4 @@ public class CompanyController {
 		CompanyCreateResponseDto responseDto = companyService.addCompany(companyCreateRequestDto, userRole);
 		return ResponseEntity.ok(responseDto);
 	}
-
 }

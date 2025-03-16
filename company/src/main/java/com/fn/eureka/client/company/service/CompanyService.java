@@ -6,4 +6,5 @@ import com.fn.eureka.client.company.dto.CompanyCreateResponseDto;
 public interface CompanyService {
 
 	CompanyCreateResponseDto addCompany(CompanyCreateRequestDto companyCreateRequestDto, String userRole);
+
 }
