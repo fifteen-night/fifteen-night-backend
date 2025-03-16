@@ -9,6 +9,7 @@ spring:
   profiles:
     group:
       local: local, key
+    active: ${ACTIVE_VAL}
 
 server:
   port: 19097
