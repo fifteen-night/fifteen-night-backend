@@ -1,13 +1,25 @@
 spring:
   application:
-    name: company
+    name: company-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: root
-    password: postgres
+    url: ${COMPANY_DB_URL}
+    username: ${COMPANY_DB_USERNAME}
+    password: ${COMPANY_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  config:
+    import: optional:file:.env[.properties]
 server:
   port: 19094
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
