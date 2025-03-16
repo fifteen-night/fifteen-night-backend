@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.company.dto.CompanyCreateRequestDto;
+import com.fn.eureka.client.company.dto.CompanyRequestDto;
 import com.fn.eureka.client.company.dto.CompanyResponseDto;
 import com.fn.eureka.client.company.service.CompanyService;
 
@@ -31,10 +32,10 @@ public class CompanyController {
 	// 업체 생성
 	@PostMapping
 	public ResponseEntity<CompanyResponseDto> createCompany(
-		@RequestBody CompanyCreateRequestDto companyCreateRequestDto,
+		@RequestBody CompanyRequestDto requestDto,
 		@RequestHeader("X-User-Role") String userRole
 	) {
-		CompanyResponseDto response = companyService.addCompany(companyCreateRequestDto, userRole);
+		CompanyResponseDto response = companyService.addCompany(requestDto, userRole);
 		return ResponseEntity.ok(response);
 	}
 
@@ -59,6 +60,14 @@ public class CompanyController {
 		) {
 		Page<CompanyResponseDto> companies = companyService.findAllCompaniesByType(hubId, type, keyword, page, size, sortDirection, sortBy, userRole);
 		return ResponseEntity.ok(companies);
+	}
+
+	// 업체 수정
+	@PutMapping("/{companyId}")
+	public ResponseEntity<CompanyResponseDto> updateCompany(@PathVariable("companyId") UUID companyId,
+		@RequestBody CompanyRequestDto requestDto) {
+		CompanyResponseDto response = companyService.modifyCompany(companyId, requestDto);
+		return ResponseEntity.ok(response);
 	}
 
 }

@@ -3,7 +3,7 @@ package com.fn.eureka.client.company.entity;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
-import com.fn.eureka.client.company.dto.CompanyCreateRequestDto;
+import com.fn.eureka.client.company.dto.CompanyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,7 +44,15 @@ public class Company extends BaseEntity {
 	@Column(nullable = false)
 	private UUID companyManagerId;
 
-	public Company(CompanyCreateRequestDto requestDto) {
+	public Company(CompanyRequestDto requestDto) {
+		this.companyName = requestDto.getCompanyName();
+		this.companyAddress = requestDto.getCompanyAddress();
+		this.companyType = CompanyType.valueOf(requestDto.getCompanyType().toUpperCase());
+		this.companyHubId = requestDto.getCompanyHubId();
+		this.companyManagerId = requestDto.getCompanyManagerId();
+	}
+
+	public void modifyCompanyInfo(CompanyRequestDto requestDto) {
 		this.companyName = requestDto.getCompanyName();
 		this.companyAddress = requestDto.getCompanyAddress();
 		this.companyType = CompanyType.valueOf(requestDto.getCompanyType().toUpperCase());
