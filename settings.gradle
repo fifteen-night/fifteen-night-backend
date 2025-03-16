@@ -1,0 +1,6 @@
+rootProject.name = 'fifteen-night-backend-develop'
+
+include 'common', 'gateway', 'server', 'company'
+
+project(':common').projectDir = file('common')
+project(':company').projectDir = file('company')
