@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CompanyCreateResponseDto {
+public class CompanyResponseDto {
 
 	private UUID companyId;
 	private String companyName;
@@ -19,7 +19,7 @@ public class CompanyCreateResponseDto {
 	private UUID companyHubId;
 	private UUID companyManagerId;
 
-	public CompanyCreateResponseDto(Company company) {
+	public CompanyResponseDto(Company company) {
 		this.companyId = company.getCompanyId();
 		this.companyName = company.getCompanyName();
 		this.companyAddress = company.getCompanyAddress();
