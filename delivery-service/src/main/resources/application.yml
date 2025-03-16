@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: delivery-service
+  config:
+    import:
+    - file:delivery-service/.env[.properties]
+    - classpath:./properties/key.yml
+    - classpath:./properties/datasource.yml
+  profiles:
+    group:
+      local: local, key
+
+server:
+  port: 19097
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/  # Eureka 서버 URL
