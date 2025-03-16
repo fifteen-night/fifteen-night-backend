@@ -60,5 +60,4 @@ public class CompanyController {
 		Page<CompanyResponseDto> companies = companyService.findAllCompaniesByType(hubId, type, keyword, page, size, sortDirection, sortBy, userRole);
 		return ResponseEntity.ok(companies);
 	}
-
 }
