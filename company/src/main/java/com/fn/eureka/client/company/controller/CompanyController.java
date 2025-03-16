@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,6 +69,12 @@ public class CompanyController {
 		@RequestBody CompanyRequestDto requestDto) {
 		CompanyResponseDto response = companyService.modifyCompany(companyId, requestDto);
 		return ResponseEntity.ok(response);
+	}
+
+	@DeleteMapping("/{companyId}")
+	public ResponseEntity<Void> deleteCompany(@PathVariable("companyId") UUID companyId) {
+		companyService.removeCompany(companyId);
+		return ResponseEntity.noContent().build();
 	}
 
 }

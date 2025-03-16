@@ -74,4 +74,13 @@ public class CompanyServiceImpl implements CompanyService {
 		return new CompanyResponseDto(company);
 	}
 
+	// 업체 삭제
+	@Override
+	public void removeCompany(UUID companyId) {
+		Company company = companyRepository.findById(companyId)
+			.orElseThrow(() -> new NotFoundException("해당 업체를 찾을 수 없습니다"));
+		company.markAsDeleted();
+		companyRepository.save(company);
+	}
+
 }

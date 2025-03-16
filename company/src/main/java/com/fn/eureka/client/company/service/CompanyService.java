@@ -18,4 +18,6 @@ public interface CompanyService {
 	Page<CompanyResponseDto> findAllCompaniesByType(UUID hubId, String type, String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole);
 
 	CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto);
+
+	void removeCompany(UUID companyId);
 }
