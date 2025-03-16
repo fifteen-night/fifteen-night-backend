@@ -15,11 +15,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @Comment("허브")
 @Entity
 @Getter
@@ -56,4 +55,15 @@ public class Hub {
 	@Column(nullable = false, precision = 9, scale = 6)
 	@Comment("경도")
 	private BigDecimal hubLongitude;
+
+	@Builder
+	public Hub(UUID hubManagerId, String hubName, String hubAddress, HubType hubType, BigDecimal hubLatitude,
+		BigDecimal hubLongitude) {
+		this.hubManagerId = hubManagerId;
+		this.hubName = hubName;
+		this.hubAddress = hubAddress;
+		this.hubType = hubType;
+		this.hubLatitude = hubLatitude;
+		this.hubLongitude = hubLongitude;
+	}
 }
