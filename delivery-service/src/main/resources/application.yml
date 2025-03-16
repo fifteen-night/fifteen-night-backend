@@ -6,6 +6,7 @@ spring:
     - file:delivery-service/.env[.properties]
     - classpath:./properties/key.yml
     - classpath:./properties/datasource.yml
+    - classpath:./properties/jpa.yml
   profiles:
     group:
       local: local, key
