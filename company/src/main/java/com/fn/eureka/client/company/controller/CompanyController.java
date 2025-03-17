@@ -69,5 +69,4 @@ public class CompanyController {
 		CompanyResponseDto response = companyService.modifyCompany(companyId, requestDto);
 		return ResponseEntity.ok(response);
 	}
-
 }

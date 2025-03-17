@@ -10,7 +10,7 @@ import com.fn.eureka.client.company.dto.CompanyRequestDto;
 import com.fn.eureka.client.company.dto.CompanyResponseDto;
 
 public interface CompanyService {
-
+  
 	CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto, String userRole);
 
 	CompanyResponseDto findTheCompany(UUID companyId);
@@ -18,4 +18,5 @@ public interface CompanyService {
 	Page<CompanyResponseDto> findAllCompaniesByType(UUID hubId, String type, String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole);
 
 	CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto);
+
 }
