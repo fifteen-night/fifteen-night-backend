@@ -1,11 +1,9 @@
-package com.fn.eureka.client.hubservice.hub.dto.mapper;
+package com.fn.eureka.client.hubservice.hub.application.dto.mapper;
 
-import java.math.BigDecimal;
-
+import com.fn.eureka.client.hubservice.hub.application.dto.CreateHubRequest;
+import com.fn.eureka.client.hubservice.hub.application.dto.CreateHubResponse;
+import com.fn.eureka.client.hubservice.hub.application.dto.Point;
 import com.fn.eureka.client.hubservice.hub.domain.Hub;
-import com.fn.eureka.client.hubservice.hub.dto.CreateHubRequest;
-import com.fn.eureka.client.hubservice.hub.dto.CreateHubResponse;
-import com.fn.eureka.client.hubservice.hub.dto.Point;
 
 public class HubMapper {
 
