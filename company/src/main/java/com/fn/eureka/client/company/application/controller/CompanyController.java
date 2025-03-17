@@ -1,10 +1,11 @@
-package com.fn.eureka.client.company.controller;
+package com.fn.eureka.client.company.application.controller;
 
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.company.dto.CompanyRequestDto;
-import com.fn.eureka.client.company.dto.CompanyResponseDto;
-import com.fn.eureka.client.company.service.CompanyService;
+import com.fn.eureka.client.company.application.dto.CompanyRequestDto;
+import com.fn.eureka.client.company.application.dto.CompanyResponseDto;
+import com.fn.eureka.client.company.presentation.CompanyService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -68,5 +69,12 @@ public class CompanyController {
 		@RequestBody CompanyRequestDto requestDto) {
 		CompanyResponseDto response = companyService.modifyCompany(companyId, requestDto);
 		return ResponseEntity.ok(response);
+	}
+
+	// 업체 삭제
+	@DeleteMapping("/{companyId}")
+	public ResponseEntity<Void> deleteCompany(@PathVariable("companyId") UUID companyId) {
+		companyService.removeCompany(companyId);
+		return ResponseEntity.noContent().build();
 	}
 }
