@@ -44,7 +44,7 @@ public class CompanyController {
 		CompanyResponseDto response = companyService.findTheCompany(companyId);
 		return ResponseEntity.ok(response);
 	}
-
+  
 	// 업체 리스트 조회 + 검색
 	@GetMapping
 	public ResponseEntity<Page<CompanyResponseDto>> getCompanies(
