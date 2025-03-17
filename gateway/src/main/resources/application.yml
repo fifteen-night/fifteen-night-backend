@@ -6,6 +6,9 @@ spring:
     web-application-type: reactive  # 리액티브 웹 애플리케이션 설정
   application:
     name: gateway-service  # 서비스명
+  config:
+    import:
+      - file:gateway/.env[.properties]
   cloud:
     gateway:
       routes:
@@ -102,3 +105,7 @@ springdoc:
         url: /delivery-manager-service/v3/api-docs
       - name: slack-service
         url: /slack-service/v3/api-docs
+
+service:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
