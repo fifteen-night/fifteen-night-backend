@@ -1,13 +1,22 @@
 package com.fn.eureka.client.company.service;
 
-import org.springframework.stereotype.Service;
+import java.util.UUID;
 
-import com.fn.common.global.exception.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
-@Service
-public class CompanyService {
+import com.fn.common.global.util.PageUtils;
+import com.fn.eureka.client.company.dto.CompanyRequestDto;
+import com.fn.eureka.client.company.dto.CompanyResponseDto;
 
-	public void errorTest() {
-		throw new BadRequestException();
-	}
+public interface CompanyService {
+  
+	CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto, String userRole);
+
+	CompanyResponseDto findTheCompany(UUID companyId);
+
+	Page<CompanyResponseDto> findAllCompaniesByType(UUID hubId, String type, String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole);
+
+	CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto);
+
 }
