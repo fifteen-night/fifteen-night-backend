@@ -34,8 +34,11 @@ dependencyManagement {
 }
 
 dependencies {
+	// 공통 모듈 추가
+	implementation project(':common')
+
 	// SWAGGER
-	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.7.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
 	// DB - LOCAL
 	runtimeOnly 'org.postgresql:postgresql'
