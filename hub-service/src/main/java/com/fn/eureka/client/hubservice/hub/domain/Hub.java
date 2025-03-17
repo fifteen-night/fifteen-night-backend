@@ -7,6 +7,8 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import com.fn.common.global.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "p_hub")
-public class Hub {
+public class Hub extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@JdbcTypeCode(SqlTypes.UUID)
