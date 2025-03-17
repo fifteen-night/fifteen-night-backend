@@ -71,10 +71,10 @@ public class CompanyController {
 		return ResponseEntity.ok(response);
 	}
 
+	// 업체 삭제
 	@DeleteMapping("/{companyId}")
 	public ResponseEntity<Void> deleteCompany(@PathVariable("companyId") UUID companyId) {
 		companyService.removeCompany(companyId);
 		return ResponseEntity.noContent().build();
 	}
-
 }

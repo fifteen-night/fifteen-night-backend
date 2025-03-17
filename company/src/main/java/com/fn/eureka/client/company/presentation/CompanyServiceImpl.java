@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.company.infrastructure.HubServiceClient;
-import com.fn.eureka.client.company.infrastructure.UserServiceClient;
 import com.fn.eureka.client.company.application.dto.CompanyRequestDto;
 import com.fn.eureka.client.company.application.dto.CompanyResponseDto;
 import com.fn.eureka.client.company.domain.entity.Company;
 import com.fn.eureka.client.company.domain.repository.CompanyQueryRepository;
 import com.fn.eureka.client.company.domain.repository.CompanyRepository;
+import com.fn.eureka.client.company.infrastructure.HubServiceClient;
+import com.fn.eureka.client.company.infrastructure.UserServiceClient;
 
 import lombok.RequiredArgsConstructor;
 
@@ -67,6 +67,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	// 업체 수정
 	@Override
+	@Transactional
 	public CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto) {
 		Company company = companyRepository.findById(companyId)
 			.orElseThrow(() -> new NotFoundException("해당 업체를 찾을 수 없습니다"));
