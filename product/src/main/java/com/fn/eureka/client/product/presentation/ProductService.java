@@ -7,4 +7,6 @@ import com.fn.eureka.client.product.application.dto.ProductResponseDto;
 
 public interface ProductService {
 	ProductResponseDto addProduct(ProductRequestDto requestDto, String userRole, UUID userId);
+
+	ProductResponseDto findProduct(UUID productId);
 }

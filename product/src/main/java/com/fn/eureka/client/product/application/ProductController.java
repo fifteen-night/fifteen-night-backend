@@ -3,6 +3,8 @@ package com.fn.eureka.client.product.application;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -34,6 +36,13 @@ public class ProductController {
 		) {
 		log.info("상품 데이터 : {}" , requestDto);
 		ProductResponseDto response = productService.addProduct(requestDto, userRole, userId);
+		return ResponseEntity.ok(response);
+	}
+
+	// 상품 조회
+	@GetMapping("/{productId}")
+	public ResponseEntity<ProductResponseDto> getProduct(@PathVariable UUID productId) {
+		ProductResponseDto response = productService.findProduct(productId);
 		return ResponseEntity.ok(response);
 	}
 

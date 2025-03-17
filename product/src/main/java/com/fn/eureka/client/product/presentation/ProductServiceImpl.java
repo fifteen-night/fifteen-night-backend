@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.exception.UnauthorizedException;
 import com.fn.eureka.client.product.application.dto.CompanyInfoDto;
 import com.fn.eureka.client.product.application.dto.ProductRequestDto;
@@ -51,6 +52,14 @@ public class ProductServiceImpl implements ProductService {
 				throw new UnauthorizedException("상품을 생성할 권한이 없습니다.");
 		}
 		Product product = productRepository.save(new Product(productRequestDto));
+		return new ProductResponseDto(product);
+	}
+
+	// 상품 조회
+	@Override
+	public ProductResponseDto findProduct(UUID productId) {
+		Product product = productRepository.findById(productId)
+			.orElseThrow(() -> new NotFoundException("해당 상품은 존재하지 않습니다."));
 		return new ProductResponseDto(product);
 	}
 }
