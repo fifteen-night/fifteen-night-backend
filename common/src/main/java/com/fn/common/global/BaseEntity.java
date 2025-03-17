@@ -1,6 +1,7 @@
 package com.fn.common.global;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,19 +36,24 @@ public abstract class BaseEntity {
 
 	@CreatedBy
 	@Column(updatable = false)
-	private String createdBy;
+	private UUID createdBy;
 
 	@LastModifiedBy
-	private String updatedBy;
+	private UUID updatedBy;
 
-	private String deletedBy;
+	private UUID deletedBy;
 
-	@PreUpdate
-	public void setDeleted() {
-		if (isDeleted) {
-			deletedAt = LocalDateTime.now();
-			// deletedBy = getAuthenticatedUsername();
-		}
+	// @PreUpdate
+	// public void setDeleted() {
+	// 	if (isDeleted) {
+	// 		deletedAt = LocalDateTime.now();
+	// 		// deletedBy = getAuthenticatedUsername();
+	// 	}
+	// }
+
+	public void softDelete(UUID userId){
+		this.deletedAt = LocalDateTime.now();
+		this.deletedBy = userId;
 	}
 
 	public void markAsDeleted() {
