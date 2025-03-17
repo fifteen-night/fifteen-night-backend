@@ -1,4 +1,4 @@
-package com.fn.eureka.client.hubservice.hub.dto;
+package com.fn.eureka.client.hubservice.hub.application.dto;
 
 import java.math.BigDecimal;
 
