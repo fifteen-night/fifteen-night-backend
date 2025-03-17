@@ -1,5 +1,5 @@
 server:
-  port: 19092
+  port: 19093
 
 spring:
   application:
@@ -20,6 +20,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  config:
+    import: file:hub-service/.env[.properties]
 
 eureka:
   client:
@@ -30,5 +32,5 @@ eureka:
 
 naver:
   api:
-    client-id:
-    client-secret:
+    client-id: ${NAVER_CLIENT_ID}
+    client-secret: ${NAVER_CLIENT_SECRET}
