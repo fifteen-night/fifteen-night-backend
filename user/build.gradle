@@ -42,6 +42,7 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
 }
 
 dependencyManagement {

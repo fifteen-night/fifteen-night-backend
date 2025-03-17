@@ -1,11 +1,15 @@
 spring:
   application:
     name: user-service
+  config:
+    import:
+      - file:user/.env[.properties]
+#      - classpath:./properties/datasource.yml
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/fn_user  # DB URL
-    username: stw  # 환경변수에서 불러오기
-    password: 1234
+    url: ${DB_URL} # 환경변수로 설정
+    username: ${DB_USER}  # 환경변수에서 불러오기
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,9 +22,9 @@ spring:
         format_sql: true  # SQL 보기 좋게 출력
 
 server:
-  port: 19092
+  port: ${SERVER_PORT}  # 서버 포트 환경변수로 설정
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:19090/eureka/
+      defaultZone: ${EUREKA_SERVER_URL}  # 환경변수로 설정
