@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fn.eureka.client.user.application.dto.ApiResponseDto;
+import com.fn.eureka.client.user.application.dto.auth.request.UserSignInRequestDto;
 import com.fn.eureka.client.user.application.dto.auth.request.UserSignUpRequestDto;
+import com.fn.eureka.client.user.application.dto.auth.response.UserSignInResponseDto;
 import com.fn.eureka.client.user.application.dto.auth.response.UserSignUpResponseDto;
 import com.fn.eureka.client.user.application.service.AuthService;
 
@@ -27,5 +29,13 @@ public class AuthController {
 
 		return ResponseEntity.ok(ApiResponseDto.success(responseDto));
 	}
+
+	@PostMapping("/signIn")
+	public ResponseEntity<ApiResponseDto<UserSignInResponseDto>> signIn(@RequestBody UserSignInRequestDto requestDto) {
+		UserSignInResponseDto responseDto = authService.signIn(requestDto);
+
+		return ResponseEntity.ok(ApiResponseDto.success(responseDto));
+	}
+
 }
 
