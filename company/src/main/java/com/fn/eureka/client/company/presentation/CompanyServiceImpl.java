@@ -1,4 +1,4 @@
-package com.fn.eureka.client.company.service;
+package com.fn.eureka.client.company.presentation;
 
 import java.util.UUID;
 
@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.company.client.HubServiceClient;
-import com.fn.eureka.client.company.client.UserServiceClient;
-import com.fn.eureka.client.company.dto.CompanyRequestDto;
-import com.fn.eureka.client.company.dto.CompanyResponseDto;
-import com.fn.eureka.client.company.entity.Company;
-import com.fn.eureka.client.company.repository.CompanyQueryRepository;
-import com.fn.eureka.client.company.repository.CompanyRepository;
+import com.fn.eureka.client.company.infrastructure.HubServiceClient;
+import com.fn.eureka.client.company.infrastructure.UserServiceClient;
+import com.fn.eureka.client.company.application.dto.CompanyRequestDto;
+import com.fn.eureka.client.company.application.dto.CompanyResponseDto;
+import com.fn.eureka.client.company.domain.entity.Company;
+import com.fn.eureka.client.company.domain.repository.CompanyQueryRepository;
+import com.fn.eureka.client.company.domain.repository.CompanyRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +35,7 @@ public class CompanyServiceImpl implements CompanyService {
 	public CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto, String userRole) {
 		// TODO 권한 - 유저 ROLE이 허브관리자 또는 업체담당자일 경우만 업체 생성 가능
 		// TODO 질문 - 만약 프론트엔드에서 이미 검증된 데이터를 보낸다면 굳이 필요없을 것 같음.
+		// TODO kafka를 이용해서 메세징 - 나 company 데이터 받았으니까 맞는지 확인해줘! 메세지 보내고 업체 생성하되 만약에 데이터가 안 맞는다는 메세지가 온다? 하면 바로 삭제
 		// companyHubId라는 허브가 존재하는지 확인
 		// boolean existedHubId = hubServiceClient.checkExistHubIdInHubList(companyCreateRequestDto.getCompanyHubId());
 		// if (!existedHubId) {
