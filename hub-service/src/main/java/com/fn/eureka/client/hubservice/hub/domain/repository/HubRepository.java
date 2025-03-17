@@ -1,7 +1,11 @@
 package com.fn.eureka.client.hubservice.hub.domain.repository;
 
-import com.fn.eureka.client.hubservice.hub.domain.Hub;
+import java.util.UUID;
 
-public interface HubRepository {
-	Hub save(Hub hub);
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.fn.eureka.client.hubservice.hub.domain.Hub;
+import com.fn.eureka.client.hubservice.hub.infrastructure.HubRepositoryCustom;
+
+public interface HubRepository extends JpaRepository<Hub, UUID>, HubRepositoryCustom {
 }

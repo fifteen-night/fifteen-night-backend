@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
 import com.fn.eureka.client.hubservice.hub.application.GeoService;
-import com.fn.eureka.client.hubservice.hub.application.dto.GeoResponse;
-import com.fn.eureka.client.hubservice.hub.application.dto.Point;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.GeoResponse;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.Point;
 
 import lombok.RequiredArgsConstructor;
 
