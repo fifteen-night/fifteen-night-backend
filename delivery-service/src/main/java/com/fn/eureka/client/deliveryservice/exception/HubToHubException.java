@@ -1,6 +1,35 @@
 package com.fn.eureka.client.deliveryservice.exception;
 
-public enum HubToHubException {
+import org.springframework.http.HttpStatus;
 
-	// TODO: 나중에 common에서 impl해서 커스텀 익셉션 작성
+import com.fn.common.global.exception.type.ExceptionType;
+
+public enum HubToHubException implements ExceptionType {
+	;
+
+	private final HttpStatus httpStatus;
+	private final String message;
+	private final String errorCode;
+
+	HubToHubException(HttpStatus httpStatus, String message, String errorCode) {
+		this.httpStatus = httpStatus;
+		this.message = message;
+		this.errorCode = errorCode;
+	}
+
+	@Override
+	public HttpStatus getHttpStatus() {
+		return this.httpStatus;
+	}
+
+	@Override
+	public String getMessage() {
+		return this.message;
+	}
+
+	@Override
+	public String getErrorCode() {
+		return this.errorCode;
+	}
 }
+
