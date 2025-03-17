@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fn_user  # DB URL
+    username: stw  # 환경변수에서 불러오기
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update  # 테이블 자동 생성 (개발용)
+    show-sql: true  # SQL 로그 출력
+    properties:
+      hibernate:
+        format_sql: true  # SQL 보기 좋게 출력
+
+server:
+  port: 19092
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
