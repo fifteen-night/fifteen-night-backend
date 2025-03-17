@@ -37,6 +37,9 @@ public class CompanyQueryRepository {
 		QCompany company = QCompany.company;
 		BooleanBuilder builder = new BooleanBuilder();
 
+		// 삭제되지 않은 항목만 조회
+		builder.and(company.isDeleted.eq(false));
+
 		// 허브별 업체 조회 조건
 		if ("HUB MANAGER".equals(userRole) && "hub".equalsIgnoreCase(type) && hubId != null) {
 			builder.and(company.companyHubId.eq(hubId));

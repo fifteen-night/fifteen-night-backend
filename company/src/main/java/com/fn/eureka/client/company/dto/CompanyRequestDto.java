@@ -2,14 +2,12 @@ package com.fn.eureka.client.company.dto;
 
 import java.util.UUID;
 
-import com.fn.eureka.client.company.entity.CompanyType;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CompanyCreateRequestDto {
+public class CompanyRequestDto {
 
 	private String companyName;
 	private String companyAddress;
