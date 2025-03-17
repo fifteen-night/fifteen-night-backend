@@ -1,7 +1,3 @@
 rootProject.name = 'fifteen-night-backend-develop'
 
 include 'common', 'gateway', 'server', 'company', 'hub-service'
-
-project(':common').projectDir = file('common')
-project(':company').projectDir = file('company')
-project(':hub-service').projectDir = file('hub-service')
