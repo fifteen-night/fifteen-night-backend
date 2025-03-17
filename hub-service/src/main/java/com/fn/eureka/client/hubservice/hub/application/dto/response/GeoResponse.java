@@ -1,4 +1,4 @@
-package com.fn.eureka.client.hubservice.hub.application.dto;
+package com.fn.eureka.client.hubservice.hub.application.dto.response;
 
 import java.util.List;
 
