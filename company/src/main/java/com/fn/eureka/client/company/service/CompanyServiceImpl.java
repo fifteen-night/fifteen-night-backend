@@ -66,6 +66,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	// 업체 수정
 	@Override
+  @Transactional
 	public CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto) {
 		Company company = companyRepository.findById(companyId)
 			.orElseThrow(() -> new NotFoundException("해당 업체를 찾을 수 없습니다"));
@@ -73,5 +74,4 @@ public class CompanyServiceImpl implements CompanyService {
 		companyRepository.save(company);
 		return new CompanyResponseDto(company);
 	}
-
 }
