@@ -1,13 +1,10 @@
 package com.fn.eureka.client.company.service;
 
-import org.springframework.stereotype.Service;
+import com.fn.eureka.client.company.dto.CompanyCreateRequestDto;
+import com.fn.eureka.client.company.dto.CompanyCreateResponseDto;
 
-import com.fn.common.global.exception.BadRequestException;
+public interface CompanyService {
 
-@Service
-public class CompanyService {
+	CompanyCreateResponseDto addCompany(CompanyCreateRequestDto companyCreateRequestDto, String userRole);
 
-	public void errorTest() {
-		throw new BadRequestException();
-	}
 }
