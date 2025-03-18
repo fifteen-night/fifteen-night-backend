@@ -37,6 +37,8 @@ public class HubMapper {
 			.hubManagerId(hub.getHubManagerId())
 			.hubName(hub.getHubName())
 			.hubType(hub.getHubType())
+			.hubLatitude(hub.getHubLatitude())
+			.hubLongitude(hub.getHubLongitude())
 			.build();
 	}
 
