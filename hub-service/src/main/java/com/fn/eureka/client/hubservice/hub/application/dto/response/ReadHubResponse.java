@@ -1,5 +1,6 @@
 package com.fn.eureka.client.hubservice.hub.application.dto.response;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.fn.eureka.client.hubservice.hub.domain.HubType;
@@ -15,4 +16,6 @@ public class ReadHubResponse {
 	private String hubAddress;
 	private HubType hubType;
 	private UUID hubManagerId;
+	private BigDecimal hubLatitude;
+	private BigDecimal hubLongitude;
 }
