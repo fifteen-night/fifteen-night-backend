@@ -22,15 +22,15 @@ public class CreateHubToHubRequestDto {
 	// private UUID hthDestinationHubId;
 
 	@NotBlank
-	private String departureHubName;
+	private String departureHubAddress;
 
 	@NotBlank
-	private String arrivalHubName;
+	private String arrivalHubAddress;
 
 	public static HubToHub toHubToHub(CreateHubToHubRequestDto createHubToHubRequestDto) {
 		return HubToHub.builder()
-			.departureHubName(createHubToHubRequestDto.getDepartureHubName())
-			.arrivalHubName(createHubToHubRequestDto.getArrivalHubName())
+			.departureHubAddress(createHubToHubRequestDto.getDepartureHubAddress())
+			.arrivalHubAddress(createHubToHubRequestDto.getArrivalHubAddress())
 			.build();
 	}
 

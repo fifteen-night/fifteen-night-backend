@@ -1,6 +1,7 @@
 package com.fn.eureka.client.deliveryservice.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -31,20 +32,20 @@ public class HubToHub {
 	//private UUID hthDestinationHubId;
 
 	// 임시
-	private String departureHubName;
+	private String departureHubAddress;
 
-	private String arrivalHubName;
+	private String arrivalHubAddress;
 
 	@Column(columnDefinition = "TIME")
-	private String hthQuantity;
+	private LocalTime hthQuantity;
 
 	@Column(precision = 7,  scale = 2)
 	private BigDecimal hthDistance;
 
 	@Builder
-	public HubToHub(String departureHubName, String arrivalHubName , String hthQuantity, BigDecimal hthDistance) {
-		this.departureHubName = departureHubName;
-		this.arrivalHubName = arrivalHubName;
+	public HubToHub(String departureHubAddress, String arrivalHubAddress, LocalTime hthQuantity, BigDecimal hthDistance) {
+		this.departureHubAddress = departureHubAddress;
+		this.arrivalHubAddress = arrivalHubAddress;
 		this.hthQuantity = hthQuantity;
 		this.hthDistance = hthDistance;
 	}

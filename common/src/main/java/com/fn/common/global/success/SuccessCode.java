@@ -9,8 +9,7 @@ public enum SuccessCode {
 	
 	// 여기서 공통 성공 응답 생성
 
-	// Route
-	;
+	HUBTOHUB_CREATE(HttpStatus.CREATED, "루트가 성공적으로 생성되었습니다.", "S_HUBTOHUB_CREATE"),;
 
 	private final HttpStatus statusCode;
 	private final String message;
