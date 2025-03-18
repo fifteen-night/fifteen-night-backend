@@ -76,4 +76,20 @@ public class HubController {
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
+
+	@PatchMapping("/{hubId}")
+	public ResponseEntity<Void> updateHub(@PathVariable("hubId") UUID hubId, @RequestBody UpdateHubRequest request) {
+
+		hubService.updateHub(hubId, request);
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@DeleteMapping("/{hubId}")
+	public ResponseEntity<Void> deleteHub(@PathVariable("hubId") UUID hubId) {
+
+		hubService.deleteHub(hubId);
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
 }
