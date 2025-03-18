@@ -8,8 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fn.eureka.client.user.application.exception.CustomJwtException;
-import com.fn.eureka.client.user.application.exception.JwtExceptionMessage;
+import com.fn.eureka.client.user.application.exception.JwtException;
 import com.fn.eureka.client.user.domain.entity.UserRole;
 
 import io.jsonwebtoken.Claims;
@@ -80,13 +79,13 @@ public class JwtUtil {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 		} catch (SecurityException | MalformedJwtException | SignatureException e) {
-			throw new CustomJwtException(JwtExceptionMessage.INVALID_JWT_SIGNATURE.getMessage());
+			throw new RuntimeException(JwtException.INVALID_JWT_SIGNATURE.getMessage());
 		} catch (ExpiredJwtException e) {
-			throw new CustomJwtException(JwtExceptionMessage.EXPIRED_JWT_TOKEN.getMessage());
+			throw new RuntimeException(JwtException.EXPIRED_JWT_TOKEN.getMessage());
 		} catch (UnsupportedJwtException e) {
-			throw new CustomJwtException(JwtExceptionMessage.UNSUPPORTED_JWT_TOKEN.getMessage());
+			throw new RuntimeException(JwtException.UNSUPPORTED_JWT_TOKEN.getMessage());
 		} catch (IllegalArgumentException e) {
-			throw new CustomJwtException(JwtExceptionMessage.JWT_CLAIM_IS_EMPTY.getMessage());
+			throw new RuntimeException(JwtException.JWT_CLAIM_IS_EMPTY.getMessage());
 		}
 	}
 }

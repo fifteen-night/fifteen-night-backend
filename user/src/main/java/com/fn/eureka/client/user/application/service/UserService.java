@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.eureka.client.user.application.dto.user.response.UserGetResponseDto;
-import com.fn.eureka.client.user.application.exception.ErrorMessage;
+import com.fn.eureka.client.user.application.exception.UserException;
 import com.fn.eureka.client.user.domain.entity.User;
 import com.fn.eureka.client.user.domain.repository.UserRepository;
 import com.fn.eureka.client.user.infrastructure.security.RequestUserDetails;
@@ -24,7 +24,7 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public UserGetResponseDto getUser(UUID userId, RequestUserDetails userDetails) {
 		if (userDetails == null || userDetails.getUserId() == null) {
-			throw new IllegalArgumentException(ErrorMessage.INVALID_AUTHENTICATION.getMessage());
+			throw new RuntimeException(UserException.INVALID_AUTHENTICATION.getMessage());
 		}
 
 		// userDetails 로부터 UUID 변환
@@ -36,11 +36,11 @@ public class UserService {
 
 		// 조회 대상 유저 정보 가져오기
 		User targetUser = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException(ErrorMessage.USER_NOT_FOUND.getMessage()));
+			.orElseThrow(() -> new RuntimeException(UserException.USER_NOT_FOUND.getMessage()));
 
 		// MASTER가 아니면 본인 정보만 조회 가능
 		if (!isMaster && !requestUserId.equals(userId)) {
-			throw new IllegalArgumentException(ErrorMessage.ACCESS_DENIED.getMessage());
+			throw new RuntimeException(UserException.ACCESS_DENIED.getMessage());
 		}
 
 		// 조회 성공 시 DTO로 변환
@@ -58,14 +58,14 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public Page<UserGetResponseDto> getUsers(String keyword, Pageable pageable, RequestUserDetails userDetails) {
 		if (userDetails == null || userDetails.getUserId() == null) {
-			throw new IllegalArgumentException(ErrorMessage.INVALID_AUTHENTICATION.getMessage());
+			throw new RuntimeException(UserException.INVALID_AUTHENTICATION.getMessage());
 		}
 
 		boolean isMaster = userDetails.getAuthorities().stream()
 			.anyMatch(auth -> auth.getAuthority().equals("ROLE_MASTER"));
 
 		if (!isMaster) {
-			throw new IllegalArgumentException(ErrorMessage.ACCESS_DENIED.getMessage());
+			throw new RuntimeException(UserException.ACCESS_DENIED.getMessage());
 		}
 
 		Page<User> users = userRepository.findByKeyword(keyword, pageable);
@@ -80,5 +80,4 @@ public class UserService {
 			.userSlackId(user.getUserSlackId())
 			.build());
 	}
-
 }

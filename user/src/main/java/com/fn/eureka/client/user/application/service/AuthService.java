@@ -8,7 +8,7 @@ import com.fn.eureka.client.user.application.dto.auth.request.UserSignInRequestD
 import com.fn.eureka.client.user.application.dto.auth.request.UserSignUpRequestDto;
 import com.fn.eureka.client.user.application.dto.auth.response.UserSignInResponseDto;
 import com.fn.eureka.client.user.application.dto.auth.response.UserSignUpResponseDto;
-import com.fn.eureka.client.user.application.exception.ErrorMessage;
+import com.fn.eureka.client.user.application.exception.AuthException;
 import com.fn.eureka.client.user.domain.entity.User;
 import com.fn.eureka.client.user.domain.repository.UserRepository;
 import com.fn.eureka.client.user.libs.util.JwtUtil;
@@ -27,12 +27,12 @@ public class AuthService {
 	public UserSignUpResponseDto signUp(UserSignUpRequestDto requestDto) {
 		// 이메일 중복 확인
 		if (userRepository.findByUserEmail(requestDto.getUserEmail()).isPresent()) {
-			throw new IllegalArgumentException(ErrorMessage.DUPLICATED_EMAIL.getMessage());
+			throw new RuntimeException(AuthException.DUPLICATED_EMAIL.getMessage());
 		}
 
-		// 유저이름 중복 확인
+		// 닉네임 중복 확인
 		if (userRepository.findByUserNickname(requestDto.getUserNickname()).isPresent()) {
-			throw new IllegalArgumentException(ErrorMessage.DUPLICATED_NICKNAME.getMessage());
+			throw new RuntimeException(AuthException.DUPLICATED_NICKNAME.getMessage());
 		}
 
 		String encodedPassword = passwordEncoder.encode(requestDto.getUserPassword());
@@ -64,7 +64,7 @@ public class AuthService {
 		// 유저네임으로 유저 조회 후, 비밀번호 검증까지 한 번에 처리
 		User user = userRepository.findByUserName(requestDto.getUserName())
 			.filter(u -> passwordEncoder.matches(requestDto.getUserPassword(), u.getUserPassword()))
-			.orElseThrow(() -> new IllegalArgumentException(ErrorMessage.WRONG_USERNAME_OR_PASSWORD.getMessage()));
+			.orElseThrow(() -> new RuntimeException(AuthException.WRONG_USERNAME_OR_PASSWORD.getMessage()));
 
 		// Access/Refresh Token 발급
 		String accessToken = jwtUtil.createAccessToken(user.getUserId(), user.getUserName(), user.getUserRole());
