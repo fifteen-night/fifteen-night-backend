@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.dto.CommonResponse;
+import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.user.application.dto.user.response.UserGetResponseDto;
 import com.fn.eureka.client.user.application.exception.UserException;
 import com.fn.eureka.client.user.domain.entity.User;
@@ -22,7 +24,7 @@ public class UserService {
 	private final UserRepository userRepository;
 
 	@Transactional(readOnly = true)
-	public UserGetResponseDto getUser(UUID userId, RequestUserDetails userDetails) {
+	public CommonResponse<UserGetResponseDto> getUser(UUID userId, RequestUserDetails userDetails) {
 		if (userDetails == null || userDetails.getUserId() == null) {
 			throw new RuntimeException(UserException.INVALID_AUTHENTICATION.getMessage());
 		}
@@ -44,7 +46,7 @@ public class UserService {
 		}
 
 		// 조회 성공 시 DTO로 변환
-		return UserGetResponseDto.builder()
+		UserGetResponseDto responseDto = UserGetResponseDto.builder()
 			.userId(targetUser.getUserId())
 			.userName(targetUser.getUserName())
 			.userNickname(targetUser.getUserNickname())
@@ -53,10 +55,12 @@ public class UserService {
 			.userPhone(targetUser.getUserPhone())
 			.userSlackId(targetUser.getUserSlackId())
 			.build();
+
+		return new CommonResponse<>(SuccessCode.USER_FOUND, responseDto);
 	}
 
 	@Transactional(readOnly = true)
-	public Page<UserGetResponseDto> getUsers(String keyword, Pageable pageable, RequestUserDetails userDetails) {
+	public CommonResponse<Page<UserGetResponseDto>> getUsers(String keyword, Pageable pageable, RequestUserDetails userDetails) {
 		if (userDetails == null || userDetails.getUserId() == null) {
 			throw new RuntimeException(UserException.INVALID_AUTHENTICATION.getMessage());
 		}
@@ -70,7 +74,7 @@ public class UserService {
 
 		Page<User> users = userRepository.findByKeyword(keyword, pageable);
 
-		return users.map(user -> UserGetResponseDto.builder()
+		Page<UserGetResponseDto> responseDtoPage = users.map(user -> UserGetResponseDto.builder()
 			.userId(user.getUserId())
 			.userName(user.getUserName())
 			.userNickname(user.getUserNickname())
@@ -79,5 +83,7 @@ public class UserService {
 			.userPhone(user.getUserPhone())
 			.userSlackId(user.getUserSlackId())
 			.build());
+
+		return new CommonResponse<>(SuccessCode.USER_LIST_FOUND, responseDtoPage);
 	}
 }

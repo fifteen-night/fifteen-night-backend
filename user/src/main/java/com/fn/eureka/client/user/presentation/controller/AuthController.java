@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fn.eureka.client.user.application.dto.ApiResponseDto;
+import com.fn.common.global.dto.CommonResponse;
+import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.user.application.dto.auth.request.UserSignInRequestDto;
 import com.fn.eureka.client.user.application.dto.auth.request.UserSignUpRequestDto;
 import com.fn.eureka.client.user.application.dto.auth.response.UserSignInResponseDto;
@@ -24,18 +25,16 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/signUp")
-	public ResponseEntity<ApiResponseDto<UserSignUpResponseDto>> signUp(@Valid @RequestBody UserSignUpRequestDto requestDto) {
-		UserSignUpResponseDto responseDto = authService.signUp(requestDto);
+	public ResponseEntity<CommonResponse<UserSignUpResponseDto>> signUp(@Valid @RequestBody UserSignUpRequestDto requestDto) {
+		CommonResponse<UserSignUpResponseDto> response = authService.signUp(requestDto);
 
-		return ResponseEntity.ok(ApiResponseDto.success(responseDto));
+		return ResponseEntity.status(SuccessCode.AUTH_SIGNUP.getStatusCode()).body(response);
 	}
 
 	@PostMapping("/signIn")
-	public ResponseEntity<ApiResponseDto<UserSignInResponseDto>> signIn(@RequestBody UserSignInRequestDto requestDto) {
-		UserSignInResponseDto responseDto = authService.signIn(requestDto);
+	public ResponseEntity<CommonResponse<UserSignInResponseDto>> signIn(@RequestBody UserSignInRequestDto requestDto) {
+		CommonResponse<UserSignInResponseDto> response = authService.signIn(requestDto);
 
-		return ResponseEntity.ok(ApiResponseDto.success(responseDto));
+		return ResponseEntity.status(SuccessCode.AUTH_LOGIN.getStatusCode()).body(response);
 	}
-
 }
-

@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fn.eureka.client.user.application.dto.ApiResponseDto;
+import com.fn.common.global.dto.CommonResponse;
+import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.user.application.dto.user.response.UserGetResponseDto;
 import com.fn.eureka.client.user.application.service.UserService;
 import com.fn.eureka.client.user.infrastructure.security.RequestUserDetails;
@@ -27,18 +28,23 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping("/{userId}")
-	public ResponseEntity<ApiResponseDto<UserGetResponseDto>> getUser(@PathVariable UUID userId, @AuthenticationPrincipal RequestUserDetails userDetails) {
-		UserGetResponseDto responseDto = userService.getUser(userId, userDetails);
+	public ResponseEntity<CommonResponse<UserGetResponseDto>> getUser(
+		@PathVariable UUID userId,
+		@AuthenticationPrincipal RequestUserDetails userDetails) {
 
-		return ResponseEntity.ok(ApiResponseDto.success(responseDto));
+		CommonResponse<UserGetResponseDto> response = userService.getUser(userId, userDetails);
+
+		return ResponseEntity.status(SuccessCode.USER_FOUND.getStatusCode()).body(response);
 	}
 
 	@GetMapping
-	public ResponseEntity<ApiResponseDto<Page<UserGetResponseDto>>> getUsers(
-		@RequestParam(required = false) String keyword, Pageable pageable, @AuthenticationPrincipal RequestUserDetails userDetails) {
-		Page<UserGetResponseDto> responseDto = userService.getUsers(keyword, pageable, userDetails);
+	public ResponseEntity<CommonResponse<Page<UserGetResponseDto>>> getUsers(
+		@RequestParam(required = false) String keyword,
+		Pageable pageable,
+		@AuthenticationPrincipal RequestUserDetails userDetails) {
 
-		return ResponseEntity.ok(ApiResponseDto.success(responseDto));
+		CommonResponse<Page<UserGetResponseDto>> response = userService.getUsers(keyword, pageable, userDetails);
+
+		return ResponseEntity.status(SuccessCode.USER_LIST_FOUND.getStatusCode()).body(response);
 	}
-
 }
