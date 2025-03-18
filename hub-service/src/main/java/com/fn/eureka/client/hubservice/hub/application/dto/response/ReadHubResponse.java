@@ -1,13 +1,16 @@
-package com.fn.eureka.client.hubservice.hub.dto;
+package com.fn.eureka.client.hubservice.hub.application.dto.response;
 
 import java.util.UUID;
 
 import com.fn.eureka.client.hubservice.hub.domain.HubType;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CreateHubRequest {
+@Builder
+public class ReadHubResponse {
+	private UUID hubId;
 	private String hubName;
 	private String hubAddress;
 	private HubType hubType;
