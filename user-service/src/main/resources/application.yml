@@ -3,23 +3,9 @@ spring:
     name: user-service
   config:
     import:
-      - file:user-service/.env[.properties]
-#      - classpath:./properties/datasource.yml
-
-  datasource:
-    url: ${DB_URL} # 환경변수로 설정
-    username: ${DB_USER}  # 환경변수에서 불러오기
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update  # 테이블 자동 생성 (개발용)
-    show-sql: true  # SQL 로그 출력
-    properties:
-      hibernate:
-        format_sql: true  # SQL 보기 좋게 출력
+      - file:.env[.properties]
+      - classpath:./properties/datasource.yml
+      - classpath:./properties/jpa.yml
 
 service:
   jwt:
@@ -29,9 +15,9 @@ service:
 
 
 server:
-  port: ${SERVER_PORT}  # 서버 포트 환경변수로 설정
+  port: ${USER_SEVER_PORT}  # 유저 서비스 포트
 
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_SERVER_URL}  # 환경변수로 설정
+      defaultZone: ${EUREKA_SERVER}  # Eureka 서버 주소
