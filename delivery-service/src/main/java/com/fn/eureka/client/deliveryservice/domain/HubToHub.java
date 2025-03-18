@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.UUID;
 
+import com.fn.common.global.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "p_hub_to_hub")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HubToHub {
+public class HubToHub extends BaseEntity {
 
 	//TODO : Common BaseEntity Impl 할것
 
