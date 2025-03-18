@@ -3,7 +3,7 @@ spring:
     name: delivery-service
   config:
     import:
-    - file:delivery-service/.env[.properties]
+    - file:.env[.properties]
     - classpath:./properties/key.yml
     - classpath:./properties/datasource.yml
     - classpath:./properties/jpa.yml
@@ -13,9 +13,9 @@ spring:
     active: ${ACTIVE_VAL}
 
 server:
-  port: 19097
+  port: ${DELIVERY_PORT}
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:19090/eureka/  # Eureka 서버 URL
+      defaultZone: ${EUREKA_SERVER}  # Eureka 서버 URL

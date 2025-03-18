@@ -8,7 +8,7 @@ spring:
     name: gateway-service  # 서비스명
   config:
     import:
-      - file:gateway/.env[.properties]
+      - file:.env[.properties]
   cloud:
     gateway:
       routes:
