@@ -33,7 +33,7 @@ public class HubRepositoryCustomImpl implements HubRepositoryCustom {
 		BooleanBuilder builder = new BooleanBuilder();
 		List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable.getSort(), qHub);
 
-		if (hubName != null && hubName.isEmpty()) {
+		if (hubName != null && !hubName.isEmpty()) {
 			builder.and(qHub.hubName.containsIgnoreCase(hubName));
 		}
 
