@@ -68,4 +68,16 @@ public class Hub extends BaseEntity {
 		this.hubLatitude = hubLatitude;
 		this.hubLongitude = hubLongitude;
 	}
+
+	public void updateHubName(String hubName) {
+		this.hubName = hubName;
+	}
+
+	public void updateHubType(HubType hubType) {
+		this.hubType = hubType;
+	}
+
+	public void updateHubManagerId(UUID hubManagerId) {
+		this.hubManagerId = hubManagerId;
+	}
 }
