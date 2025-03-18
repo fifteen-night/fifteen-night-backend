@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'   // Spring MVC 기반 어노테이션 사용 목적
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'    // Swagger 관련
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'    // Swagger 관련
     implementation 'org.springframework.boot:spring-boot-starter-validation'    // DTO 필드 검증
 
     // Spring Data JPA
