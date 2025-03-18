@@ -1,5 +1,7 @@
 package com.fn.eureka.client.deliveryservice.infrastructure;
 
+import java.util.Optional;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -18,10 +20,11 @@ public interface NaverMapService {
 		@RequestHeader("Accept") String accept,
 		@RequestHeader("x-ncp-apigw-api-key-id") String apiKeyId,
 		@RequestHeader("x-ncp-apigw-api-key") String apiKey,
-		@RequestParam("query") @NotBlank String hthDepartureHubId);
+		@RequestParam("query") @NotBlank String hthDepartureHubAddress
+	);
 
 	@GetMapping("${MAP_DIRECTION}")
-	NaverMapDirResponseDto findDirection(@RequestHeader("Accept") String acceptHeader,
+	Optional<NaverMapDirResponseDto> findDirection(@RequestHeader("Accept") String acceptHeader,
 		@RequestHeader("x-ncp-apigw-api-key-id") String apiKeyId,
 		@RequestHeader("x-ncp-apigw-api-key") String apiKey,
 		@RequestParam("goal") String goal,

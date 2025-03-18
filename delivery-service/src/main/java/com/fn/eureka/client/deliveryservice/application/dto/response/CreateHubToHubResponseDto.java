@@ -1,10 +1,10 @@
 package com.fn.eureka.client.deliveryservice.application.dto.response;
 
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import com.fn.eureka.client.deliveryservice.domain.HubToHub;
-import com.fn.eureka.client.deliveryservice.presentation.dto.response.NaverMapDirResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,20 +19,20 @@ public class CreateHubToHubResponseDto {
 	// private UUID departureHubName;
 	// private UUID arrivalHubName;
 
-	private String departureHubName;
-	private String arrivalHubName;
-	private String hthQuantity;
+	private UUID hthid;
+	private String departureHubAddress;
+	private String arrivalHubAddress;
+	private LocalTime hthQuantity;
 	private BigDecimal hthDistance;
 
-	public static CreateHubToHubResponseDto fromHubToHub(HubToHub hub, NaverMapDirResponseDto naverMapDirResponseDto) {
+	public static CreateHubToHubResponseDto fromHubToHub(HubToHub saveHubToHub) {
 
 		return CreateHubToHubResponseDto.builder()
-			.departureHubName(hub.getDepartureHubName())
-			.arrivalHubName(hub.getArrivalHubName())
-			.hthQuantity(
-				String.valueOf(naverMapDirResponseDto.getRoute().getTraoptimal().get(0).getSummary().getDuration()))
-			.hthDistance(
-				BigDecimal.valueOf(naverMapDirResponseDto.getRoute().getTraoptimal().get(0).getSummary().getDistance()))
+			.hthid(saveHubToHub.getHthId())
+			.departureHubAddress(saveHubToHub.getDepartureHubAddress())
+			.arrivalHubAddress(saveHubToHub.getArrivalHubAddress())
+			.hthQuantity(saveHubToHub.getHthQuantity())
+			.hthDistance(saveHubToHub.getHthDistance())
 			.build();
 
 	}
