@@ -21,6 +21,7 @@ import com.fn.eureka.client.deliveryservice.application.dto.response.GetHubToHub
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -37,6 +38,7 @@ public class HubToHubController {
 	@Operation(summary = "허브관계 등록" , description = "허브 등록은 'MASTER' 만 가능")
 	public ResponseEntity<CommonResponse<CreateHubToHubResponseDto>> createRoute(
 		@RequestBody @Validated CreateHubToHubRequestDto createHubToHubRequestDto
+
 	) {
 		CreateHubToHubResponseDto createHubToHubResponseDto = hubToHubService.createRoute(createHubToHubRequestDto);
 
@@ -49,6 +51,17 @@ public class HubToHubController {
 		return ResponseEntity
 			.created(location)
 			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_CREATE, createHubToHubResponseDto));
+	}
+
+	@GetMapping("/hub-to-hubs/{hubToHubId}")
+	@Operation(summary = "허브관계 단건 조회" , description = "허브 조회는 '모두' 가능")
+	public ResponseEntity<CommonResponse<GetHubToHubResponseDto>> getRoute(@NotNull UUID hubToHubId){
+
+		GetHubToHubResponseDto getHubToHubResponseDto = hubToHubService.searchOneHubToHub(hubToHubId);
+
+		return ResponseEntity
+			.ok()
+			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SEARCH_ONE, getHubToHubResponseDto));
 	}
 
 }

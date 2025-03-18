@@ -3,6 +3,7 @@ package com.fn.eureka.client.deliveryservice.application;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.eureka.client.deliveryservice.application.dto.request.CreateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.CreateHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.response.GetHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.domain.HubToHub;
 import com.fn.eureka.client.deliveryservice.exception.HubToHubException;
 import com.fn.eureka.client.deliveryservice.infrastructure.NaverMapService;
@@ -42,7 +44,7 @@ public class HubToHubService {
 	@Transactional
 	public CreateHubToHubResponseDto createRoute(CreateHubToHubRequestDto createHubToHubRequestDto) {
 		try {
-			// TODO : findBY 사용해서 Exception 날리기
+			// TODO : findBY 사용해서 Exception 날리기 , 유저 검증
 
 			HubToHub hub = CreateHubToHubRequestDto.toHubToHub(createHubToHubRequestDto);
 
@@ -77,6 +79,14 @@ public class HubToHubService {
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public GetHubToHubResponseDto searchOneHubToHub(UUID hubToHubId) {
+
+		HubToHub targetHubToHub = hubToHubRepository.findByHthIdAndDeletedAtIsNull(hubToHubId)
+			.orElseThrow(() -> new CustomApiException(HubToHubException.NOT_FOUND_HUBTOHUB));
+
+		return GetHubToHubResponseDto.fromHubToHub(targetHubToHub);
 	}
 
 	private void logHubDetails(HubToHub hub) {
@@ -118,4 +128,5 @@ public class HubToHubService {
 
 		return LocalTime.of((int)hours, (int)minutes, (int)seconds);
 	}
+
 }
