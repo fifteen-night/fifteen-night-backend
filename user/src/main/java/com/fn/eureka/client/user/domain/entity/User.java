@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.fn.common.global.BaseEntity;
+import com.fn.eureka.client.user.application.dto.user.request.UserUpdateRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,4 +66,24 @@ public class User extends BaseEntity {
 		this.userPhone = userPhone;
 		this.userEmail = userEmail;
 	}
+
+	// 업데이트 메서드
+	public void updateUser(UserUpdateRequestDto requestDto) {
+		if (requestDto.getUserNickname() != null) {
+			this.userNickname = requestDto.getUserNickname();
+		}
+		if (requestDto.getUserSlackId() != null) {
+			this.userSlackId = requestDto.getUserSlackId();
+		}
+		if (requestDto.getUserPhone() != null) {
+			this.userPhone = requestDto.getUserPhone();
+		}
+		if (requestDto.getUserEmail() != null) {
+			this.userEmail = requestDto.getUserEmail();
+		}
+		if (requestDto.getUserRole() != null) {
+			this.userRole = requestDto.getUserRole();
+		}
+	}
+
 }
