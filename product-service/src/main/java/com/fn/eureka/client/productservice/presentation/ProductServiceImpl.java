@@ -1,16 +1,21 @@
 package com.fn.eureka.client.productservice.presentation;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.exception.UnauthorizedException;
+import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.dto.CompanyInfoDto;
 import com.fn.eureka.client.productservice.application.dto.ProductRequestDto;
 import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 import com.fn.eureka.client.productservice.domain.Product;
-import com.fn.eureka.client.productservice.domain.ProductRepository;
+import com.fn.eureka.client.productservice.domain.repository.ProductQueryRepository;
+import com.fn.eureka.client.productservice.domain.repository.ProductRepository;
 import com.fn.eureka.client.productservice.infrastructure.CompanyServiceClient;
 import com.fn.eureka.client.productservice.infrastructure.HubServiceClient;
 
@@ -21,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductServiceImpl implements ProductService {
 
 	private final ProductRepository productRepository;
+	private final ProductQueryRepository productQueryRepository;
 
 	private final HubServiceClient hubServiceClient;
 	private final CompanyServiceClient companyServiceClient;
@@ -58,8 +64,22 @@ public class ProductServiceImpl implements ProductService {
 	// 상품 조회
 	@Override
 	public ProductResponseDto findProduct(UUID productId) {
-		Product product = productRepository.findById(productId)
+		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new NotFoundException("해당 상품은 존재하지 않습니다."));
 		return new ProductResponseDto(product);
 	}
+
+	// 전체/허브별/업체별 상품 리스트 조회 + 검색
+	@Override
+	public Page<ProductResponseDto> findAllProductsByType(String type, UUID id, String keyword, int page, int size,
+		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy) {
+		// TODO client 해결되면 허브별 상품 리스트 조회 코드 추가
+		// id와 같은 HubID를 가진 업체ID 목록 가져오기
+		// List<UUID> companies = null;
+		// if ("hub".equalsIgnoreCase(type) && id != null) {
+		// 	companies = companyServiceClient.getCompanyIdByCompanyHubId(id);
+		// }
+		return productQueryRepository.findProductsByType(type, id, keyword, PageUtils.pageable(page, size), sortDirection, sortBy);
+	}
+
 }
