@@ -2,6 +2,8 @@ package com.fn.eureka.client.user.application.service;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +53,32 @@ public class UserService {
 			.userPhone(targetUser.getUserPhone())
 			.userSlackId(targetUser.getUserSlackId())
 			.build();
+	}
+
+	@Transactional(readOnly = true)
+	public Page<UserGetResponseDto> getUsers(String keyword, Pageable pageable, RequestUserDetails userDetails) {
+		if (userDetails == null || userDetails.getUserId() == null) {
+			throw new IllegalArgumentException(ErrorMessage.INVALID_AUTHENTICATION.getMessage());
+		}
+
+		boolean isMaster = userDetails.getAuthorities().stream()
+			.anyMatch(auth -> auth.getAuthority().equals("ROLE_MASTER"));
+
+		if (!isMaster) {
+			throw new IllegalArgumentException(ErrorMessage.ACCESS_DENIED.getMessage());
+		}
+
+		Page<User> users = userRepository.findByKeyword(keyword, pageable);
+
+		return users.map(user -> UserGetResponseDto.builder()
+			.userId(user.getUserId())
+			.userName(user.getUserName())
+			.userNickname(user.getUserNickname())
+			.userEmail(user.getUserEmail())
+			.userRole(user.getUserRole().name())
+			.userPhone(user.getUserPhone())
+			.userSlackId(user.getUserSlackId())
+			.build());
 	}
 
 }
