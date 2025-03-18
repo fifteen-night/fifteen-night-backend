@@ -17,6 +17,7 @@ public class ProductResponseDto {
 	private Integer productQuantity;
 
 	public ProductResponseDto(Product product) {
+		this.productId = product.getProductId();
 		this.productName = product.getProductName();
 		this.productCompanyId = product.getProductCompanyId();
 		this.productQuantity = product.getProductQuantity();
