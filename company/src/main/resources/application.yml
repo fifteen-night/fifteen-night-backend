@@ -15,10 +15,9 @@ spring:
         format_sql: true
         show_sql: true
   config:
-    import: file:company/.env[.properties]
-#    import: optional:file:company/.env[.properties]
+    import: optional:file:.env[.properties]
 server:
-  port: ${SERVER_PORT}
+  port: ${COMPANY_SERVER_PORT}
 
 eureka:
   client:
