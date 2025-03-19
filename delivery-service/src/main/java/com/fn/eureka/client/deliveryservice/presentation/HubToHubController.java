@@ -35,11 +35,10 @@ public class HubToHubController {
 	private final HubToHubService hubToHubService;
 
 	@PostMapping("/hub-to-hubs")
-	@Operation(summary = "허브관계 등록" , description = "허브 등록은 'MASTER' 만 가능")
+	@Operation(summary = "허브관계 등록", description = "허브 등록은 'MASTER' 만 가능")
 	public ResponseEntity<CommonResponse<CreateHubToHubResponseDto>> createRoute(
 		@RequestBody @Validated CreateHubToHubRequestDto createHubToHubRequestDto
-
-	) {
+	) throws Throwable {
 		CreateHubToHubResponseDto createHubToHubResponseDto = hubToHubService.createRoute(createHubToHubRequestDto);
 
 		URI location = ServletUriComponentsBuilder
@@ -54,8 +53,8 @@ public class HubToHubController {
 	}
 
 	@GetMapping("/hub-to-hubs/{hubToHubId}")
-	@Operation(summary = "허브관계 단건 조회" , description = "허브 조회는 '모두' 가능")
-	public ResponseEntity<CommonResponse<GetHubToHubResponseDto>> getRoute(@NotNull UUID hubToHubId){
+	@Operation(summary = "허브관계 단건 조회", description = "허브 조회는 '모두' 가능")
+	public ResponseEntity<CommonResponse<GetHubToHubResponseDto>> getRoute(@NotNull UUID hubToHubId) {
 
 		GetHubToHubResponseDto getHubToHubResponseDto = hubToHubService.searchOneHubToHub(hubToHubId);
 

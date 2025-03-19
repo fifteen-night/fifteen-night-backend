@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import com.fn.common.global.exception.type.BaseException;
 import com.fn.common.global.exception.type.ExceptionType;
 
+import lombok.Getter;
+
+@Getter
 public class CustomApiException extends RuntimeException {
 
 	// 커스텀 api Exception

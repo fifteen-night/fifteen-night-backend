@@ -10,5 +10,7 @@ import com.fn.eureka.client.deliveryservice.domain.HubToHub;
 
 public interface HubToHubRepository extends JpaRepository<HubToHub, UUID> {
 
-	Optional<HubToHub> findByHthIdAndDeletedAtIsNull(UUID hubToHubId);
+	Optional<HubToHub> findByHthIdAndIsDeletedIsFalse(UUID hubToHubId);
+
+	boolean existsByDepartureHubAddressAndArrivalHubAddressAndIsDeletedIsFalse(String departureHubAddress, String arrivalHubAddress);
 }
