@@ -13,10 +13,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class GeoServiceImpl implements GeoService {
-	private final GeoFeignClient geoFeignClient;
+	private final GeoClient geoClient;
 
 	public Point getPoint(String address) {
-		GeoResponse response = geoFeignClient.getPoint(address);
+		GeoResponse response = geoClient.getPoint(address);
 
 		if (response.getAddresses() == null || response.getAddresses().isEmpty()) {
 			throw new RuntimeException("없는 주소입니다.");
