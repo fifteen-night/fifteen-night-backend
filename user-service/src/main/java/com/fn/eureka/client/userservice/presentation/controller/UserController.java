@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,7 +20,6 @@ import com.fn.eureka.client.userservice.application.dto.user.request.UserUpdateR
 import com.fn.eureka.client.userservice.application.dto.user.response.UserGetResponseDto;
 import com.fn.eureka.client.userservice.application.dto.user.response.UserUpdateResponseDto;
 import com.fn.eureka.client.userservice.application.service.UserService;
-import com.fn.eureka.client.userservice.infrastructure.security.RequestUserDetails;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +49,7 @@ public class UserController {
 
 		return ResponseEntity.status(SuccessCode.USER_LIST_FOUND.getStatusCode()).body(response);
 	}
+
 
 	@PatchMapping("/{userId}")
 	public ResponseEntity<CommonResponse<UserUpdateResponseDto>> updateUser(

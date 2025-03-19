@@ -1,10 +1,7 @@
 package com.fn.eureka.client.userservice.presentation.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
@@ -27,14 +24,12 @@ public class AuthController {
 	@PostMapping("/signUp")
 	public ResponseEntity<CommonResponse<UserSignUpResponseDto>> signUp(@Valid @RequestBody UserSignUpRequestDto requestDto) {
 		CommonResponse<UserSignUpResponseDto> response = authService.signUp(requestDto);
-
 		return ResponseEntity.status(SuccessCode.AUTH_SIGNUP.getStatusCode()).body(response);
 	}
 
 	@PostMapping("/signIn")
-	public ResponseEntity<CommonResponse<UserSignInResponseDto>> signIn(@RequestBody UserSignInRequestDto requestDto) {
+	public ResponseEntity<CommonResponse<UserSignInResponseDto>> signIn(@Valid @RequestBody UserSignInRequestDto requestDto) {
 		CommonResponse<UserSignInResponseDto> response = authService.signIn(requestDto);
-
 		return ResponseEntity.status(SuccessCode.AUTH_LOGIN.getStatusCode()).body(response);
 	}
 }
