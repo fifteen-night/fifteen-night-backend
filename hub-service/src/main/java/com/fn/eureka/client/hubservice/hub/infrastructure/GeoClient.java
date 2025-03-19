@@ -12,7 +12,7 @@ import com.fn.eureka.client.hubservice.hub.config.GeoFeignConfig;
 	url = "https://naveropenapi.apigw.ntruss.com",
 	configuration = GeoFeignConfig.class
 )
-public interface GeoFeignClient {
+public interface GeoClient {
 
 	@GetMapping("/map-geocode/v2/geocode")
 	GeoResponse getPoint(@RequestParam("query") String query);
