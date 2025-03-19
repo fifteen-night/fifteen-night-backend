@@ -3,8 +3,8 @@ package com.fn.eureka.client.hubservice.hub.infrastructure;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.fn.eureka.client.hubservice.hub.domain.Hub;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
 
 public interface HubRepositoryCustom {
-	Page<Hub> searchHubs(Pageable pageable, String hubName);
+	Page<ReadHubResponse> searchHubs(Pageable pageable, String hubName);
 }

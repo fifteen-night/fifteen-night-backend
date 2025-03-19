@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import com.fn.eureka.client.hubservice.hub.application.dto.mapper.HubMapper;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
 import com.fn.eureka.client.hubservice.hub.domain.Hub;
 import com.fn.eureka.client.hubservice.hub.domain.QHub;
 import com.querydsl.core.BooleanBuilder;
@@ -28,24 +30,26 @@ public class HubRepositoryCustomImpl implements HubRepositoryCustom {
 	QHub qHub = QHub.hub;
 
 	@Override
-	public Page<Hub> searchHubs(Pageable pageable, String hubName) {
+	public Page<ReadHubResponse> searchHubs(Pageable pageable, String hubName) {
 
 		BooleanBuilder builder = new BooleanBuilder();
 		List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable.getSort(), qHub);
 
-		if (hubName != null || hubName.isEmpty()) {
+		if (hubName != null && !hubName.isEmpty()) {
 			builder.and(qHub.hubName.containsIgnoreCase(hubName));
 		}
 
-		builder.and(qHub.deletedAt.isNull());
+		builder.and(qHub.isDeleted.isFalse());
 
-		List<Hub> content = queryFactory
+		List<Hub> hubs = queryFactory
 			.selectFrom(qHub)
 			.where(builder)
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]))
 			.fetch();
+
+		List<ReadHubResponse> content = hubs.stream().map(e -> HubMapper.toDto(e, e.getHubId())).toList();
 
 		long total = queryFactory
 			.select(qHub.count())
