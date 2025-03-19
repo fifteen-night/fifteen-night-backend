@@ -41,7 +41,7 @@ public class HubToHub extends BaseEntity {
 	@Column(columnDefinition = "TIME")
 	private LocalTime hthQuantity;
 
-	@Column(precision = 7,  scale = 2)
+	@Column(precision = 9,  scale = 2)
 	private BigDecimal hthDistance;
 
 	@Builder
