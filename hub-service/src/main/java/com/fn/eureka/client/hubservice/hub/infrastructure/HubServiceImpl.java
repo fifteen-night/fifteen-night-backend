@@ -91,4 +91,10 @@ public class HubServiceImpl implements HubService {
 
 		return hubRepository.findById(id).orElseThrow(() -> new NotFoundException("없는 허브입니다."));
 	}
+
+	@Override
+	public Hub findHubById(UUID id) {
+
+		return hubRepository.findById(id).orElseThrow(() -> new NotFoundException("없는 허브입니다."));
+	}
 }
