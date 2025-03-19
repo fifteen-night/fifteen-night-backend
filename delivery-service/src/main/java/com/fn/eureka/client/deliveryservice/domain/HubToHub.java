@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "p_hub_to_hub")
+@Table(name = "p_hub_to_hub" , schema = "delivery")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HubToHub extends BaseEntity {
