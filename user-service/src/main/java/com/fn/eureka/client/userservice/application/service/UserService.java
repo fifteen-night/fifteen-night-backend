@@ -1,9 +1,12 @@
 package com.fn.eureka.client.userservice.application.service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +29,8 @@ public class UserService {
 	private final UserRepository userRepository;
 
 	@Transactional(readOnly = true)
-	public CommonResponse<UserGetResponseDto> getUser(UUID userId, RequestUserDetails userDetails) {
+	public CommonResponse<UserGetResponseDto> getUser(UUID userId) {
+		RequestUserDetails userDetails = getAuthenticatedUser();
 		validateAuthentication(userDetails);
 
 		UUID requestUserId = UUID.fromString(userDetails.getUserId());
@@ -56,7 +60,8 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public CommonResponse<Page<UserGetResponseDto>> getUsers(String keyword, Pageable pageable, RequestUserDetails userDetails) {
+	public CommonResponse<Page<UserGetResponseDto>> getUsers(String keyword, Pageable pageable) {
+		RequestUserDetails userDetails = getAuthenticatedUser();
 		validateAuthentication(userDetails);
 
 		if (!hasMasterRole(userDetails)) {
@@ -79,22 +84,20 @@ public class UserService {
 	}
 
 	@Transactional
-	public CommonResponse<UserUpdateResponseDto> updateUser(UUID userId, UserUpdateRequestDto requestDto, RequestUserDetails userDetails) {
+	public CommonResponse<UserUpdateResponseDto> updateUser(UUID userId, UserUpdateRequestDto requestDto) {
+		RequestUserDetails userDetails = getAuthenticatedUser();
 		validateAuthentication(userDetails);
 
-		// 수정 권한 체크 마스터 관리자만 가능
 		if (!hasMasterRole(userDetails)) {
 			throw new RuntimeException(UserException.ACCESS_DENIED.getMessage());
 		}
 
-		// 사용자 조회
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new RuntimeException(UserException.USER_NOT_FOUND.getMessage()));
 
-		// 업데이트 수행
 		user.updateUser(requestDto);
+		user.setUpdatedAt(LocalDateTime.now());
 
-		// 수정된 정보 DTO 변환
 		UserUpdateResponseDto responseDto = UserUpdateResponseDto.builder()
 			.userId(user.getUserId())
 			.userName(user.getUserName())
@@ -108,6 +111,30 @@ public class UserService {
 		return new CommonResponse<>(SuccessCode.USER_UPDATED, responseDto);
 	}
 
+
+	@Transactional
+	public CommonResponse<Void> deleteUser(UUID userId) {
+		RequestUserDetails userDetails = getAuthenticatedUser();
+		validateAuthentication(userDetails);
+
+		// 2) 권한 체크
+		if (!hasMasterRole(userDetails)) {
+			throw new RuntimeException(UserException.ACCESS_DENIED.getMessage());
+		}
+
+		// 3) 삭제 대상 User 엔티티 조회
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new RuntimeException(UserException.USER_NOT_FOUND.getMessage()));
+
+		// 4) 소프트 삭제 수행 - @PreUpdate를 활용하여 deletedAt, deletedBy 자동 설정
+		user.markAsDeleted();
+
+		// 5) 응답
+		return new CommonResponse<>(SuccessCode.USER_DELETED, null);
+	}
+
+
+
 	// 인증 정보 검증
 	private void validateAuthentication(RequestUserDetails userDetails) {
 		if (userDetails == null || userDetails.getUserId() == null) {
@@ -120,4 +147,21 @@ public class UserService {
 		return userDetails.getAuthorities().stream()
 			.anyMatch(auth -> auth.getAuthority().equals("ROLE_MASTER"));
 	}
+
+	private RequestUserDetails getAuthenticatedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication == null || !authentication.isAuthenticated()) {
+			throw new RuntimeException("인증 정보가 유효하지 않습니다.");
+		}
+
+		Object principal = authentication.getPrincipal();
+		if (principal instanceof RequestUserDetails userDetails) {
+			return userDetails;
+		}
+
+		throw new RuntimeException("유효하지 않은 사용자 정보입니다.");
+	}
+
+
 }

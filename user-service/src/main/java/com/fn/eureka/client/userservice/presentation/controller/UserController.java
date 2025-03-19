@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,10 +35,9 @@ public class UserController {
 
 	@GetMapping("/{userId}")
 	public ResponseEntity<CommonResponse<UserGetResponseDto>> getUser(
-		@PathVariable UUID userId,
-		@AuthenticationPrincipal RequestUserDetails userDetails) {
+		@PathVariable UUID userId) {
 
-		CommonResponse<UserGetResponseDto> response = userService.getUser(userId, userDetails);
+		CommonResponse<UserGetResponseDto> response = userService.getUser(userId);
 
 		return ResponseEntity.status(SuccessCode.USER_FOUND.getStatusCode()).body(response);
 	}
@@ -45,10 +45,9 @@ public class UserController {
 	@GetMapping
 	public ResponseEntity<CommonResponse<Page<UserGetResponseDto>>> getUsers(
 		@RequestParam(required = false) String keyword,
-		Pageable pageable,
-		@AuthenticationPrincipal RequestUserDetails userDetails) {
+		Pageable pageable) {
 
-		CommonResponse<Page<UserGetResponseDto>> response = userService.getUsers(keyword, pageable, userDetails);
+		CommonResponse<Page<UserGetResponseDto>> response = userService.getUsers(keyword, pageable);
 
 		return ResponseEntity.status(SuccessCode.USER_LIST_FOUND.getStatusCode()).body(response);
 	}
@@ -56,11 +55,19 @@ public class UserController {
 	@PatchMapping("/{userId}")
 	public ResponseEntity<CommonResponse<UserUpdateResponseDto>> updateUser(
 		@PathVariable UUID userId,
-		@Valid @RequestBody UserUpdateRequestDto requestDto,
-		@AuthenticationPrincipal RequestUserDetails userDetails) {
+		@Valid @RequestBody UserUpdateRequestDto requestDto) {
 
-		CommonResponse<UserUpdateResponseDto> response = userService.updateUser(userId, requestDto, userDetails);
+		CommonResponse<UserUpdateResponseDto> response = userService.updateUser(userId, requestDto);
 
 		return ResponseEntity.status(SuccessCode.USER_UPDATED.getStatusCode()).body(response);
 	}
+
+	@DeleteMapping("/{userId}")
+	public ResponseEntity<CommonResponse<Void>> deleteUser(
+		@PathVariable UUID userId
+	) {
+		CommonResponse<Void> response = userService.deleteUser(userId);
+		return ResponseEntity.status(SuccessCode.USER_DELETED.getStatusCode()).body(response);
+	}
+
 }
