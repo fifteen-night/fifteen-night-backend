@@ -204,6 +204,27 @@ public class HubToHubService {
 
 		return targetHubToHub;
 	}
+	@Transactional
+	public void updateAllRoutes() {
 
+		hubToHubRepository.findAllByIsDeletedIsFalse().forEach(hubToHub -> {
+
+			log.info("전: {}" , hubToHub.getHthQuantity());
+
+			try {
+				updateHubToHub(
+					hubToHub.getHthId(),
+					new UpdateHubToHubRequestDto(
+						hubToHub.getDepartureHubAddress(),
+						hubToHub.getArrivalHubAddress()
+					)
+				);
+			}catch (Exception e) {
+				log.error("HubToHub 경로 업데이트 실패: {}", hubToHub.getHthId(), e);
+			}
+
+			log.info("후: {}" , hubToHub.getHthQuantity());
+		});
+	}
 
 }
