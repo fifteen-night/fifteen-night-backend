@@ -15,6 +15,7 @@ import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.eureka.client.deliveryservice.application.dto.request.CreateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.CreateHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.response.DeleteHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.GetAllHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.GetHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.domain.HubToHub;
@@ -99,6 +100,8 @@ public class HubToHubService {
 
 	public GetHubToHubResponseDto searchOneHubToHub(UUID hubToHubId) {
 
+		log.info("Search hub to hub with id {}", hubToHubId);
+
 		HubToHub targetHubToHub = findHubToHub(hubToHubId);
 
 		return GetHubToHubResponseDto.fromHubToHub(targetHubToHub);
@@ -115,6 +118,14 @@ public class HubToHubService {
 		Page<GetAllHubToHubResponseDto> getAllHubToHubResponseDtos = hubToHubs.map(GetAllHubToHubResponseDto::fromHubToHub);
 
 		return new CommonPageResponse<>(getAllHubToHubResponseDtos);
+	}
+
+	@Transactional
+	public void softDelete(UUID hubToHubId) {
+
+		HubToHub targetHubToHub = findHubToHub(hubToHubId);
+
+		targetHubToHub.markAsDeleted();
 	}
 
 	private void logHubDetails(HubToHub hub) {

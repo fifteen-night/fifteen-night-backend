@@ -76,6 +76,26 @@ spring:
           filters:
             - RewritePath=/slack-service/(?<segment>.*), /$\{segment}
 
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOriginPatterns:
+              - "http://localhost:19091"  # 게이트웨이 포트
+              - "http://localhost:19092"  # user-service 포트
+              - "http://localhost:19093"  # hub-service 포트
+              - "http://localhost:19094"  # company-service 포트
+              - "http://localhost:19095"  # product-service 포트
+              - "http://localhost:19097"  # delivery-service 포트
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
       discovery:
         locator:
           enabled: true

@@ -8,7 +8,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliveryservice.application.HubToHubService;
 import com.fn.eureka.client.deliveryservice.application.dto.request.CreateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.CreateHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.response.DeleteHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.GetAllHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.GetHubToHubResponseDto;
 
@@ -28,7 +31,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -59,8 +64,9 @@ public class HubToHubController {
 
 	@GetMapping("/hub-to-hubs/{hubToHubId}")
 	@Operation(summary = "허브관계 단건 조회", description = "허브 조회는 '모두' 가능")
-	public ResponseEntity<CommonResponse<GetHubToHubResponseDto>> getRoute(@NotNull UUID hubToHubId) {
+	public ResponseEntity<CommonResponse<GetHubToHubResponseDto>> getRoute(@PathVariable UUID hubToHubId) {
 
+		log.info("Controller UUID : {}", hubToHubId);
 		GetHubToHubResponseDto getHubToHubResponseDto = hubToHubService.searchOneHubToHub(hubToHubId);
 
 		return ResponseEntity
@@ -82,4 +88,14 @@ public class HubToHubController {
 			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SEARCH_ALL , getAllHubToHubResponseDtoCommonPageResponse));
 	}
 
+	@DeleteMapping("/hub-to-hubs/{hubToHubId}")
+	@Operation(summary = "허브관계 삭제" , description = "허브 삭제는 'MASTER' 만 가능")
+	public ResponseEntity<CommonResponse<DeleteHubToHubResponseDto>> deleteRoute(@PathVariable UUID hubToHubId){
+
+		hubToHubService.softDelete(hubToHubId);
+
+		return ResponseEntity
+			.ok()
+			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SOFT_DELETE , null));
+	}
 }
