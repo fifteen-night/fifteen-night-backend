@@ -43,17 +43,12 @@ public abstract class BaseEntity {
 
 	private UUID deletedBy;
 
-	// @PreUpdate
-	// public void setDeleted() {
-	// 	if (isDeleted) {
-	// 		deletedAt = LocalDateTime.now();
-	// 		// deletedBy = getAuthenticatedUsername();
-	// 	}
-	// }
-
-	public void softDelete(UUID userId){
-		this.deletedAt = LocalDateTime.now();
-		this.deletedBy = userId;
+	@PreUpdate
+	public void setDeleted() {
+		if (isDeleted) {
+			deletedAt = LocalDateTime.now();
+			// deletedBy = getAuthenticatedUsername();
+		}
 	}
 
 	public void markAsDeleted() {

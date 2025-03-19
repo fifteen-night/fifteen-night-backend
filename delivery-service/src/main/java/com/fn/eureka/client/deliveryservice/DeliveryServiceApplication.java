@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.fn.common" , "com.fn.eureka.client.deliveryservice"})
 @EnableDiscoveryClient
-@EnableJpaAuditing
+// @EnableJpaAuditing
 public class DeliveryServiceApplication {
 
 	public static void main(String[] args) {
