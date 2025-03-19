@@ -5,9 +5,13 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.Getter;
+
 public class RequestUserDetails implements UserDetails {
 
+	@Getter
 	private final String userId;
+	@Getter
 	private final String userName;
 	private final Collection<? extends GrantedAuthority> authorities;
 
@@ -15,14 +19,6 @@ public class RequestUserDetails implements UserDetails {
 		this.userId = userId;
 		this.userName = userName;
 		this.authorities = authorities;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public String getUserName() {
-		return userName;
 	}
 
 	@Override
@@ -37,7 +33,7 @@ public class RequestUserDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return userName;
+		return userId;
 	}
 
 	@Override

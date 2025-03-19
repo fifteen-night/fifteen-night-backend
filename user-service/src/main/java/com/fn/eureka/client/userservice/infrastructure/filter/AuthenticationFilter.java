@@ -63,8 +63,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		log.info("인증 성공 - SecurityContext에 저장됨");
+		log.info("SecurityContext 저장된 값: {}", SecurityContextHolder.getContext().getAuthentication());
+		log.info("User UUID: {}", userDetails.getUsername()); // userId가 username에 저장되어 있다면 확인 가능
 
 		filterChain.doFilter(request, response);
 	}
-
 }
