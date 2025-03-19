@@ -3,6 +3,9 @@ package com.fn.eureka.client.deliveryservice.presentation;
 import java.net.URI;
 import java.util.UUID;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliveryservice.application.HubToHubService;
 import com.fn.eureka.client.deliveryservice.application.dto.request.CreateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.CreateHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.response.GetAllHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.GetHubToHubResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,6 +66,20 @@ public class HubToHubController {
 		return ResponseEntity
 			.ok()
 			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SEARCH_ONE, getHubToHubResponseDto));
+	}
+
+	@GetMapping("/hub-to-hubs")
+	@Operation(summary = "허브관계 모든 조회" , description = "허브 조회는 '모두' 가능")
+	public ResponseEntity<CommonResponse<CommonPageResponse<GetAllHubToHubResponseDto>>> getAllRoute(
+		@PageableDefault(size = 10, sort = "createdAt" , direction = Sort.Direction.ASC) Pageable pageable
+	){
+
+		CommonPageResponse<GetAllHubToHubResponseDto> getAllHubToHubResponseDtoCommonPageResponse
+			= hubToHubService.searchAllHubToHub(pageable);
+
+		return ResponseEntity
+			.ok()
+			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SEARCH_ALL , getAllHubToHubResponseDtoCommonPageResponse));
 	}
 
 }

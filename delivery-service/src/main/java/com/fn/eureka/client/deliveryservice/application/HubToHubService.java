@@ -6,12 +6,16 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.eureka.client.deliveryservice.application.dto.request.CreateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.CreateHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.response.GetAllHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.GetHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.domain.HubToHub;
 import com.fn.eureka.client.deliveryservice.exception.HubToHubException;
@@ -98,6 +102,19 @@ public class HubToHubService {
 		HubToHub targetHubToHub = findHubToHub(hubToHubId);
 
 		return GetHubToHubResponseDto.fromHubToHub(targetHubToHub);
+	}
+
+	public CommonPageResponse<GetAllHubToHubResponseDto> searchAllHubToHub(Pageable pageable) {
+
+		Page<HubToHub> hubToHubs = hubToHubRepository.findAllByIsDeletedIsFalse(pageable);
+
+		if (hubToHubs.isEmpty()){
+			throw new CustomApiException(HubToHubException.NOT_FOUND_HUBTOHUB);
+		}
+
+		Page<GetAllHubToHubResponseDto> getAllHubToHubResponseDtos = hubToHubs.map(GetAllHubToHubResponseDto::fromHubToHub);
+
+		return new CommonPageResponse<>(getAllHubToHubResponseDtos);
 	}
 
 	private void logHubDetails(HubToHub hub) {
