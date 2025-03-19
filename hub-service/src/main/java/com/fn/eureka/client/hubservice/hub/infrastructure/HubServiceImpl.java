@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.fn.common.global.exception.NotFoundException;
 import com.fn.eureka.client.hubservice.hub.application.GeoService;
 import com.fn.eureka.client.hubservice.hub.application.HubService;
 import com.fn.eureka.client.hubservice.hub.application.dto.mapper.HubMapper;
@@ -48,5 +49,11 @@ public class HubServiceImpl implements HubService {
 		Page<Hub> page = hubRepository.searchHubs(pageable, hubName);
 
 		return HubMapper.toDto(page);
+	}
+
+	@Override
+	public Hub findHubById(UUID id) {
+
+		return hubRepository.findById(id).orElseThrow(() -> new NotFoundException("없는 허브입니다."));
 	}
 }
