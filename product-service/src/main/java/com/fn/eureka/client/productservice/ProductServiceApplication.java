@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
+// @SpringBootApplication(scanBasePackages = {"com.fn.common" , "com.fn.eureka.client.userservice"})
 @SpringBootApplication
-	// (scanBasePackages = {"com.fn.common"})
 // @EnableDiscoveryClient
 @EnableFeignClients
 	// (basePackages = {"com.fn.eureka.client.productservice.infrastructure"})

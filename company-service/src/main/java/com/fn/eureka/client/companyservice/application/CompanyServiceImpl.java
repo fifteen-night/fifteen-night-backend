@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice.presentation;
+package com.fn.eureka.client.companyservice.application;
 
 import java.util.UUID;
 
@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.companyservice.application.dto.CompanyRequestDto;
-import com.fn.eureka.client.companyservice.application.dto.CompanyResponseDto;
+import com.fn.eureka.client.companyservice.presentation.dto.CompanyRequestDto;
+import com.fn.eureka.client.companyservice.presentation.dto.CompanyResponseDto;
 import com.fn.eureka.client.companyservice.domain.entity.Company;
 import com.fn.eureka.client.companyservice.domain.repository.CompanyQueryRepository;
 import com.fn.eureka.client.companyservice.domain.repository.CompanyRepository;
@@ -72,17 +72,16 @@ public class CompanyServiceImpl implements CompanyService {
 		Company company = companyRepository.findById(companyId)
 			.orElseThrow(() -> new NotFoundException("해당 업체를 찾을 수 없습니다"));
 		company.modifyCompanyInfo(requestDto);
-		companyRepository.save(company);
 		return new CompanyResponseDto(company);
 	}
 
 	// 업체 삭제 soft-delete
 	@Override
+	@Transactional
 	public void removeCompany(UUID companyId) {
 		Company company = companyRepository.findById(companyId)
 			.orElseThrow(() -> new NotFoundException("해당 업체를 찾을 수 없습니다"));
 		company.markAsDeleted();
-		companyRepository.save(company);
 	}
 
 }

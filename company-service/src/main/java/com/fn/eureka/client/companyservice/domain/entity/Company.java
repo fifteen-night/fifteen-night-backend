@@ -3,7 +3,7 @@ package com.fn.eureka.client.companyservice.domain.entity;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
-import com.fn.eureka.client.companyservice.application.dto.CompanyRequestDto;
+import com.fn.eureka.client.companyservice.presentation.dto.CompanyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

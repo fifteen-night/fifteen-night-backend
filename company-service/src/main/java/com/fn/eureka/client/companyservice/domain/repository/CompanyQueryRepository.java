@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.companyservice.application.dto.CompanyResponseDto;
+import com.fn.eureka.client.companyservice.presentation.dto.CompanyResponseDto;
 import com.fn.eureka.client.companyservice.domain.entity.Company;
 import com.fn.eureka.client.companyservice.domain.entity.QCompany;
 import com.querydsl.core.BooleanBuilder;

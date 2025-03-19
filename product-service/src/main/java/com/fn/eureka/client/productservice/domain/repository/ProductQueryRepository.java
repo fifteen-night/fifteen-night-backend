@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
+import com.fn.eureka.client.productservice.presentation.dto.ProductResponseDto;
 import com.fn.eureka.client.productservice.domain.Product;
 import com.fn.eureka.client.productservice.domain.QProduct;
 import com.querydsl.core.BooleanBuilder;

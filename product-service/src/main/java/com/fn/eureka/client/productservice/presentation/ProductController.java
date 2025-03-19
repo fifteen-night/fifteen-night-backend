@@ -1,4 +1,4 @@
-package com.fn.eureka.client.productservice.application;
+package com.fn.eureka.client.productservice.presentation;
 
 import java.util.Map;
 import java.util.UUID;
@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.productservice.application.dto.ProductRequestDto;
-import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
-import com.fn.eureka.client.productservice.presentation.ProductService;
+import com.fn.eureka.client.productservice.application.ProductService;
+import com.fn.eureka.client.productservice.presentation.dto.ProductRequestDto;
+import com.fn.eureka.client.productservice.presentation.dto.ProductResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,7 @@ public class ProductController {
 
 	// 상품 조회
 	@GetMapping("/{productId}")
-	public ResponseEntity<ProductResponseDto> getProduct(@PathVariable UUID productId) {
+	public ResponseEntity<ProductResponseDto> getProduct(@PathVariable("productId") UUID productId) {
 		ProductResponseDto response = productService.findProduct(productId);
 		return ResponseEntity.ok(response);
 	}
@@ -69,11 +70,19 @@ public class ProductController {
 	// 상품 수정
 	@PatchMapping("/{productId}")
 	public ResponseEntity<ProductResponseDto> updateProduct(
-		@PathVariable UUID productId,
+		@PathVariable("productId") UUID productId,
 		@RequestBody Map<String, Object> updates,
 		@RequestHeader("X-User-Role") String userRole) {
 		ProductResponseDto response = productService.modifyProduct(productId, updates, userRole);
 		return ResponseEntity.ok(response);
+	}
+
+	@DeleteMapping("/{productId}")
+	public ResponseEntity<Void> deleteProduct(@PathVariable("productId") UUID productId) {
+		log.info("Delete product {}", productId);
+		productService.removeProduct(productId);
+		log.info("Product deleted Successfully");
+		return ResponseEntity.noContent().build();
 	}
 
 }
