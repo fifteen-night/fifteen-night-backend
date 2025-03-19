@@ -1,5 +1,6 @@
 package com.fn.eureka.client.deliveryservice.application;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,4 +17,6 @@ public interface HubToHubRepository extends JpaRepository<HubToHub, UUID> {
 	boolean existsByDepartureHubAddressAndArrivalHubAddressAndIsDeletedIsFalse(String departureHubAddress, String arrivalHubAddress);
 
 	Page<HubToHub> findAllByIsDeletedIsFalse(Pageable pageable);
+
+	List<HubToHub> findAllByIsDeletedIsFalse();
 }

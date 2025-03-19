@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,14 +23,15 @@ import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliveryservice.application.HubToHubService;
 import com.fn.eureka.client.deliveryservice.application.dto.request.CreateHubToHubRequestDto;
+import com.fn.eureka.client.deliveryservice.application.dto.request.UpdateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.CreateHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.DeleteHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.GetAllHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.response.GetHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.response.UpdateHubToHubResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,10 +94,25 @@ public class HubToHubController {
 	@Operation(summary = "허브관계 삭제" , description = "허브 삭제는 'MASTER' 만 가능")
 	public ResponseEntity<CommonResponse<DeleteHubToHubResponseDto>> deleteRoute(@PathVariable UUID hubToHubId){
 
-		hubToHubService.softDelete(hubToHubId);
+		hubToHubService.softDeleteHubToHub(hubToHubId);
 
 		return ResponseEntity
 			.ok()
 			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SOFT_DELETE , null));
+	}
+
+	@PatchMapping("/hub-to-hubs/{hubToHubId}")
+	@Operation(summary = "허브관계 수정" , description = "허브 수정은 'MASTER' 만 가능")
+	public ResponseEntity<CommonResponse<UpdateHubToHubResponseDto>> updateRoute(
+		@PathVariable UUID hubToHubId,
+		@RequestBody @Validated UpdateHubToHubRequestDto updateHubToHubRequestDto
+	){
+
+		UpdateHubToHubResponseDto updateHubToHubResponseDto
+			= hubToHubService.updateHubToHub(hubToHubId , updateHubToHubRequestDto);
+
+		return ResponseEntity
+			.ok()
+			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_UPDATE , updateHubToHubResponseDto));
 	}
 }
