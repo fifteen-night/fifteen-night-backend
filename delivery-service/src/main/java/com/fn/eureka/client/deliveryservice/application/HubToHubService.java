@@ -41,7 +41,7 @@ public class HubToHubService {
 	@Value("${NAVER_MAP_API_KEY}")
 	private String apiKey;
 
-	// @Transactional
+	@Transactional
 	public CreateHubToHubResponseDto createRoute(CreateHubToHubRequestDto createHubToHubRequestDto) throws Throwable {
 		HubToHub hub = CreateHubToHubRequestDto.toHubToHub(createHubToHubRequestDto);
 
