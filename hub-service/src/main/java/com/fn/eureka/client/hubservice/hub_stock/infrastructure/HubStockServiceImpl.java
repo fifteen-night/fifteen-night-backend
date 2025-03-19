@@ -1,8 +1,11 @@
 package com.fn.eureka.client.hubservice.hub_stock.infrastructure;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +16,7 @@ import com.fn.eureka.client.hubservice.hub_stock.application.HubStockService;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.mapper.HubStockMapper;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.request.CreateHubStockRequest;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.CreateHubStockResponse;
+import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.ReadHubStockResponse;
 import com.fn.eureka.client.hubservice.hub_stock.domain.HubStock;
 import com.fn.eureka.client.hubservice.hub_stock.domain.repository.HubStockRepository;
 
@@ -30,7 +34,8 @@ public class HubStockServiceImpl implements HubStockService {
 	public CreateHubStockResponse createHubStock(UUID hubId, CreateHubStockRequest request) {
 		Hub hub = hubService.findHubById(hubId);
 
-		Optional<HubStock> optionalHubStock = hubStockRepository.findByHsHubHubIdAndHsProductId(hubId,
+		Optional<HubStock> optionalHubStock = hubStockRepository.findByHsHubHubIdAndHsProductIdAndIsDeletedIsFalse(
+			hubId,
 			request.getProductId());
 
 		HubStock hubStock;
@@ -48,7 +53,24 @@ public class HubStockServiceImpl implements HubStockService {
 	}
 
 	@Override
+	public ReadHubStockResponse readHubStock(UUID hubId, UUID stockId) {
+		HubStock hubStock = hubStockRepository.findByHsHubHubIdAndHsIdAndIsDeletedIsFalse(hubId, stockId)
+			.orElseThrow(() -> new NotFoundException("없는 재고입니다."));
+
+		return HubStockMapper.toDto(hubStock, stockId);
+	}
+
+	@Override
+	public Page<ReadHubStockResponse> searchHubStock(UUID hubId, Pageable pageable, UUID productId, int quantity,
+		LocalDateTime startDateTime, LocalDateTime endDateTime) {
+
+		return hubStockRepository.searchHubStock(hubId, pageable, productId, quantity, startDateTime, endDateTime);
+	}
+
+	@Override
 	public HubStock findHubStockById(UUID id) {
-		return hubStockRepository.findById(id).orElseThrow(() -> new NotFoundException("없는 재고입니다."));
+
+		return hubStockRepository.findByHsIdAndIsDeletedIsFalse(id)
+			.orElseThrow(() -> new NotFoundException("없는 재고입니다."));
 	}
 }
