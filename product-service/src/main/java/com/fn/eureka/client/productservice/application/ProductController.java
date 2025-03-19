@@ -1,7 +1,10 @@
 package com.fn.eureka.client.productservice.application;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.dto.ProductRequestDto;
 import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 import com.fn.eureka.client.productservice.presentation.ProductService;
@@ -44,6 +49,22 @@ public class ProductController {
 	public ResponseEntity<ProductResponseDto> getProduct(@PathVariable UUID productId) {
 		ProductResponseDto response = productService.findProduct(productId);
 		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping
+	public ResponseEntity<Page<ProductResponseDto>> getProducts(
+		@RequestParam(defaultValue = "whole", required = false) String type,
+		@RequestParam(required = false) UUID id,
+		@RequestParam(required = false) String keyword,
+		@RequestParam(defaultValue = "0", required = false) int page,
+		@RequestParam(defaultValue = "10", required = false) int size,
+		@RequestParam(defaultValue = "DESC", required = false) Sort.Direction sortDirection,
+		@RequestParam(defaultValue = "UPDATED_AT", required = false) PageUtils.CommonSortBy sortBy
+	) {
+		log.info("type : {}", type);
+		log.info("id : {}", id);
+		Page<ProductResponseDto> products = productService.findAllProductsByType(type, id, keyword, page, size, sortDirection, sortBy);
+		return ResponseEntity.ok(products);
 	}
 
 }
