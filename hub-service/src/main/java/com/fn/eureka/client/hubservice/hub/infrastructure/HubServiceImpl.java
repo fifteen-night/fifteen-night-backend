@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.exception.NotFoundException;
 import com.fn.eureka.client.hubservice.hub.application.GeoService;
 import com.fn.eureka.client.hubservice.hub.application.HubService;
 import com.fn.eureka.client.hubservice.hub.application.dto.mapper.HubMapper;
@@ -15,7 +16,6 @@ import com.fn.eureka.client.hubservice.hub.application.dto.request.UpdateHubRequ
 import com.fn.eureka.client.hubservice.hub.application.dto.response.CreateHubResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.Point;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
-import com.fn.eureka.client.hubservice.hub.application.dto.response.SearchHubResponse;
 import com.fn.eureka.client.hubservice.hub.domain.Hub;
 import com.fn.eureka.client.hubservice.hub.domain.repository.HubRepository;
 
@@ -41,25 +41,23 @@ public class HubServiceImpl implements HubService {
 	@Transactional(readOnly = true)
 	public ReadHubResponse readHub(UUID hubId) {
 
-		Hub hub = hubRepository.findById(hubId).orElseThrow(() -> new RuntimeException("없는 허브입니다."));
+		Hub hub = hubRepository.findById(hubId).orElseThrow(() -> new NotFoundException("없는 허브입니다."));
 
 		return HubMapper.toDto(hub, hubId);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public SearchHubResponse searchHub(Pageable pageable, String hubName) {
+	public Page<ReadHubResponse> searchHub(Pageable pageable, String hubName) {
 
-		Page<Hub> page = hubRepository.searchHubs(pageable, hubName);
-
-		return HubMapper.toDto(page);
+		return hubRepository.searchHubs(pageable, hubName);
 	}
 
 	@Override
 	@Transactional
 	public void updateHub(UUID hubId, UpdateHubRequest request) {
 
-		Hub hub = hubRepository.findById(hubId).orElseThrow(() -> new RuntimeException("없는 허브입니다."));
+		Hub hub = hubRepository.findById(hubId).orElseThrow(() -> new NotFoundException("없는 허브입니다."));
 
 		if (request.getHubName() != null) {
 			hub.updateHubName(request.getHubName());
@@ -77,7 +75,7 @@ public class HubServiceImpl implements HubService {
 	@Override
 	@Transactional
 	public void deleteHub(UUID hubId) {
-		Hub hub = hubRepository.findById(hubId).orElseThrow(() -> new RuntimeException("없는 허브입니다."));
+		Hub hub = hubRepository.findById(hubId).orElseThrow(() -> new NotFoundException("없는 허브입니다."));
 
 		hub.markAsDeleted();
 	}
