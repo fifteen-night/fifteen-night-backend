@@ -1,4 +1,4 @@
-package com.fn.eureka.client.productservice.presentation;
+package com.fn.eureka.client.productservice.application;
 
 import java.util.Map;
 import java.util.UUID;
@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.productservice.application.dto.ProductRequestDto;
-import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
+import com.fn.eureka.client.productservice.presentation.dto.ProductRequestDto;
+import com.fn.eureka.client.productservice.presentation.dto.ProductResponseDto;
 
 public interface ProductService {
 	ProductResponseDto addProduct(ProductRequestDto requestDto, String userRole, UUID userId);
@@ -18,4 +18,6 @@ public interface ProductService {
 	Page<ProductResponseDto> findAllProductsByType(String type, UUID id, String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy);
 
 	ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole);
+
+	void removeProduct(UUID productId);
 }
