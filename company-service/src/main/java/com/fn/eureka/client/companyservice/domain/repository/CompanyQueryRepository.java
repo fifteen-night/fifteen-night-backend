@@ -57,7 +57,6 @@ public class CompanyQueryRepository {
 		// 정렬 조건
 		OrderSpecifier<?> orderSpecifier = PageUtils.getCommonOrderSpecifier(company, sortDirection, sortBy);
 
-		// QueryDSL 조회
 		JPAQuery<Company> query = queryFactory
 			.selectFrom(company)
 			.where(builder)
@@ -68,7 +67,6 @@ public class CompanyQueryRepository {
 		List<Company> result = query.fetch();
 		long total = query.fetchCount();
 
-		// 엔티티 → DTO 변환
 		List<CompanyResponseDto> dtoList = result.stream()
 			.map(CompanyResponseDto::new)
 			.collect(Collectors.toList());

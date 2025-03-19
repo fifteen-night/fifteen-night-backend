@@ -25,20 +25,20 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER}
-  instance:
-    prefer-ip-address: true
-    instance-id: product-service:${PRODUCT_SERVER_PORT}
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
-  discovery:
-    enabled: true
+#  instance:
+#    prefer-ip-address: true
+#    instance-id: product-service:${PRODUCT_SERVER_PORT}
+#feign:
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 5000
+#        readTimeout: 5000
+#  discovery:
+#    enabled: true
 
-logging:
-  level:
-    root: INFO
-    org.springframework.cloud.openfeign: DEBUG
-    com.fn.eureka.client.product.infrastructure.CompanyServiceClient: DEBUG
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.cloud.openfeign: DEBUG
+#    com.fn.eureka.client.product.infrastructure.CompanyServiceClient: DEBUG
