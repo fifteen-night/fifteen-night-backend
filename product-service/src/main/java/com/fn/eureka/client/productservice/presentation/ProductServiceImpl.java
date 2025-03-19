@@ -1,11 +1,12 @@
 package com.fn.eureka.client.productservice.presentation;
 
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.exception.UnauthorizedException;
@@ -19,7 +20,9 @@ import com.fn.eureka.client.productservice.domain.repository.ProductRepository;
 import com.fn.eureka.client.productservice.infrastructure.CompanyServiceClient;
 import com.fn.eureka.client.productservice.infrastructure.HubServiceClient;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
 	// 상품 생성
 	@Override
+	@Transactional
 	public ProductResponseDto addProduct(ProductRequestDto productRequestDto, String userRole, UUID userId) {
 		// 업체 조회
 		CompanyInfoDto companyInfo= companyServiceClient.getCompany(productRequestDto.getProductCompanyId());
@@ -80,6 +84,17 @@ public class ProductServiceImpl implements ProductService {
 		// 	companies = companyServiceClient.getCompanyIdByCompanyHubId(id);
 		// }
 		return productQueryRepository.findProductsByType(type, id, keyword, PageUtils.pageable(page, size), sortDirection, sortBy);
+	}
+
+	// 상품 수정
+	@Override
+	@Transactional
+	public ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole) {
+		// TODO Security - 마스터, 허브관리자, 업체관리자만 상품 수정 가능
+		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
+			.orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+		updates.forEach((key, value) -> product.modifyProductInfo(key, value, userRole));
+		return new ProductResponseDto(product);
 	}
 
 }

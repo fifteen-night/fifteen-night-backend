@@ -8,7 +8,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.fn.common.global.audit.SecurityContextHelper;
 import com.fn.eureka.client.userservice.infrastructure.filter.AuthenticationFilter;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +23,7 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 		http
 			.csrf(csrf -> csrf.disable())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -28,9 +31,13 @@ public class SecurityConfig {
 				.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 				.anyRequest().authenticated()
 			)
-			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore((request, response, chain) -> {
+				SecurityContextHelper.storeAuthentication();
+				chain.doFilter(request, response);
+				SecurityContextHelper.clear();
+			}, AuthenticationFilter.class);
 
 		return http.build();
 	}
-
 }

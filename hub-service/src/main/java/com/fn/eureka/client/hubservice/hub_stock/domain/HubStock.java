@@ -17,11 +17,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @Comment("허브 재고")
 @Entity
 @Getter
@@ -36,7 +35,7 @@ public class HubStock {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hs_hub_id", nullable = false)
-	private Hub hsHubId;
+	private Hub hsHub;
 
 	@Column(nullable = false)
 	@Comment("상품 ID")
@@ -44,4 +43,15 @@ public class HubStock {
 
 	@Comment("허브 재고 수량")
 	private int hsQuantity;
+
+	@Builder
+	public HubStock(Hub hsHub, UUID hsProductId, int hsQuantity) {
+		this.hsHub = hsHub;
+		this.hsProductId = hsProductId;
+		this.hsQuantity = hsQuantity;
+	}
+
+	public void updateQuantity(int quantity) {
+		this.hsQuantity += quantity;
+	}
 }
