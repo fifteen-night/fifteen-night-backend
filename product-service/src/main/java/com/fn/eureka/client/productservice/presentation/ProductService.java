@@ -1,5 +1,6 @@
 package com.fn.eureka.client.productservice.presentation;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -15,4 +16,6 @@ public interface ProductService {
 	ProductResponseDto findProduct(UUID productId);
 
 	Page<ProductResponseDto> findAllProductsByType(String type, UUID id, String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy);
+
+	ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole);
 }

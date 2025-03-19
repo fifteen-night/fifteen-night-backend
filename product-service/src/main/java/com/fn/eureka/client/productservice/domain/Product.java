@@ -3,6 +3,7 @@ package com.fn.eureka.client.productservice.domain;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
+import com.fn.common.global.exception.UnauthorizedException;
 import com.fn.eureka.client.productservice.application.dto.ProductRequestDto;
 
 import jakarta.persistence.Column;
@@ -38,5 +39,19 @@ public class Product extends BaseEntity {
 		this.productName = productRequestDto.getProductName();
 		this.productCompanyId = productRequestDto.getProductCompanyId();
 		this.productQuantity = productRequestDto.getProductQuantity();
+	}
+
+	public void modifyProductInfo(String key, Object value, String userRole) {
+		switch (key) {
+			case "productName" -> this.productName = (String) value;
+			case "productQuantity" -> this.productQuantity = (Integer) value;
+			case "productCompanyId" -> {
+				if (!"HUB_MANAGER".equalsIgnoreCase(userRole) && !"MASTER".equalsIgnoreCase(userRole)) {
+					throw new UnauthorizedException("상품의 업체를 변경할 권한이 없습니다.");
+				}
+				this.productCompanyId = UUID.fromString((String) value);
+			}
+			default -> throw new IllegalStateException("잘못된 필드명 : " + key);
+		}
 	}
 }
