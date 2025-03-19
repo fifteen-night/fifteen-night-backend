@@ -41,50 +41,61 @@ public class HubToHubService {
 	@Value("${NAVER_MAP_API_KEY}")
 	private String apiKey;
 
-	@Transactional
-	public CreateHubToHubResponseDto createRoute(CreateHubToHubRequestDto createHubToHubRequestDto) {
-		try {
-			// TODO : findBY 사용해서 Exception 날리기 , 유저 검증
+	// @Transactional
+	public CreateHubToHubResponseDto createRoute(CreateHubToHubRequestDto createHubToHubRequestDto) throws Throwable {
+		HubToHub hub = CreateHubToHubRequestDto.toHubToHub(createHubToHubRequestDto);
 
-			HubToHub hub = CreateHubToHubRequestDto.toHubToHub(createHubToHubRequestDto);
+		logHubDetails(hub);
 
-			logHubDetails(hub);
-
-			String[] departureCoords = extractCoordinates(hub.getDepartureHubAddress());
-			String[] arrivalCoords = extractCoordinates(hub.getArrivalHubAddress());
-
-			if (departureCoords == null || arrivalCoords == null) {
-				throw new CustomApiException(HubToHubException.NOT_FOUND_COORDS);
-			}
-
-			NaverMapDirResponseDto naverMapDirResponseDto = requestDirection(departureCoords, arrivalCoords);
-
-			HubToHub saveHubToHub = HubToHub.builder()
-				.departureHubAddress(hub.getDepartureHubAddress())
-				.arrivalHubAddress(hub.getArrivalHubAddress())
-				.hthQuantity(
-					convertTime(naverMapDirResponseDto.getRoute().getTraoptimal().get(0).getSummary().getDuration()))
-				.hthDistance(
-					BigDecimal.valueOf(
-						naverMapDirResponseDto.getRoute().getTraoptimal().get(0).getSummary().getDistance()))
-				.build();
-
-			hubToHubRepository.save(saveHubToHub);
-
-			return CreateHubToHubResponseDto.fromHubToHub(saveHubToHub);
-
-		} catch (Exception e) {
-			log.error("Error: {}", e.getMessage());
-			return null;
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
+		if (hubToHubRepository.existsByDepartureHubAddressAndArrivalHubAddressAndIsDeletedIsFalse(
+			hub.getDepartureHubAddress(),
+			hub.getArrivalHubAddress()
+		)) {
+			throw new CustomApiException(HubToHubException.ALREADY_EXISTS_ROUTE);
 		}
+
+		String[] departureCoords = extractCoordinates(hub.getDepartureHubAddress());
+		String[] arrivalCoords = extractCoordinates(hub.getArrivalHubAddress());
+
+		if (departureCoords == null || arrivalCoords == null) {
+			throw new CustomApiException(HubToHubException.NOT_FOUND_COORDS);
+		}
+
+		NaverMapDirResponseDto naverMapDirResponseDto = requestDirection(departureCoords, arrivalCoords);
+
+		HubToHub saveHubToHub = HubToHub.builder()
+			.departureHubAddress(hub.getDepartureHubAddress())
+			.arrivalHubAddress(hub.getArrivalHubAddress())
+			.hthQuantity(
+				convertTime(
+					naverMapDirResponseDto
+						.getRoute()
+						.getTraoptimal()
+						.get(0)
+						.getSummary()
+						.getDuration()
+				)
+			)
+			.hthDistance(
+				BigDecimal.valueOf(
+					naverMapDirResponseDto
+						.getRoute()
+						.getTraoptimal()
+						.get(0)
+						.getSummary()
+						.getDistance()
+				)
+			)
+			.build();
+
+		hubToHubRepository.save(saveHubToHub);
+
+		return CreateHubToHubResponseDto.fromHubToHub(saveHubToHub);
 	}
 
 	public GetHubToHubResponseDto searchOneHubToHub(UUID hubToHubId) {
 
-		HubToHub targetHubToHub = hubToHubRepository.findByHthIdAndDeletedAtIsNull(hubToHubId)
-			.orElseThrow(() -> new CustomApiException(HubToHubException.NOT_FOUND_HUBTOHUB));
+		HubToHub targetHubToHub = findHubToHub(hubToHubId);
 
 		return GetHubToHubResponseDto.fromHubToHub(targetHubToHub);
 	}
@@ -114,8 +125,13 @@ public class HubToHubService {
 			arrivalCoords[0] + "," + arrivalCoords[1]
 		);
 
-		return naverMapService.findDirection(ACCEPT_HEADER, apiKeyId, apiKey,
-				requestDto.getGoal(), requestDto.getStart())
+		return naverMapService.findDirection(
+				ACCEPT_HEADER,
+				apiKeyId,
+				apiKey,
+				requestDto.getGoal(),
+				requestDto.getStart()
+			)
 			.orElseThrow(() -> new CustomApiException(HubToHubException.NOT_FOUND_DIRECTION));
 	}
 
@@ -127,6 +143,14 @@ public class HubToHubService {
 		long seconds = duration.getSeconds() % 60;
 
 		return LocalTime.of((int)hours, (int)minutes, (int)seconds);
+	}
+
+	private HubToHub findHubToHub(UUID hthId) {
+
+		HubToHub targetHubToHub = hubToHubRepository.findByHthIdAndIsDeletedIsFalse(hthId)
+			.orElseThrow(() -> new CustomApiException(HubToHubException.NOT_FOUND_HUBTOHUB));
+
+		return targetHubToHub;
 	}
 
 }

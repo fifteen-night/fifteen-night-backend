@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fn.common.global.dto.CommonErrorResponse;
+import com.fn.common.global.exception.type.ExceptionType;
+
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.TransactionalException;
 
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice
 @Hidden
 public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
 
@@ -70,5 +74,13 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+    // 공통 커스텀 예외를 기준으로 오류를 제어한다.
+    @ExceptionHandler(value = {CustomApiException.class})
+    protected ResponseEntity<Object> handleCustomApiException(CustomApiException e, WebRequest request) {
+
+        HttpHeaders headers = new HttpHeaders();
+        return handleExceptionInternal(e, new CommonErrorResponse(e.getMessage(), e.getExceptionType()),
+            headers, e.getHttpStatus(), request);
+    }
 
 }
