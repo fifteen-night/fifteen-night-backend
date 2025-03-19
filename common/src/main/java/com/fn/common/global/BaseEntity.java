@@ -64,17 +64,34 @@ public abstract class BaseEntity {
 		this.isDeleted = true;
 	}
 
+	private static final UUID SYSTEM_USER_UUID = UUID.fromString("00000000-0000-0000-0000-000000000001");
+	private static final UUID ANONYMOUS_USER_UUID = UUID.fromString("00000000-0000-0000-0000-000000000002");
+
 	private UUID getAuthenticatedUserId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		// 1. 인증되지 않은 사용자일 경우 → SYSTEM UUID 반환
 		if (authentication == null || !authentication.isAuthenticated()) {
-			return null; // 인증되지 않은 경우 null 반환
+			return SYSTEM_USER_UUID;
 		}
 
 		Object principal = authentication.getPrincipal();
-		if (principal instanceof UserDetails userDetails) {
-			return UUID.fromString(userDetails.getUsername()); // userId가 username에 저장됨
+
+		// 2. principal이 UserDetails가 아닐 경우 → ANONYMOUS UUID 반환
+		if (!(principal instanceof UserDetails userDetails)) {
+			return ANONYMOUS_USER_UUID;
 		}
-		return null;
+
+		String userIdStr = userDetails.getUsername();
+
+		try {
+			// 3. UUID 변환 성공 시 정상 반환
+			return UUID.fromString(userIdStr);
+		} catch (IllegalArgumentException e) {
+			// 4. UUID 변환 실패 시 ANONYMOUS UUID 반환
+			return ANONYMOUS_USER_UUID;
+		}
 	}
+
 }
 
