@@ -20,9 +20,7 @@ import com.fn.eureka.client.productservice.domain.repository.ProductRepository;
 import com.fn.eureka.client.productservice.infrastructure.CompanyServiceClient;
 import com.fn.eureka.client.productservice.infrastructure.HubServiceClient;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 @Service
 @RequiredArgsConstructor
