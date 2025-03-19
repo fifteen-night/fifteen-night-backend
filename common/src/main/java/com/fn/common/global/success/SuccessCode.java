@@ -8,14 +8,17 @@ import lombok.Getter;
 public enum SuccessCode {
 
 	// 여기서 공통 성공 응답 생성
-  // HubRoute 관련 성공응답
+	// HubRoute 관련 성공응답
 	HUBTOHUB_CREATE(HttpStatus.CREATED, "루트가 성공적으로 생성되었습니다.", "S_HUBTOHUB_CREATE"),
-	HUBTOHUB_SEARCH_ALL(HttpStatus.OK, "모든 루트가 성공적으로 조회되었습니다.","S_HUBTOHUB_SEARCH_ALL" ),
+	HUBTOHUB_SEARCH_ALL(HttpStatus.OK, "모든 루트가 성공적으로 조회되었습니다.", "S_HUBTOHUB_SEARCH_ALL"),
 	HUBTOHUB_SEARCH_ONE(HttpStatus.OK, "단건 루트가 성공적으로 조회되었습니다.", "S_HUBTOHUB_SEARCH_ONE"),
-  
-  // Hub 관련 성공응답
+
+	// Hub 관련 성공응답
 	HUB_CREATE(HttpStatus.CREATED, "허브가 성공적으로 생성되었습니다.", "S_HUB_CREATE"),
 	HUB_SEARCH(HttpStatus.OK, "허브가 성공적으로 조회되었습니다.", "S_HUB_SEARCH"),
+
+	// HubStock 관련 성공 응답
+	HUB_STOCK_CREATE(HttpStatus.CREATED, "허브 재고가 성공적으로 생성되었습니다.", "S_HUB_STOCK_CREATE"),
 
 	// Auth 관련 성공 응답
 	AUTH_SIGNUP(HttpStatus.CREATED, "회원가입이 성공적으로 완료되었습니다.", "S_AUTH_SIGNUP"),
