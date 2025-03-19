@@ -1,12 +1,13 @@
 package com.fn.eureka.client.productservice.application;
 
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +40,6 @@ public class ProductController {
 		@RequestHeader("X-User-Role") String userRole,
 		@RequestHeader("X-User-Id") UUID userId
 		) {
-		log.info("상품 데이터 : {}" , requestDto);
 		ProductResponseDto response = productService.addProduct(requestDto, userRole, userId);
 		return ResponseEntity.ok(response);
 	}
@@ -51,6 +51,7 @@ public class ProductController {
 		return ResponseEntity.ok(response);
 	}
 
+	// 상품 리스트 조회 (전체, 허브별, 업체별)
 	@GetMapping
 	public ResponseEntity<Page<ProductResponseDto>> getProducts(
 		@RequestParam(defaultValue = "whole", required = false) String type,
@@ -61,10 +62,18 @@ public class ProductController {
 		@RequestParam(defaultValue = "DESC", required = false) Sort.Direction sortDirection,
 		@RequestParam(defaultValue = "UPDATED_AT", required = false) PageUtils.CommonSortBy sortBy
 	) {
-		log.info("type : {}", type);
-		log.info("id : {}", id);
 		Page<ProductResponseDto> products = productService.findAllProductsByType(type, id, keyword, page, size, sortDirection, sortBy);
 		return ResponseEntity.ok(products);
+	}
+
+	// 상품 수정
+	@PatchMapping("/{productId}")
+	public ResponseEntity<ProductResponseDto> updateProduct(
+		@PathVariable UUID productId,
+		@RequestBody Map<String, Object> updates,
+		@RequestHeader("X-User-Role") String userRole) {
+		ProductResponseDto response = productService.modifyProduct(productId, updates, userRole);
+		return ResponseEntity.ok(response);
 	}
 
 }
