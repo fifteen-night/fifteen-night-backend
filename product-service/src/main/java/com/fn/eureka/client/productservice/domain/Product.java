@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
 import com.fn.common.global.exception.UnauthorizedException;
-import com.fn.eureka.client.productservice.application.dto.ProductRequestDto;
+import com.fn.eureka.client.productservice.presentation.dto.ProductRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.fn.eureka.client.productservice.application.dto;
+package com.fn.eureka.client.companyservice.presentation.dto;
 
 import java.util.UUID;
 
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CompanyInfoDto {
-	private UUID companyId;
+public class CompanyRequestDto {
+
 	private String companyName;
 	private String companyAddress;
 	private String companyType;
 
 	private UUID companyHubId;
-	private UUID companyManagerId;
+	private UUID companyManagerId;	// 허브관리자가 지정 또는 유저 본인
 }

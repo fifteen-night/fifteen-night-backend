@@ -1,4 +1,4 @@
-package com.fn.eureka.client.productservice.presentation;
+package com.fn.eureka.client.productservice.application;
 
 import java.util.Map;
 import java.util.UUID;
@@ -11,18 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.exception.UnauthorizedException;
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.productservice.application.dto.CompanyInfoDto;
-import com.fn.eureka.client.productservice.application.dto.ProductRequestDto;
-import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 import com.fn.eureka.client.productservice.domain.Product;
 import com.fn.eureka.client.productservice.domain.repository.ProductQueryRepository;
 import com.fn.eureka.client.productservice.domain.repository.ProductRepository;
 import com.fn.eureka.client.productservice.infrastructure.CompanyServiceClient;
 import com.fn.eureka.client.productservice.infrastructure.HubServiceClient;
+import com.fn.eureka.client.productservice.presentation.dto.CompanyInfoDto;
+import com.fn.eureka.client.productservice.presentation.dto.ProductRequestDto;
+import com.fn.eureka.client.productservice.presentation.dto.ProductResponseDto;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 @Service
 @RequiredArgsConstructor
@@ -90,11 +88,21 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional
 	public ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole) {
+		// TODO 상품의 업체 담당자, <업체의 소속 허브 관리자만 삭제 가능
 		// TODO Security - 마스터, 허브관리자, 업체관리자만 상품 수정 가능
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
 		updates.forEach((key, value) -> product.modifyProductInfo(key, value, userRole));
 		return new ProductResponseDto(product);
+	}
+
+	@Override
+	@Transactional
+	public void removeProduct(UUID productId) {
+		// TODO 상품의 업체 담당자, < 업체의 소속 허브 관리자만 삭제 가능
+		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
+			.orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+		product.markAsDeleted();
 	}
 
 }

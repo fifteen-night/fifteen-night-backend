@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice.application;
+package com.fn.eureka.client.companyservice.presentation;
 
 import java.util.UUID;
 
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.companyservice.application.dto.CompanyRequestDto;
-import com.fn.eureka.client.companyservice.application.dto.CompanyResponseDto;
-import com.fn.eureka.client.companyservice.presentation.CompanyService;
+import com.fn.eureka.client.companyservice.application.CompanyService;
+import com.fn.eureka.client.companyservice.presentation.dto.CompanyRequestDto;
+import com.fn.eureka.client.companyservice.presentation.dto.CompanyResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
