@@ -9,6 +9,7 @@ import com.fn.eureka.client.hubservice.hub.application.dto.request.CreateHubRequ
 import com.fn.eureka.client.hubservice.hub.application.dto.request.UpdateHubRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.CreateHubResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
+import com.fn.eureka.client.hubservice.hub.domain.Hub;
 
 public interface HubService {
 	CreateHubResponse createHub(CreateHubRequest request);
@@ -20,4 +21,6 @@ public interface HubService {
 	void updateHub(UUID hubId, UpdateHubRequest request);
 
 	void deleteHub(UUID hubId);
+
+	Hub findHubById(UUID id);
 }
