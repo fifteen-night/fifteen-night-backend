@@ -1,7 +1,6 @@
 package com.fn.gateway.filter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthenticationFilter implements GlobalFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 	private final JwtUtil jwtUtil;
 
 	@Override
@@ -41,17 +39,11 @@ public class AuthenticationFilter implements GlobalFilter {
 			return exchange.getResponse().setComplete();
 		}
 
-		log.info("추출된 JWT 토큰: {}", token);
-
-
 		// 5) Claims(유저 정보) 추출
 		Claims claims = jwtUtil.parseClaims(token);
 		String userId = claims.get("userId", String.class);
 		String userName = claims.get("userName", String.class);
 		String role = claims.get("role", String.class);
-
-		log.info("Claims 정보 - userId: {}, userName: {}, role: {}", userId, userName, role);
-
 
 		// 6) 내부 서비스로 전달할 사용자 정보 헤더에 추가 (exchange 객체 갱신)
 		exchange = exchange.mutate()
@@ -62,8 +54,6 @@ public class AuthenticationFilter implements GlobalFilter {
 				.build())
 			.build();
 
-		log.info("요청에 추가된 헤더 - X-User-Id: {}, X-User-Name: {}, X-User-Role: {}",
-			userId, userName, role);
 
 		return chain.filter(exchange);
 

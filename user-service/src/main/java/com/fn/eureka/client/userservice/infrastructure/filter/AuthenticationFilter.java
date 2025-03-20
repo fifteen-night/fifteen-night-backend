@@ -3,8 +3,6 @@ package com.fn.eureka.client.userservice.infrastructure.filter;
 import java.io.IOException;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,26 +21,20 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 		throws ServletException, IOException {
 
 		String requestUri = request.getRequestURI();
-		log.info("현재 요청 URI: {}", requestUri);
 
 		// 인증 예외 경로
 		if (requestUri.startsWith("/api/auth/") ||
 			requestUri.startsWith("/swagger-ui/") ||
 			requestUri.startsWith("/v3/api-docs"))
 		{
-			log.info("인증 예외 경로 - 필터 통과: {}", requestUri);
 			filterChain.doFilter(request, response);
 			return;
 		}
-
-		log.info("인증 필터 적용: {}", requestUri);
 
 		// API Gateway에서 전달된 인증 정보 추출
 		String userId = request.getHeader("X-User-Id");
@@ -61,10 +53,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		UsernamePasswordAuthenticationToken authentication =
 			new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		log.info("인증 성공 - SecurityContext에 저장됨");
-		log.info("SecurityContext 저장된 값: {}", SecurityContextHolder.getContext().getAuthentication());
-		log.info("User UUID: {}", userDetails.getUsername()); // userId가 username에 저장되어 있다면 확인 가능
 
 		filterChain.doFilter(request, response);
 	}
