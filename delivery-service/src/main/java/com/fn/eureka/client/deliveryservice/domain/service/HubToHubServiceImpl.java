@@ -49,6 +49,7 @@ public class HubToHubServiceImpl implements HubToHubService {
 	@Value("${NAVER_MAP_API_KEY}")
 	private String apiKey;
 
+	@Override
 	@Transactional
 	public CreateHubToHubResponseDto createRoute(CreateHubToHubRequestDto createHubToHubRequestDto) {
 		HubToHub hub = CreateHubToHubRequestDto.toHubToHub(createHubToHubRequestDto);
@@ -83,6 +84,7 @@ public class HubToHubServiceImpl implements HubToHubService {
 		return CreateHubToHubResponseDto.fromHubToHub(saveHubToHub);
 	}
 
+	@Override
 	public GetHubToHubResponseDto searchOneHubToHub(UUID hubToHubId) {
 
 		log.info("Search hub to hub with id {}", hubToHubId);
@@ -92,6 +94,7 @@ public class HubToHubServiceImpl implements HubToHubService {
 		return GetHubToHubResponseDto.fromHubToHub(targetHubToHub);
 	}
 
+	@Override
 	public CommonPageResponse<GetAllHubToHubResponseDto> searchAllHubToHub(Pageable pageable) {
 
 		Page<HubToHub> hubToHubs = hubToHubRepository.findAllByIsDeletedIsFalse(pageable);
@@ -105,6 +108,7 @@ public class HubToHubServiceImpl implements HubToHubService {
 		return new CommonPageResponse<>(getAllHubToHubResponseDtos);
 	}
 
+	@Override
 	@Transactional
 	public void softDeleteHubToHub(UUID hubToHubId) {
 
@@ -113,6 +117,7 @@ public class HubToHubServiceImpl implements HubToHubService {
 		targetHubToHub.markAsDeleted();
 	}
 
+	@Override
 	@Transactional
 	public UpdateHubToHubResponseDto updateHubToHub(UUID hubToHubId, UpdateHubToHubRequestDto updateHubToHubRequestDto) {
 
