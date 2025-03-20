@@ -22,13 +22,13 @@ import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliveryservice.application.HubToHubService;
-import com.fn.eureka.client.deliveryservice.application.dto.request.CreateHubToHubRequestDto;
-import com.fn.eureka.client.deliveryservice.application.dto.request.UpdateHubToHubRequestDto;
-import com.fn.eureka.client.deliveryservice.application.dto.response.CreateHubToHubResponseDto;
-import com.fn.eureka.client.deliveryservice.application.dto.response.DeleteHubToHubResponseDto;
-import com.fn.eureka.client.deliveryservice.application.dto.response.GetAllHubToHubResponseDto;
-import com.fn.eureka.client.deliveryservice.application.dto.response.GetHubToHubResponseDto;
-import com.fn.eureka.client.deliveryservice.application.dto.response.UpdateHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.route.dto.request.CreateHubToHubRequestDto;
+import com.fn.eureka.client.deliveryservice.application.route.dto.request.UpdateHubToHubRequestDto;
+import com.fn.eureka.client.deliveryservice.application.route.dto.response.CreateHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.route.dto.response.DeleteHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.route.dto.response.GetAllHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.route.dto.response.GetHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.route.dto.response.UpdateHubToHubResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,7 +50,7 @@ public class HubToHubController {
 	@Operation(summary = "허브관계 등록", description = "허브 등록은 'MASTER' 만 가능")
 	public ResponseEntity<CommonResponse<CreateHubToHubResponseDto>> createRoute(
 		@RequestBody @Validated CreateHubToHubRequestDto createHubToHubRequestDto
-	) throws Throwable {
+	) {
 		CreateHubToHubResponseDto createHubToHubResponseDto = hubToHubService.createRoute(createHubToHubRequestDto);
 
 		URI location = ServletUriComponentsBuilder

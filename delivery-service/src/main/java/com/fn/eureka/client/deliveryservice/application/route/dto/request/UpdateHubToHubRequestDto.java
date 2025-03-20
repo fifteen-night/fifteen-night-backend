@@ -1,4 +1,4 @@
-package com.fn.eureka.client.deliveryservice.application.dto.request;
+package com.fn.eureka.client.deliveryservice.application.route.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

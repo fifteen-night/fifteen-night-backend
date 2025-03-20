@@ -1,19 +1,19 @@
-package com.fn.eureka.client.deliveryservice.application.dto.response;
+package com.fn.eureka.client.deliveryservice.application.route.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.UUID;
 
-import com.fn.eureka.client.deliveryservice.domain.HubToHub;
+import com.fn.eureka.client.deliveryservice.domain.route.HubToHub;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@Builder
 @AllArgsConstructor
-public class GetAllHubToHubResponseDto {
+public class GetHubToHubResponseDto {
 
 	private UUID hthId;
 	private String departureHubAddress;
@@ -21,9 +21,9 @@ public class GetAllHubToHubResponseDto {
 	private LocalTime hthQuantity;
 	private BigDecimal hthDistance;
 
-	public static GetAllHubToHubResponseDto fromHubToHub(HubToHub targetHubToHub) {
+	public static GetHubToHubResponseDto fromHubToHub(HubToHub targetHubToHub) {
 
-		return GetAllHubToHubResponseDto.builder()
+		return GetHubToHubResponseDto.builder()
 			.hthId(targetHubToHub.getHthId())
 			.departureHubAddress(targetHubToHub.getDepartureHubAddress())
 			.arrivalHubAddress(targetHubToHub.getArrivalHubAddress())
