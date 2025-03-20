@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public enum SuccessCode {
-	
+
 	// 여기서 공통 성공 응답 생성
     // HubToHub 관련 성공응답
 	HUBTOHUB_CREATE(HttpStatus.CREATED, "루트가 성공적으로 생성되었습니다.", "S_HUBTOHUB_CREATE"),
@@ -26,6 +26,7 @@ public enum SuccessCode {
 
 	// HubStock 관련 성공 응답
 	HUB_STOCK_CREATE(HttpStatus.CREATED, "허브 재고가 성공적으로 생성되었습니다.", "S_HUB_STOCK_CREATE"),
+	HUB_STOCK_SEARCH(HttpStatus.OK, "허브 재고가 성공적으로 조회되었습니다.", "S_HUB_STOCK_SEARCH"),
 
 	// Auth 관련 성공 응답
 	AUTH_SIGNUP(HttpStatus.CREATED, "회원가입이 성공적으로 완료되었습니다.", "S_AUTH_SIGNUP"),

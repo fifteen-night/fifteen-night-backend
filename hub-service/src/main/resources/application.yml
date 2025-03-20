@@ -1,14 +1,14 @@
 server:
-  port: 19093
+  port: ${HUB_SERVER_PORT}
 
 spring:
   application:
     name: hub-service
   datasource:
-    url: jdbc:h2:mem:test
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: ${DB_URL}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   h2:
     console:
       enabled: true
