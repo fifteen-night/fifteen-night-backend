@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliveryservice.application.DeliveryService;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.request.CreateDeliveryRequestDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.CreateDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.DeleteDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.GetAllDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.GetDeliveryResponseDto;
 
@@ -79,6 +81,17 @@ public class DeliveryController {
 
 		return ResponseEntity.ok()
 			.body(new CommonResponse<>(SuccessCode.DELIVERY_SEARCH_ALL , getAllDeliveryResponseDtoCommonPageResponse));
+	}
+
+	@DeleteMapping("/deliveries/{deliveryId}")
+	@Operation(summary = "배송 소프트 삭제" , description = "배송삭제는 'MASTER' , 'HUB_MANAGER' 만 가능")
+	public ResponseEntity<CommonResponse<DeleteDeliveryResponseDto>> deleteDelivery(@PathVariable UUID deliveryId) {
+
+		deliveryService.deleteDelivery(deliveryId);
+
+		return ResponseEntity
+			.ok()
+			.body(new CommonResponse<>(SuccessCode.DELIVERY_DELETE , null));
 	}
 
 }
