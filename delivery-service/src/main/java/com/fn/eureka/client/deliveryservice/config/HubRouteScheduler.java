@@ -17,7 +17,7 @@ public class HubRouteScheduler {
 
 	private final HubToHubService hubToHubService;
 
-	@Scheduled(cron = "*/30 * * * * *")
+	@Scheduled(cron = "0 30 * * * *")
 	public void updateHubRoutes() {
 
 		log.info("주기적인 허브 루트 갱신");
