@@ -3,8 +3,10 @@ package com.fn.eureka.client.slackservice.presentation.controller;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.slackservice.application.dto.request.SlackMessageRequestDto;
+import com.fn.eureka.client.slackservice.application.dto.request.SlackUpdateRequestDto;
 import com.fn.eureka.client.slackservice.application.dto.response.SlackGetResponseDto;
 import com.fn.eureka.client.slackservice.application.dto.response.SlackMessageResponseDto;
+import com.fn.eureka.client.slackservice.application.dto.response.SlackUpdateResponseDto;
 import com.fn.eureka.client.slackservice.application.service.SlackService;
 import lombok.RequiredArgsConstructor;
 
@@ -44,5 +46,15 @@ public class SlackController {
 
 		CommonResponse<Page<SlackGetResponseDto>> response = slackService.getSlackMessages(keyword, pageable);
 		return ResponseEntity.status(SuccessCode.SLACK_MESSAGE_LIST_FOUND.getStatusCode()).body(response);
+	}
+
+	@PatchMapping("/{slackId}")
+	public ResponseEntity<CommonResponse<SlackUpdateResponseDto>> updateSlackMessage(
+		@PathVariable UUID slackId,
+		@RequestBody SlackUpdateRequestDto requestDto) {
+
+		CommonResponse<SlackUpdateResponseDto> response = slackService.updateSlackMessage(slackId, requestDto);
+
+		return ResponseEntity.status(SuccessCode.SLACK_MESSAGE_UPDATED.getStatusCode()).body(response);
 	}
 }
