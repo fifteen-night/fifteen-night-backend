@@ -12,7 +12,7 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-public class CreateDeliveryResponseDto {
+public class GetAllDeliveryResponseDto {
 
 	private UUID deliveryId;
 	private UUID orderId;
@@ -24,19 +24,18 @@ public class CreateDeliveryResponseDto {
 	private UUID receiverSlackId;
 	private UUID cmdId;
 
+	public static GetAllDeliveryResponseDto fromDelivery(Delivery delivery) {
 
-	public static CreateDeliveryResponseDto fromDelivery(Delivery savedDelivery) {
-
-		return CreateDeliveryResponseDto.builder()
-			.deliveryId(savedDelivery.getDeliveryId())
-			.orderId(savedDelivery.getOrderId())
-			.departureHubId(savedDelivery.getDepartureHubId())
-			.destinationHubId(savedDelivery.getDestinationHubId())
-			.status(savedDelivery.getStatus())
-			.address(savedDelivery.getAddress())
-			.receiverName(savedDelivery.getReceiverName())
-			.receiverSlackId(savedDelivery.getReceiverSlackId())
-			.cmdId(savedDelivery.getCdmId())
+		return GetAllDeliveryResponseDto.builder()
+			.deliveryId(delivery.getDeliveryId())
+			.orderId(delivery.getOrderId())
+			.departureHubId(delivery.getDepartureHubId())
+			.destinationHubId(delivery.getDestinationHubId())
+			.status(delivery.getStatus())
+			.address(delivery.getAddress())
+			.receiverName(delivery.getReceiverName())
+			.receiverSlackId(delivery.getReceiverSlackId())
+			.cmdId(delivery.getCdmId())
 			.build();
 	}
 }
