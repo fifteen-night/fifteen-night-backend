@@ -5,11 +5,13 @@ import java.util.UUID;
 
 import com.fn.eureka.client.hubservice.hub.domain.HubType;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class ReadHubResponse {
 	private UUID hubId;
 	private String hubName;

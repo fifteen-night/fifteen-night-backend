@@ -1,7 +1,6 @@
 package com.fn.gateway.filter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthenticationFilter implements GlobalFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 	private final JwtUtil jwtUtil;
 
 	@Override
@@ -55,6 +53,7 @@ public class AuthenticationFilter implements GlobalFilter {
 				.header("X-User-Role", role)
 				.build())
 			.build();
+
 
 		return chain.filter(exchange);
 

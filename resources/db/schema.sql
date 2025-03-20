@@ -16,3 +16,6 @@ CREATE SCHEMA IF NOT EXISTS product;
 -- order 도메인 스키마
 CREATE SCHEMA IF NOT EXISTS "order";
 
+-- slack 도메인 스키마
+CREATE SCHEMA IF NOT EXISTS slack;
+
