@@ -70,6 +70,8 @@ public class SlackService {
 			.receiverId(slackMessage.getSlackReceiverId())
 			.message(slackMessage.getSlackMessage())
 			.sentAt(slackMessage.getCreatedAt())
+			.isDeleted(slackMessage.isDeleted()) // 삭제 여부 포함
+			.deletedAt(slackMessage.getDeletedAt()) // 삭제된 경우 삭제 시점 포함
 			.build();
 
 		return new CommonResponse<>(SuccessCode.SLACK_MESSAGE_FOUND, responseDto);
@@ -88,10 +90,13 @@ public class SlackService {
 			.receiverId(slack.getSlackReceiverId())
 			.message(slack.getSlackMessage())
 			.sentAt(slack.getCreatedAt())
+			.isDeleted(slack.isDeleted()) // 삭제 여부 포함
+			.deletedAt(slack.getDeletedAt()) // 삭제된 경우 삭제 시점 포함
 			.build());
 
 		return new CommonResponse<>(SuccessCode.SLACK_MESSAGE_LIST_FOUND, responseDtoPage);
 	}
+
 
 	@Transactional
 	public CommonResponse<SlackUpdateResponseDto> updateSlackMessage(UUID slackId, SlackUpdateRequestDto requestDto) {
