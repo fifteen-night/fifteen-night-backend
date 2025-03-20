@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.dto.CommonResponse;
+import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.userservice.application.dto.user.request.UserUpdateRequestDto;
 import com.fn.eureka.client.userservice.application.dto.user.response.UserGetResponseDto;
@@ -38,11 +39,11 @@ public class UserService {
 
 		// 조회 대상 유저 정보 가져오기
 		User targetUser = userRepository.findById(userId)
-			.orElseThrow(() -> new RuntimeException(UserException.USER_NOT_FOUND.getMessage()));
+			.orElseThrow(() -> new CustomApiException(UserException.USER_NOT_FOUND));
 
 		// MASTER가 아니면 본인 정보만 조회 가능
 		if (!isMaster && !requestUserId.equals(userId)) {
-			throw new RuntimeException(UserException.ACCESS_DENIED.getMessage());
+			throw new CustomApiException(UserException.ACCESS_DENIED);
 		}
 
 		// 조회 성공 시 DTO 변환
@@ -65,7 +66,7 @@ public class UserService {
 		validateAuthentication(userDetails);
 
 		if (!hasMasterRole(userDetails)) {
-			throw new RuntimeException(UserException.ACCESS_DENIED.getMessage());
+			throw new CustomApiException(UserException.ACCESS_DENIED);
 		}
 
 		Page<User> users = userRepository.findByKeyword(keyword, pageable);
@@ -89,11 +90,11 @@ public class UserService {
 		validateAuthentication(userDetails);
 
 		if (!hasMasterRole(userDetails)) {
-			throw new RuntimeException(UserException.ACCESS_DENIED.getMessage());
+			throw new CustomApiException(UserException.ACCESS_DENIED);
 		}
 
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new RuntimeException(UserException.USER_NOT_FOUND.getMessage()));
+			.orElseThrow(() -> new CustomApiException(UserException.USER_NOT_FOUND));
 
 		user.updateUser(requestDto);
 		user.setUpdatedAt(LocalDateTime.now());
@@ -117,28 +118,26 @@ public class UserService {
 		RequestUserDetails userDetails = getAuthenticatedUser();
 		validateAuthentication(userDetails);
 
-		// 2) 권한 체크
+		// 권한 체크
 		if (!hasMasterRole(userDetails)) {
-			throw new RuntimeException(UserException.ACCESS_DENIED.getMessage());
+			throw new CustomApiException(UserException.ACCESS_DENIED);
 		}
 
-		// 3) 삭제 대상 User 엔티티 조회
+		// 삭제 대상 User 엔티티 조회
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new RuntimeException(UserException.USER_NOT_FOUND.getMessage()));
+			.orElseThrow(() -> new CustomApiException(UserException.USER_NOT_FOUND));
 
-		// 4) 소프트 삭제 수행 - @PreUpdate를 활용하여 deletedAt, deletedBy 자동 설정
+		// 소프트 삭제 수행 - @PreUpdate를 활용하여 deletedAt, deletedBy 자동 설정
 		user.markAsDeleted();
 
-		// 5) 응답
+		// 응답
 		return new CommonResponse<>(SuccessCode.USER_DELETED, null);
 	}
-
-
 
 	// 인증 정보 검증
 	private void validateAuthentication(RequestUserDetails userDetails) {
 		if (userDetails == null || userDetails.getUserId() == null) {
-			throw new RuntimeException(UserException.INVALID_AUTHENTICATION.getMessage());
+			throw new CustomApiException(UserException.INVALID_AUTHENTICATION);
 		}
 	}
 
@@ -152,7 +151,7 @@ public class UserService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication == null || !authentication.isAuthenticated()) {
-			throw new RuntimeException("인증 정보가 유효하지 않습니다.");
+			throw new CustomApiException(UserException.INVALID_AUTHENTICATION);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -160,8 +159,7 @@ public class UserService {
 			return userDetails;
 		}
 
-		throw new RuntimeException("유효하지 않은 사용자 정보입니다.");
+		throw new CustomApiException(UserException.INVALID_AUTHENTICATION);
 	}
-
 
 }
