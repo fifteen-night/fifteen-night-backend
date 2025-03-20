@@ -1,6 +1,7 @@
 package com.fn.eureka.client.hubservice.hub.infrastructure;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -95,9 +96,21 @@ public class HubServiceImpl implements HubService {
 	@Transactional
 	public CreateHubStockResponse createHubStock(UUID hubId, CreateHubStockRequest request) {
 		Hub hub = findHubById(hubId);
-		HubStock hubStock = HubStockMapper.toEntity(request, hub);
 
-		hub.addHubStock(hubStock);
+		Optional<HubStock> optionalHubStock = hubRepository.findHubStockByHubIdAndProductId(hubId,
+			request.getProductId());
+		HubStock hubStock;
+
+		if (optionalHubStock.isPresent()) {
+			// 이미 존재 시 수량 증가
+			hubStock = optionalHubStock.get();
+			hubStock.updateQuantity(request.getQuantity());
+		} else {
+			// 없을 시 재고 생성
+			hubStock = HubStockMapper.toEntity(request, hub);
+			hub.addHubStock(hubStock);
+		}
+
 		hubRepository.save(hub);
 
 		return HubStockMapper.toDto(hubStock);
@@ -133,11 +146,7 @@ public class HubServiceImpl implements HubService {
 
 	@Override
 	public HubStock findHubStockByHubIdAndProductId(UUID hubId, UUID productId) {
-		Hub hub = findHubById(hubId);
-
-		return hub.getHubStocks().stream()
-			.filter(e -> !e.isDeleted() && e.getHsProductId().equals(productId))
-			.findFirst()
+		return hubRepository.findHubStockByHubIdAndProductId(hubId, productId)
 			.orElseThrow(() -> new NotFoundException("없는 재고입니다."));
 	}
 }

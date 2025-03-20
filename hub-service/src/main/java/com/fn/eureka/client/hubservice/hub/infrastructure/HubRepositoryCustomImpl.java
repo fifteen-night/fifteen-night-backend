@@ -3,6 +3,7 @@ package com.fn.eureka.client.hubservice.hub.infrastructure;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
 import com.fn.eureka.client.hubservice.hub.domain.QHub;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.ReadHubStockResponse;
+import com.fn.eureka.client.hubservice.hub_stock.domain.HubStock;
 import com.fn.eureka.client.hubservice.hub_stock.domain.QHubStock;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.EntityPath;
@@ -126,6 +128,17 @@ public class HubRepositoryCustomImpl implements HubRepositoryCustom {
 			.fetchOne();
 
 		return new PageImpl<>(content, pageable, total);
+	}
+
+	@Override
+	public Optional<HubStock> findHubStockByHubIdAndProductId(UUID hubId, UUID productId) {
+		return Optional.ofNullable(queryFactory
+			.selectFrom(qHubStock)
+			.where(
+				qHubStock.hsHub.hubId.eq(hubId),
+				qHubStock.hsProductId.eq(productId),
+				qHubStock.isDeleted.isFalse())
+			.fetchOne());
 	}
 
 	private <T> List<OrderSpecifier<?>> getOrderSpecifiers(Sort sort, EntityPath<T> entityPath) {
