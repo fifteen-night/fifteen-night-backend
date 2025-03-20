@@ -3,6 +3,9 @@ package com.fn.eureka.client.orderservice.domain;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.fn.common.global.BaseEntity;
+import com.fn.eureka.client.orderservice.presentation.dto.OrderRequestDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +21,7 @@ import lombok.Setter;
 @Entity
 @Table(name="p_order")
 @NoArgsConstructor
-public class Order {
+public class Order extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID orderId;
@@ -44,4 +47,16 @@ public class Order {
 	@Column
 	private String orderRequirement;
 
+	public Order(OrderRequestDto requestDto) {
+		this.orderSupplyCompanyId = requestDto.getOrderSupplyCompanyId();
+		this.orderReceiveCompanyId = requestDto.getOrderReceiveCompanyId();
+		this.orderProductId = requestDto.getOrderProductId();
+		this.orderProductQuantity = requestDto.getOrderProductQuantity();
+		this.orderDeadline = requestDto.getOrderDeadline();
+		this.orderRequirement = requestDto.getOrderRequirement();
+	}
+
+	public void saveOrderDeliveryId(UUID deliveryId) {
+		this.orderDeliveryId = deliveryId;
+	}
 }

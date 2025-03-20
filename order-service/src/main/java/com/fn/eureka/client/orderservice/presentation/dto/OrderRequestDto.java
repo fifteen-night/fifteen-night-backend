@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class OrderRequestDto {
-	private UUID orderSupplyCompanyId;
-	private UUID orderReceiveCompanyId;
-	private UUID orderProductId;
-	private Integer orderProductQuantity;
-	private Timestamp orderDeadline;
-	private String orderRequirement;
+	private UUID orderSupplyCompanyId;	// 공급업체
+	private UUID orderReceiveCompanyId; // 주문자 = 수령업체
+	private UUID orderProductId;	// 상품ID
+	private Integer orderProductQuantity;	// 상품 수량
+	private Timestamp orderDeadline;	// 상품 납품기한
+	private String orderRequirement;	// 상품 요구사항
 }
