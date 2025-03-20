@@ -13,11 +13,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "p_delivery" , schema = "delivery")
+@Table(name = "p_delivery", schema = "delivery")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Delivery extends BaseEntity {
@@ -39,7 +40,7 @@ public class Delivery extends BaseEntity {
 	@Column(nullable = false)
 	private UUID destinationHubId;
 
-	@Column(nullable = false , length = 100)
+	@Column(nullable = false, length = 100)
 	private String address;
 
 	@Column(nullable = false, length = 100)
@@ -49,6 +50,27 @@ public class Delivery extends BaseEntity {
 	private UUID receiverSlackId;
 
 	// 업체 배송 담당자 id
-	@Column(nullable = false)
+	// @Column(nullable = false)
 	private UUID cdmId;
+
+	@Builder
+	public Delivery(
+		UUID orderId,
+		DeliveryStatus status,
+		UUID departureHubId,
+		UUID destinationHubId,
+		String address,
+		String receiverName,
+		UUID receiverSlackId,
+		UUID cdmId) {
+
+		this.OrderId = orderId;
+		this.Status = status;
+		this.departureHubId = departureHubId;
+		this.destinationHubId = destinationHubId;
+		this.address = address;
+		this.receiverName = receiverName;
+		this.receiverSlackId = receiverSlackId;
+		this.cdmId = cdmId;
+	}
 }
