@@ -35,7 +35,9 @@ public class DeliveryServiceImpl implements DeliveryService {
 
 		Delivery delivery = CreateDeliveryRequestDto.toDelivery(createDeliveryRequestDto);
 
-		// TODO: 중복 검증 예외 추가
+		if(deliveryRepository.existsByOrderIdAndIsDeletedIsFalse(delivery.getOrderId())){
+			throw new CustomApiException(DeliveryException.ALREADY_EXISTS_DELIVERY);
+		}
 
 		Delivery savedDelivery = deliveryRepository.save(delivery);
 

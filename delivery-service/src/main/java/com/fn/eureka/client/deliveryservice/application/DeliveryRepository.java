@@ -14,4 +14,6 @@ public interface DeliveryRepository extends JpaRepository<Delivery, UUID> {
 	Optional<Delivery> findByDeliveryIdAndIsDeletedIsFalse(UUID deliveryId);
 
 	Page<Delivery> findAllByIsDeletedIsFalse(Pageable pageable);
+
+	boolean existsByOrderIdAndIsDeletedIsFalse(UUID orderId);
 }

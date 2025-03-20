@@ -29,7 +29,7 @@ public class Delivery extends BaseEntity {
 	private UUID deliveryId;
 
 	@Column(nullable = false)
-	private UUID OrderId;
+	private UUID orderId;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -65,7 +65,7 @@ public class Delivery extends BaseEntity {
 		UUID receiverSlackId,
 		UUID cdmId) {
 
-		this.OrderId = orderId;
+		this.orderId = orderId;
 		this.Status = status;
 		this.departureHubId = departureHubId;
 		this.destinationHubId = destinationHubId;
