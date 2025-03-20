@@ -133,4 +133,17 @@ public class SlackService {
 			throw new CustomApiException(SlackException.UNAUTHORIZED_ACCESS);
 		}
 	}
+
+	@Transactional
+	public CommonResponse<Void> deleteSlackMessage(UUID slackId) {
+		validateMasterRole();
+
+		Slack slackMessage = slackRepository.findById(slackId)
+			.orElseThrow(() -> new CustomApiException(SlackException.SLACK_MESSAGE_NOT_FOUND));
+
+		slackMessage.markAsDeleted();
+
+		return new CommonResponse<>(SuccessCode.SLACK_MESSAGE_DELETED, null);
+	}
+
 }
