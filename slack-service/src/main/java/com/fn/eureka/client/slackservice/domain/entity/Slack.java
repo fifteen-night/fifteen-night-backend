@@ -23,7 +23,7 @@ public class Slack extends BaseEntity {
 	@UuidGenerator
 	private UUID slackId;
 
-	private String SlackReceivedSlackId;
+	private String SlackReceiverId;
 	@Column(length = 255)
 	private String slackMessage;
 
@@ -34,8 +34,8 @@ public class Slack extends BaseEntity {
 	}
 
 	// 프라이빗 생성자 (정적 팩토리 메서드만 사용하도록 제한)
-	private Slack(String SlackReceivedSlackId, String slackMessage) {
-		this.SlackReceivedSlackId = SlackReceivedSlackId;
+	private Slack(String SlackReceiverId, String slackMessage) {
+		this.SlackReceiverId = SlackReceiverId;
 		this.slackMessage = slackMessage;
 	}
 

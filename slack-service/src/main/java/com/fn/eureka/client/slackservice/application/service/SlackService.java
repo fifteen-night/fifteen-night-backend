@@ -35,7 +35,7 @@ public class SlackService {
 		restTemplate.postForEntity(slackWebhookUrl, entity, String.class);
 
 		// 메시지 DB 저장
-		Slack slackMessage = Slack.of(requestDto.getSlackReceivedSlackId(), requestDto.getText());
+		Slack slackMessage = Slack.of(requestDto.getSlackReceiverId(), requestDto.getText());
 		slackRepository.save(slackMessage);
 
 		return SlackMessageResponseDto.builder()

@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SlackMessageRequestDto {
-	private String SlackReceivedSlackId;
+	private String SlackReceiverId;
 	private String text;
 }
