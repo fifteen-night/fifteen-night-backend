@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import com.fn.common.global.exception.type.ExceptionType;
 
 public enum DeliveryException implements ExceptionType {
+	DELIVERY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 배송을 찾을 수 없습니다.", "E_DELIVERY_NOT_FOUND"),
 	;
 
 	private final HttpStatus httpStatus;
