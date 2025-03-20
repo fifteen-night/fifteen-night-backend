@@ -12,9 +12,11 @@ import com.fn.common.global.exception.CustomApiException;
 import com.fn.eureka.client.deliveryservice.application.DeliveryRepository;
 import com.fn.eureka.client.deliveryservice.application.DeliveryService;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.request.CreateDeliveryRequestDto;
+import com.fn.eureka.client.deliveryservice.application.delivery.dto.request.UpdateDeliveryRequestDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.CreateDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.GetAllDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.GetDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.UpdateDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.domain.delivery.Delivery;
 import com.fn.eureka.client.deliveryservice.exception.DeliveryException;
 
@@ -67,11 +69,24 @@ public class DeliveryServiceImpl implements DeliveryService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteDelivery(UUID deliveryId) {
 
 		Delivery targetDelivery = findDeliveryById(deliveryId);
 
 		targetDelivery.markAsDeleted();
+	}
+
+	@Override
+	@Transactional
+	public UpdateDeliveryResponseDto updateDelivery(UUID deliveryId,
+		UpdateDeliveryRequestDto updateDeliveryRequestDto) {
+
+		Delivery targetDelivery = findDeliveryById(deliveryId);
+
+		targetDelivery.update(updateDeliveryRequestDto);
+
+		return UpdateDeliveryResponseDto.fromDelivery(targetDelivery);
 	}
 
 	private Delivery findDeliveryById(UUID deliveryId) {
