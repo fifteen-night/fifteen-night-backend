@@ -31,9 +31,6 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
-
-	implementation("com.slack.api:slack-api-client:1.45.3")
-
 }
 
 ext {
