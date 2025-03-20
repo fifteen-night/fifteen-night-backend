@@ -14,7 +14,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CreateDeliveryResponseDto {
 
-	private UUID dId;
+	private UUID deliveryId;
 	private UUID orderId;
 	private UUID departureHubId;
 	private UUID destinationHubId;
@@ -28,7 +28,7 @@ public class CreateDeliveryResponseDto {
 	public static CreateDeliveryResponseDto fromDelivery(Delivery savedDelivery) {
 
 		return CreateDeliveryResponseDto.builder()
-			.dId(savedDelivery.getDId())
+			.deliveryId(savedDelivery.getDeliveryId())
 			.orderId(savedDelivery.getOrderId())
 			.departureHubId(savedDelivery.getDepartureHubId())
 			.destinationHubId(savedDelivery.getDestinationHubId())

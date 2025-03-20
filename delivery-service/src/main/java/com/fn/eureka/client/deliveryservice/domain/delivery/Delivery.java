@@ -22,10 +22,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Delivery extends BaseEntity {
-
+	
+	// 최대한 사람이 알아볼수있는 컬럼명을 짓자
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID dId;
+	private UUID deliveryId;
 
 	@Column(nullable = false)
 	private UUID OrderId;
