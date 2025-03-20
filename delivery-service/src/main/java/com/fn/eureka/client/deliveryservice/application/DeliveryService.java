@@ -15,4 +15,5 @@ public interface DeliveryService {
 
 	GetDeliveryResponseDto searchOneDelivery(UUID deliveryId);
 
+	CommonPageResponse<GetAllDeliveryResponseDto> searchAllDelivery(Pageable pageable);
 }

@@ -68,4 +68,17 @@ public class DeliveryController {
 			.body(new CommonResponse<>(SuccessCode.DELIVERY_SEARCH_ONE , deliveryResponseDto));
 	}
 
+	@GetMapping("/deliveries")
+	@Operation(summary = "모든 배송 조회" , description = "모든 배송 조회는 'ALL' 가능")
+	public ResponseEntity<CommonResponse<CommonPageResponse<GetAllDeliveryResponseDto>>> getAllDelivery(
+		@PageableDefault(size = 10, sort = "createdAt" , direction = Sort.Direction.ASC) Pageable pageable
+	){
+
+		CommonPageResponse<GetAllDeliveryResponseDto> getAllDeliveryResponseDtoCommonPageResponse
+			= deliveryService.searchAllDelivery(pageable);
+
+		return ResponseEntity.ok()
+			.body(new CommonResponse<>(SuccessCode.DELIVERY_SEARCH_ALL , getAllDeliveryResponseDtoCommonPageResponse));
+	}
+
 }

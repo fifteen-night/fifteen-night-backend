@@ -50,6 +50,20 @@ public class DeliveryServiceImpl implements DeliveryService {
 		return GetDeliveryResponseDto.fromDelivery(targetDelivery);
 	}
 
+	@Override
+	public CommonPageResponse<GetAllDeliveryResponseDto> searchAllDelivery(Pageable pageable) {
+
+		Page<Delivery> deliveries = deliveryRepository.findAllByIsDeletedIsFalse(pageable);
+
+		if (deliveries.isEmpty()){
+			throw new CustomApiException(DeliveryException.DELIVERY_NOT_FOUND);
+		}
+
+		Page<GetAllDeliveryResponseDto> getAllDeliveryResponseDtos = deliveries.map(GetAllDeliveryResponseDto::fromDelivery);
+
+		return new CommonPageResponse<>(getAllDeliveryResponseDtos);
+	}
+
 	private Delivery findDeliveryById(UUID deliveryId) {
 
 		Delivery targetDelivery = deliveryRepository.findByDeliveryIdAndIsDeletedIsFalse(deliveryId)
