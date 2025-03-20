@@ -19,6 +19,7 @@ public enum SuccessCode {
 	DELIVERY_CREATE(HttpStatus.CREATED, "배송이 성공적으로 생성되었습니다.", "S_DELIVERY_CREATE" ),
 	DELIVERY_SEARCH_ONE(HttpStatus.OK, "단건 배송이 성공적으로 조회되었습니다.","S_DELIVERY_SEARCH_ONE" ),
 	DELIVERY_SEARCH_ALL(HttpStatus.OK, "모든 배송이 성공적으로 조회되었습니다.","S_DELIVERY_SEARCH_ALL" ),
+	DELIVERY_DELETE(HttpStatus.NO_CONTENT, "해당 배송이 삭제되었습니다.", "S_DELIVERY_DELETE" ),
 
 	// Hub 관련 성공응답
 	HUB_CREATE(HttpStatus.CREATED, "허브가 성공적으로 생성되었습니다.", "S_HUB_CREATE"),
@@ -42,7 +43,7 @@ public enum SuccessCode {
 	SLACK_MESSAGE_SENT(HttpStatus.CREATED, "Slack 메시지가 성공적으로 전송되었습니다.", "S_SLACK_MESSAGE_SENT"),
 	SLACK_MESSAGE_FOUND(HttpStatus.OK, "Slack 메시지가 성공적으로 조회되었습니다.", "S_SLACK_MESSAGE_FOUND"),
 	SLACK_MESSAGE_LIST_FOUND(HttpStatus.OK, "Slack 메시지 목록이 성공적으로 조회되었습니다.", "S_SLACK_MESSAGE_LIST_FOUND"),
-	SLACK_MESSAGE_UPDATED(HttpStatus.OK, "Slack 메시지가 성공적으로 수정되었습니다.", "S_SLACK_MESSAGE_UPDATED")
+	SLACK_MESSAGE_UPDATED(HttpStatus.OK, "Slack 메시지가 성공적으로 수정되었습니다.", "S_SLACK_MESSAGE_UPDATED"),
 	;
 
 	private final HttpStatus statusCode;
