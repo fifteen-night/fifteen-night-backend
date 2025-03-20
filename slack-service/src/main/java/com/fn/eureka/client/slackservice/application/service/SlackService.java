@@ -16,8 +16,10 @@ import org.springframework.web.client.RestTemplate;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.slackservice.application.dto.request.SlackMessageRequestDto;
+import com.fn.eureka.client.slackservice.application.dto.request.SlackUpdateRequestDto;
 import com.fn.eureka.client.slackservice.application.dto.response.SlackGetResponseDto;
 import com.fn.eureka.client.slackservice.application.dto.response.SlackMessageResponseDto;
+import com.fn.eureka.client.slackservice.application.dto.response.SlackUpdateResponseDto;
 import com.fn.eureka.client.slackservice.application.exception.SlackException;
 import com.fn.eureka.client.slackservice.domain.entity.Slack;
 import com.fn.eureka.client.slackservice.domain.repository.SlackRepository;
@@ -89,6 +91,27 @@ public class SlackService {
 			.build());
 
 		return new CommonResponse<>(SuccessCode.SLACK_MESSAGE_LIST_FOUND, responseDtoPage);
+	}
+
+	@Transactional
+	public CommonResponse<SlackUpdateResponseDto> updateSlackMessage(UUID slackId, SlackUpdateRequestDto requestDto) {
+		validateMasterRole();
+
+		// Slack 메시지 존재 여부 확인
+		Slack slackMessage = slackRepository.findById(slackId)
+			.orElseThrow(() -> new CustomApiException(SlackException.SLACK_MESSAGE_NOT_FOUND));
+
+		// 메시지 업데이트
+		slackMessage.updateSlackMessage(requestDto.getSlackMessage());
+
+		// 응답 DTO 생성
+		SlackUpdateResponseDto responseDto = SlackUpdateResponseDto.builder()
+			.slackId(slackMessage.getSlackId())
+			.updatedMessage(slackMessage.getSlackMessage())
+			.updatedAt(slackMessage.getUpdatedAt())
+			.build();
+
+		return new CommonResponse<>(SuccessCode.SLACK_MESSAGE_UPDATED, responseDto);
 	}
 
 	private void validateMasterRole() {

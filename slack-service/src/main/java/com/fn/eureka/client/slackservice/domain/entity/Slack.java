@@ -39,4 +39,11 @@ public class Slack extends BaseEntity {
 		this.slackMessage = slackMessage;
 	}
 
+	// 메시지 수정 메서드
+	public void updateSlackMessage(String newMessage) {
+		if (newMessage != null) {
+			this.slackMessage = newMessage;
+		}
+	}
+
 }
