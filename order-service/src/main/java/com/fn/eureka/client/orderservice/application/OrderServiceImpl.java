@@ -1,16 +1,24 @@
 package com.fn.eureka.client.orderservice.application;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.exception.ConflictException;
 import com.fn.eureka.client.orderservice.domain.Order;
 import com.fn.eureka.client.orderservice.domain.OrderRepository;
 import com.fn.eureka.client.orderservice.infrastructure.CompanyServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.DeliveryServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.HubServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.UserServiceClient;
+import com.fn.eureka.client.orderservice.presentation.dto.CompanyInfoDto;
+import com.fn.eureka.client.orderservice.presentation.dto.DeliveryRequestDto;
+import com.fn.eureka.client.orderservice.presentation.dto.DeliveryResponseDto;
+import com.fn.eureka.client.orderservice.presentation.dto.HubStockResponseDto;
 import com.fn.eureka.client.orderservice.presentation.dto.OrderRequestDto;
 import com.fn.eureka.client.orderservice.presentation.dto.OrderResponseDto;
+import com.fn.eureka.client.orderservice.presentation.dto.UserResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,17 +55,17 @@ public class OrderServiceImpl implements OrderService {
 
 		// 주문 생성
 		Order order = orderRepository.save(new Order(orderRequestDto));
-		// 배송 생성 요청
+		// // 배송 생성 요청
 		// // 주문자(수령업체) 업체 조회
 		// UUID receiveCompanyId = orderRequestDto.getOrderReceiveCompanyId();	// 수령업체 ID
 		// CompanyInfoDto receiveCompanyInfo = companyServiceClient.getCompany(receiveCompanyId);
 		// // 주문자(수령업체) 업체담당자 유저 정보 조회
 		// UserResponseDto userInfo = userServiceClient.getUserById(receiveCompanyInfo.getCompanyManagerId());
 		// DeliveryRequestDto deliveryRequestDto = new DeliveryRequestDto(
-		// 	order.getOrderId(), supplyCompanyHubId, receiveCompanyId, receiveCompanyInfo.getCompanyAddress(), userInfo.getUserSlackId());
+		// 	order.getOrderId(), supplyCompanyHubId, receiveCompanyId, receiveCompanyInfo.getCompanyAddress(), receiveCompanyInfo.getCompanyName(), userInfo.getUserSlackId());
 		// // 배송 생성
 		// DeliveryResponseDto deliveryInfo = deliveryServiceClient.createdDelivery(deliveryRequestDto);
-
+		//
 		// // 생성된 배송ID 받아 저장
 		// order.saveOrderDeliveryId(deliveryInfo.getDeliveryId());
 		return new OrderResponseDto(order);
