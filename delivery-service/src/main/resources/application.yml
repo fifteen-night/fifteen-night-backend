@@ -11,6 +11,8 @@ spring:
     group:
       local: local, key
     active: ${ACTIVE_VAL}
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration #시큐리티 무시
 
 server:
   port: ${DELIVERY_PORT}

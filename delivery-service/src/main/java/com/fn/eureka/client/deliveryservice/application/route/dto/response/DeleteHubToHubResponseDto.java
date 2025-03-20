@@ -1,4 +1,4 @@
-package com.fn.eureka.client.deliveryservice.application.dto.response;
+package com.fn.eureka.client.deliveryservice.application.route.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

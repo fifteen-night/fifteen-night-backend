@@ -1,8 +1,6 @@
-package com.fn.eureka.client.deliveryservice.application.dto.request;
+package com.fn.eureka.client.deliveryservice.application.route.dto.request;
 
-import java.util.UUID;
-
-import com.fn.eureka.client.deliveryservice.domain.HubToHub;
+import com.fn.eureka.client.deliveryservice.domain.route.HubToHub;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

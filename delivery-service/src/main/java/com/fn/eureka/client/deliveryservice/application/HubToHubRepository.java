@@ -1,5 +1,6 @@
 package com.fn.eureka.client.deliveryservice.application;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.fn.eureka.client.deliveryservice.domain.HubToHub;
+import com.fn.eureka.client.deliveryservice.domain.route.HubToHub;
 
 public interface HubToHubRepository extends JpaRepository<HubToHub, UUID> {
 
@@ -16,4 +17,6 @@ public interface HubToHubRepository extends JpaRepository<HubToHub, UUID> {
 	boolean existsByDepartureHubAddressAndArrivalHubAddressAndIsDeletedIsFalse(String departureHubAddress, String arrivalHubAddress);
 
 	Page<HubToHub> findAllByIsDeletedIsFalse(Pageable pageable);
+
+	List<HubToHub> findAllByIsDeletedIsFalse();
 }

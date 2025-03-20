@@ -1,0 +1,16 @@
+spring:
+  config.activate.on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: slack  # user 스키마 사용
+
+  sql:
+    init:
+      mode: always
+      # 나중에 더미데이터 넣고 시작
+#      data-locations: classpath:db/create-user.sql

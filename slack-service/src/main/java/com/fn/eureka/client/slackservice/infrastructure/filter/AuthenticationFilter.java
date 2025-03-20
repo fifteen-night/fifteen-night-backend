@@ -1,4 +1,4 @@
-package com.fn.eureka.client.userservice.infrastructure.filter;
+package com.fn.eureka.client.slackservice.infrastructure.filter;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fn.eureka.client.userservice.infrastructure.security.RequestUserDetails;
+import com.fn.eureka.client.slackservice.infrastructure.security.RequestUserDetails;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,8 +28,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		String requestUri = request.getRequestURI();
 
 		// 인증 예외 경로
-		if (requestUri.startsWith("/api/auth/") ||
-			requestUri.startsWith("/swagger-ui/") ||
+		if (requestUri.startsWith("/swagger-ui/") ||
 			requestUri.startsWith("/v3/api-docs"))
 		{
 			filterChain.doFilter(request, response);

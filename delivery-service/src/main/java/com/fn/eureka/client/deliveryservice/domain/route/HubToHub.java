@@ -1,10 +1,15 @@
-package com.fn.eureka.client.deliveryservice.domain;
+package com.fn.eureka.client.deliveryservice.domain.route;
+
+import static com.fn.eureka.client.deliveryservice.domain.util.TimeUtils.*;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
+import com.fn.eureka.client.deliveryservice.application.route.dto.request.UpdateHubToHubRequestDto;
+import com.fn.eureka.client.deliveryservice.presentation.dto.response.NaverMapDirResponseDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,4 +57,30 @@ public class HubToHub extends BaseEntity {
 		this.hthDistance = hthDistance;
 	}
 
+	public void updateAddress(UpdateHubToHubRequestDto updateHubToHubRequestDto) {
+		Optional.ofNullable(updateHubToHubRequestDto.getDepartureHubAddress()).ifPresent(value -> departureHubAddress = value);
+		Optional.ofNullable(updateHubToHubRequestDto.getArrivalHubAddress()).ifPresent(value -> arrivalHubAddress = value);
+	}
+
+	public void update(NaverMapDirResponseDto naverMapDirResponseDto) {
+
+		this.hthQuantity = convertTime(
+			naverMapDirResponseDto
+				.getRoute()
+				.getTraoptimal()
+				.get(0)
+				.getSummary()
+				.getDuration()
+		);
+
+		this.hthDistance = BigDecimal.valueOf(
+			naverMapDirResponseDto
+				.getRoute()
+				.getTraoptimal()
+				.get(0)
+				.getSummary()
+				.getDistance()
+		);
+
+	}
 }
