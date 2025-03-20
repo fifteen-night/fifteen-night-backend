@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.fn.eureka.client.deliveryservice.domain.HubToHub;
+import com.fn.eureka.client.deliveryservice.domain.route.HubToHub;
 
 public interface HubToHubRepository extends JpaRepository<HubToHub, UUID> {
 

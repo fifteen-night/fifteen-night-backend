@@ -1,4 +1,4 @@
-package com.fn.eureka.client.deliveryservice.domain;
+package com.fn.eureka.client.deliveryservice.domain.route;
 
 import static com.fn.eureka.client.deliveryservice.domain.util.TimeUtils.*;
 
@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
-import com.fn.eureka.client.deliveryservice.application.dto.request.UpdateHubToHubRequestDto;
+import com.fn.eureka.client.deliveryservice.application.route.dto.request.UpdateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.presentation.dto.response.NaverMapDirResponseDto;
 
 import jakarta.persistence.Column;

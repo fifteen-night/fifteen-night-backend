@@ -1,11 +1,10 @@
-package com.fn.eureka.client.deliveryservice.application.dto.response;
+package com.fn.eureka.client.deliveryservice.application.route.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.UUID;
 
-import com.fn.eureka.client.deliveryservice.application.dto.request.UpdateHubToHubRequestDto;
-import com.fn.eureka.client.deliveryservice.domain.HubToHub;
+import com.fn.eureka.client.deliveryservice.domain.route.HubToHub;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
