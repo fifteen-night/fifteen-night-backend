@@ -13,3 +13,6 @@ CREATE SCHEMA IF NOT EXISTS company;
 -- product 도메인 스키마
 CREATE SCHEMA IF NOT EXISTS product;
 
+-- slack 도메인 스키마
+CREATE SCHEMA IF NOT EXISTS slack;
+

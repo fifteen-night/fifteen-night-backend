@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: slack-service
+  config:
+    import:
+      - file:.env[.properties]
+      - classpath:./properties/datasource.yml
+      - classpath:./properties/jpa.yml
+
+
+server:
+  port: ${SLACK_SERVER_PORT}
+
+slack:
+  webhook:
+    url: ${SLACK_WEBHOOK_URL}
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER}  # Eureka 서버 주소
