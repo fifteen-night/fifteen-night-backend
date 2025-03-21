@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.exception.ConflictException;
+import com.fn.common.global.exception.CustomApiException;
 import com.fn.eureka.client.orderservice.domain.Order;
 import com.fn.eureka.client.orderservice.domain.OrderRepository;
+import com.fn.eureka.client.orderservice.exception.OrderException;
 import com.fn.eureka.client.orderservice.infrastructure.CompanyServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.DeliveryServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.HubServiceClient;
@@ -41,15 +43,15 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional
 	public OrderResponseDto addOrder(OrderRequestDto orderRequestDto) {
-		UUID supplyCompanyId = orderRequestDto.getOrderSupplyCompanyId();	// 공급업체 ID
-		CompanyInfoDto supplyCompanyInfo = companyServiceClient.getCompany(supplyCompanyId);
+		// UUID supplyCompanyId = orderRequestDto.getOrderSupplyCompanyId();	// 공급업체 ID
+		// CompanyInfoDto supplyCompanyInfo = companyServiceClient.getCompany(supplyCompanyId);
 		// // 공급업체의 허브ID 검색 후 허브 재고 조회
 		// UUID supplyCompanyHubId = supplyCompanyInfo.getCompanyHubId();	// 공급업체 담당 허브 ID
 		// UUID orderProductId = orderRequestDto.getOrderProductId();	// 주문상품 ID
 		// HubStockResponseDto hubStockInfo = hubServiceClient.searchHubStock(supplyCompanyHubId, orderProductId);
 		// // 재고 부족 예외 처리
 		// if (hubStockInfo.getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
-		// 	throw new ConflictException("허브에 해당 상품의 재고가 부족합니다.");
+		// 	throw new CustomApiException(OrderException.HUB_INSUFFICIENT_STOCK);
 		// }
 
 		// 주문 생성
@@ -73,6 +75,14 @@ public class OrderServiceImpl implements OrderService {
 		//
 		// // 생성된 배송ID 받아 저장
 		// order.saveOrderDeliveryId(deliveryInfo.getDeliveryId());
+		return new OrderResponseDto(order);
+	}
+
+	// 주문 조회
+	@Override
+	public OrderResponseDto findOrder(UUID orderId) {
+		Order order = orderRepository.findByOrderIdAndIsDeletedFalse(orderId)
+			.orElseThrow(() -> new CustomApiException(OrderException.ORDER_NOT_FOUND));
 		return new OrderResponseDto(order);
 	}
 }
