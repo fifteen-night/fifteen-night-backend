@@ -6,8 +6,10 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.fn.eureka.client.hubservice.hub.application.dto.request.CheckHubManagerRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.CreateHubRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.UpdateHubRequest;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.CheckHubManagerResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.CreateHubResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
 import com.fn.eureka.client.hubservice.hub.domain.Hub;
@@ -29,6 +31,8 @@ public interface HubService {
 	void deleteHub(UUID hubId);
 
 	Hub findHubById(UUID id);
+
+	CheckHubManagerResponse checkHubManager(CheckHubManagerRequest request);
 
 	CreateHubStockResponse createHubStock(UUID hubId, CreateHubStockRequest request);
 

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import feign.RequestInterceptor;
 
 @Configuration
-public class GeoFeignConfig {
+public class GeoClientConfig {
 
 	@Value("${naver.api.client-id}")
 	private String clientId;

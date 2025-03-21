@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class CreateHubStockResponse {
-	private UUID hubStockId;
+	private final UUID hubStockId;
 
 	public CreateHubStockResponse(UUID hubStockId) {
 		this.hubStockId = hubStockId;

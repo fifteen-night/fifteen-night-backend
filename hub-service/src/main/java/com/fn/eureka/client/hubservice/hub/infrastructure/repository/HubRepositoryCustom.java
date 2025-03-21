@@ -1,4 +1,4 @@
-package com.fn.eureka.client.hubservice.hub.infrastructure;
+package com.fn.eureka.client.hubservice.hub.infrastructure.repository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

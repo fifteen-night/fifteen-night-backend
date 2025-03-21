@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum SuccessCode {
 
 	// 여기서 공통 성공 응답 생성
+
 	// Order 관련 성공응답
 	ORDER_CREATE(HttpStatus.CREATED, "주문이 성공적으로 생성되었습니다.", "S_ORDER_CREATE"),
 	ORDER_SEARCH_ONE(HttpStatus.OK, "단건 주문이 성공적으로 조회되었습니다.", "S_ORDER_SEARCH_ONE"),
@@ -15,7 +16,7 @@ public enum SuccessCode {
 	ORDER_UPDATE(HttpStatus.OK, "주문이 성공적으로 수정되었습니다.", "S_ORDER_UPDATE" ),
 	ORDER_DELETE(HttpStatus.NO_CONTENT, "해당 주문이 삭제되었습니다.", "S_ORDER_DELETE" ),
 
-    // HubToHub 관련 성공응답
+  // HubToHub 관련 성공응답
 	HUBTOHUB_CREATE(HttpStatus.CREATED, "루트가 성공적으로 생성되었습니다.", "S_HUBTOHUB_CREATE"),
 	HUBTOHUB_SEARCH_ALL(HttpStatus.OK, "모든 루트가 성공적으로 조회되었습니다.","S_HUBTOHUB_SEARCH_ALL" ),
 	HUBTOHUB_SEARCH_ONE(HttpStatus.OK, "단건 루트가 성공적으로 조회되었습니다.", "S_HUBTOHUB_SEARCH_ONE"),
@@ -32,6 +33,7 @@ public enum SuccessCode {
 	// Hub 관련 성공응답
 	HUB_CREATE(HttpStatus.CREATED, "허브가 성공적으로 생성되었습니다.", "S_HUB_CREATE"),
 	HUB_SEARCH(HttpStatus.OK, "허브가 성공적으로 조회되었습니다.", "S_HUB_SEARCH"),
+	HUB_MANAGER_CHECK(HttpStatus.OK, "허브 매니저가 확인되었습니다.", "S_HUB_MANAGER_CHECK"),
 
 	// HubStock 관련 성공 응답
 	HUB_STOCK_CREATE(HttpStatus.CREATED, "허브 재고가 성공적으로 생성되었습니다.", "S_HUB_STOCK_CREATE"),
