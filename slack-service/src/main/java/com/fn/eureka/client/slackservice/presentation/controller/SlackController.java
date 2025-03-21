@@ -57,4 +57,11 @@ public class SlackController {
 
 		return ResponseEntity.status(SuccessCode.SLACK_MESSAGE_UPDATED.getStatusCode()).body(response);
 	}
+
+	@DeleteMapping("/{slackId}")
+	public ResponseEntity<CommonResponse<Void>> deleteSlackMessage(@PathVariable UUID slackId) {
+		CommonResponse<Void> response = slackService.deleteSlackMessage(slackId);
+
+		return ResponseEntity.status(SuccessCode.SLACK_MESSAGE_DELETED.getStatusCode()).body(response);
+	}
 }
