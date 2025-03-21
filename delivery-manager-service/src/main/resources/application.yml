@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: delivery-manager-service
+  config:
+    import:
+      - file:.env[.properties]
+      - classpath:./properties/datasource.yml
+      - classpath:./properties/jpa.yml
+
+server:
+  port: ${DELIVERY_MANAGER_SEVER_PORT}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER}  # Eureka 서버 주소
