@@ -1,5 +1,6 @@
 package com.fn.eureka.client.orderservice.domain.service;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -15,4 +16,6 @@ public interface OrderService {
 	OrderResponseDto findOrder(UUID orderId);
 
 	Page<OrderResponseDto> findAllOrdersByRole(String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole, UUID userId);
+
+	OrderResponseDto modifyOrder(UUID orderId, Map<String, Object> updates, String userRole, UUID userId);
 }

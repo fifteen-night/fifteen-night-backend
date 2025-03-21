@@ -1,12 +1,14 @@
 package com.fn.eureka.client.orderservice.presentation;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,5 +64,16 @@ public class OrderController {
 	) {
 		Page<OrderResponseDto> orders = orderService.findAllOrdersByRole(keyword, page, size, sortDirection, sortBy, userRole, userId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_SEARCH_ALL, orders));
+	}
+
+	// 주문 수정
+	@PatchMapping("/{orderId}")
+	public ResponseEntity<CommonResponse<OrderResponseDto>> updateOrder(
+		@PathVariable("orderId") UUID orderId,
+		@RequestBody Map<String, Object> updates,
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId) {
+		OrderResponseDto orderResponseDto = orderService.modifyOrder(orderId, updates, userRole, userId);
+		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_UPDATE, orderResponseDto));
 	}
 }

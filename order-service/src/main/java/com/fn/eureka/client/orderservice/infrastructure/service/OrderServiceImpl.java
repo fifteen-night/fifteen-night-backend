@@ -1,5 +1,6 @@
 package com.fn.eureka.client.orderservice.infrastructure.service;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -114,5 +115,27 @@ public class OrderServiceImpl implements OrderService {
 		}
 		Page<OrderResponseDto> orders = orderQueryRepository.findAllOrdersByRole(keyword, PageUtils.pageable(page, size), userRole, userId, companyId, sortDirection, sortBy);
 		return orders;
+	}
+
+	// 주문 수정
+	@Override
+	@Transactional
+	public OrderResponseDto modifyOrder(UUID orderId, Map<String, Object> updates, String userRole, UUID userId) {
+		Order order = orderRepository.findByOrderIdAndIsDeletedFalse(orderId)
+			.orElseThrow(() -> new CustomApiException(OrderException.ORDER_NOT_FOUND));
+		switch(userRole) {
+			case "MASTER" : break;
+			case "HUB_MANAGER" :
+				// UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
+				// UUID supplyCompanyHubId = companyServiceClient.readHubIdByCompanyId(order.getOrderSupplyCompanyId());
+				// UUID receiveCompanyHubId = companyServiceClient.readHubIdByCompanyId(order.getOrderReceiveCompanyId());
+				// if (!hubId.equals(supplyCompanyHubId) && !hubId.equals(receiveCompanyHubId)) {
+				// 	throw new CustomApiException(OrderException.ORDER_UNAUTHORIZED);
+				// }
+				break;
+			default: throw new CustomApiException(OrderException.ORDER_UNAUTHORIZED);
+		}
+		updates.forEach((key, value) -> order.modifyOrderInfo(key, value));
+		return new OrderResponseDto(order);
 	}
 }

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.orderservice.domain.model.Order;
-import com.fn.eureka.client.orderservice.domain.QOrder;
 import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
+import com.fn.eureka.client.orderservice.domain.model.QOrder;
 import com.fn.eureka.client.orderservice.domain.repository.OrderQueryRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;

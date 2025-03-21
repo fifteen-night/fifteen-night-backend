@@ -84,7 +84,7 @@ public class CompanyController {
 	// for other services...
 
 	// 허브에 소속된 업체ID 목록 조회
-	@GetMapping("/hub/{hubId}")
+	@GetMapping("/company-list/{hubId}")
 	public List<UUID> readCompaniesByHubId(@PathVariable("hubId") UUID hubId) {
 		return companyService.findAllCompaniesByHubId(hubId);
 	}
@@ -93,5 +93,11 @@ public class CompanyController {
 	@GetMapping("/company-manager/{companyManagerId}")
 	UUID readCompanyIdByCompanyManagerId(@PathVariable("companyManagerId")UUID companyManagerId) {
 		return companyService.findCompanyIdByCompanyManagerId(companyManagerId);
+	}
+
+	// 업체ID로 허브ID 반환
+	@GetMapping("/hub/{companyId}")
+	UUID readCompanyIdByHubId(@PathVariable("companyId") UUID companyId) {
+		return companyService.findHubIdByCompanyId(companyId);
 	}
 }

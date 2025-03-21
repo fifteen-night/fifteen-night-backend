@@ -99,4 +99,9 @@ public class CompanyServiceImpl implements CompanyService {
 		return companyQueryRepository.findCompanyIdByCompanyManagerId(companyManagerId);
 	}
 
+	@Override
+	public UUID findHubIdByCompanyId(UUID companyId) {
+		return companyQueryRepository.findHubIdByCompanyId(companyId);
+	}
+
 }
