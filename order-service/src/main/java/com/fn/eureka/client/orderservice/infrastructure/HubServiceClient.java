@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fn.eureka.client.orderservice.presentation.dto.HubStockResponseDto;
 
-@FeignClient(name = "hub-service", url = "http://localhost:19093/api/hubs")
+@FeignClient(name = "hub-service", path = "/api/hubs")
 public interface HubServiceClient {
 
+	// TODO 메서드 이름 같은지 확인하기!!
 	// 허브 재고 조회
 	@GetMapping("/{hubId}")
 	HubStockResponseDto searchHubStock(

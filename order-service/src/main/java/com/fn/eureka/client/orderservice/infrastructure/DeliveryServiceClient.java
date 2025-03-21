@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.fn.eureka.client.orderservice.presentation.dto.DeliveryRequestDto;
 import com.fn.eureka.client.orderservice.presentation.dto.DeliveryResponseDto;
 
-@FeignClient(name = "delivery-service", url = "http://localhost:19097/api/deliveries")
+@FeignClient(name = "delivery-service", path = "/api/deliveries")
 public interface DeliveryServiceClient {
 
+	// TODO 메서드 이름 같은지 확인하기!!
 	@PostMapping
 	DeliveryResponseDto createdDelivery(@RequestBody DeliveryRequestDto deliveryRequestDto);
 }

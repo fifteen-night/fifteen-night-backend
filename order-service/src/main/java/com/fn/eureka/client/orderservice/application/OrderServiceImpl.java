@@ -41,9 +41,8 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional
 	public OrderResponseDto addOrder(OrderRequestDto orderRequestDto) {
-		// UUID supplyCompanyId = orderRequestDto.getOrderSupplyCompanyId();	// 공급업체 ID
-		// CompanyInfoDto supplyCompanyInfo = companyServiceClient.getCompany(supplyCompanyId);
-		// log.info("공급업체 Info : {}", supplyCompanyInfo);
+		UUID supplyCompanyId = orderRequestDto.getOrderSupplyCompanyId();	// 공급업체 ID
+		CompanyInfoDto supplyCompanyInfo = companyServiceClient.getCompany(supplyCompanyId);
 		// // 공급업체의 허브ID 검색 후 허브 재고 조회
 		// UUID supplyCompanyHubId = supplyCompanyInfo.getCompanyHubId();	// 공급업체 담당 허브 ID
 		// UUID orderProductId = orderRequestDto.getOrderProductId();	// 주문상품 ID
@@ -60,10 +59,16 @@ public class OrderServiceImpl implements OrderService {
 		// UUID receiveCompanyId = orderRequestDto.getOrderReceiveCompanyId();	// 수령업체 ID
 		// CompanyInfoDto receiveCompanyInfo = companyServiceClient.getCompany(receiveCompanyId);
 		// // 주문자(수령업체) 업체담당자 유저 정보 조회
-		// UserResponseDto userInfo = userServiceClient.getUserById(receiveCompanyInfo.getCompanyManagerId());
-		// DeliveryRequestDto deliveryRequestDto = new DeliveryRequestDto(
-		// 	order.getOrderId(), supplyCompanyHubId, receiveCompanyId, receiveCompanyInfo.getCompanyAddress(), receiveCompanyInfo.getCompanyName(), userInfo.getUserSlackId());
+		// UserResponseDto receiveCompanyManagerInfo = userServiceClient.getUser(receiveCompanyInfo.getCompanyManagerId());
 		// // 배송 생성
+		// DeliveryRequestDto deliveryRequestDto = DeliveryRequestDto.builder()
+		// 	.orderId(order.getOrderId())
+		// 	.supplyCompanyHubId(supplyCompanyHubId)
+		// 	.receiveCompanyHubId(receiveCompanyId)
+		// 	.receiveCompanyAddress(receiveCompanyInfo.getCompanyAddress())
+		// 	.deliveryReceiverCompanyManagerName(receiveCompanyManagerInfo.getUserNickname())
+		// 	.receiverSlackId(receiveCompanyManagerInfo.getUserSlackId())
+		// 	.build();
 		// DeliveryResponseDto deliveryInfo = deliveryServiceClient.createdDelivery(deliveryRequestDto);
 		//
 		// // 생성된 배송ID 받아 저장

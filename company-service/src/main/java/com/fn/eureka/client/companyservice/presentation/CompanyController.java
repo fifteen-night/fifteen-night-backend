@@ -30,11 +30,6 @@ public class CompanyController {
 
 	private final CompanyService companyService;
 
-	@GetMapping("/hello")
-	public String hello (){
-		return "hello!";
-	}
-
 	// 업체 생성
 	@PostMapping
 	public ResponseEntity<CompanyResponseDto> createCompany(

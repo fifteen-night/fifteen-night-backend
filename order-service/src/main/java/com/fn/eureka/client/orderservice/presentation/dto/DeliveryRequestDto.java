@@ -2,6 +2,7 @@ package com.fn.eureka.client.orderservice.presentation.dto;
 
 import java.util.UUID;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,15 +13,16 @@ public class DeliveryRequestDto {
 	private UUID deliveryDepartureHubId;
 	private UUID deliveryDestinationHubId;
 	private String deliveryAddress;
-	private String deliveryReceiverCompanyName;
+	private String deliveryReceiverCompanyManagerName;
 	private UUID deliveryReceiverSlackId;
 
-	public DeliveryRequestDto(UUID orderId, UUID supplyCompanyHubId, UUID receiveCompanyHubId, String receiveCompanyAddress, String deliveryReceiverCompanyName, UUID receiverSlackId) {
+	@Builder
+	public DeliveryRequestDto(UUID orderId, UUID supplyCompanyHubId, UUID receiveCompanyHubId, String receiveCompanyAddress, String deliveryReceiverCompanyManagerName, UUID receiverSlackId) {
 		this.deliveryOrderId = orderId;
 		this.deliveryDepartureHubId = supplyCompanyHubId;
 		this.deliveryDestinationHubId = receiveCompanyHubId;
 		this.deliveryAddress = receiveCompanyAddress;
-		this.deliveryReceiverCompanyName = deliveryReceiverCompanyName;
+		this.deliveryReceiverCompanyManagerName = deliveryReceiverCompanyManagerName;
 		this.deliveryReceiverSlackId = receiverSlackId;
 	}
 }
