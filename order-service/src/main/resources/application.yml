@@ -1,17 +1,13 @@
 spring:
   application:
-    name: company-service
+    name: order-service
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      schema: company
-#    sql:
-#      init:
-#        mode: always
-#        data-locations: classpath:db/create-company.sql
+      schema: order
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -23,7 +19,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
 server:
-  port: ${COMPANY_SERVER_PORT}
+  port: ${ORDER_SERVER_PORT}
 
 eureka:
   client:
@@ -32,5 +28,6 @@ eureka:
 
 logging:
   level:
+    com.fn.eureka.client.orderservice.infrastructure.CompanyServiceClient: DEBUG
     org.springframework.cloud.openfeign: DEBUG
     org.springframework.web.client.RestTemplate: DEBUG

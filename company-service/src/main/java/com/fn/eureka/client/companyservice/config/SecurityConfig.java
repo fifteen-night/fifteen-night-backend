@@ -1,25 +1,25 @@
-package com.fn.eureka.client.userservice.infrastructure.security;
+package com.fn.eureka.client.companyservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fn.common.global.audit.SecurityContextHelper;
-import com.fn.eureka.client.userservice.infrastructure.filter.AuthenticationFilter;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.extern.slf4j.Slf4j;
 
-import lombok.RequiredArgsConstructor;
-
+@Slf4j
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
-	private final AuthenticationFilter authenticationFilter;
+	@Bean
+	public AuthenticationFilter getAuthenticationFilter() {
+		return new AuthenticationFilter();
+	}
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,12 +31,7 @@ public class SecurityConfig {
 				.requestMatchers("/api/auth/**", "/api/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 				.anyRequest().authenticated()
 			)
-			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore((request, response, chain) -> {
-				SecurityContextHelper.storeAuthentication();
-				chain.doFilter(request, response);
-				SecurityContextHelper.clear();
-			}, AuthenticationFilter.class);
+			.addFilterBefore(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}

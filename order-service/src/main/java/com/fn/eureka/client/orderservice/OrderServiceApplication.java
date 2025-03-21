@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice;
+package com.fn.eureka.client.orderservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,11 +8,12 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients
 @EnableDiscoveryClient
-// @SpringBootApplication(scanBasePackages = {"com.fn.common"})
-@SpringBootApplication(scanBasePackages = {"com.fn.eureka.client.companyservice.config"})
-public class CompanyServiceApplication {
+//@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+public class OrderServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CompanyServiceApplication.class, args);
+		SpringApplication.run(OrderServiceApplication.class, args);
 	}
+
 }
