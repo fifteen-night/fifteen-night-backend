@@ -29,3 +29,8 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER}
+
+logging:
+  level:
+    org.springframework.cloud.openfeign: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG

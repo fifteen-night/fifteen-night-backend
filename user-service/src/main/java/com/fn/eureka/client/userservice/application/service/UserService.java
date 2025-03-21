@@ -134,6 +134,13 @@ public class UserService {
 		return new CommonResponse<>(SuccessCode.USER_DELETED, null);
 	}
 
+	@Transactional(readOnly = true)
+	public boolean checkUserExists(UUID userId) {
+		return userRepository.existsById(userId);
+	}
+
+
+
 	// 인증 정보 검증
 	private void validateAuthentication(RequestUserDetails userDetails) {
 		if (userDetails == null || userDetails.getUserId() == null) {

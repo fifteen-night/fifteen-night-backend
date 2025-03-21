@@ -77,11 +77,10 @@ public class ProductController {
 		return ResponseEntity.ok(response);
 	}
 
+	// 상품 삭제
 	@DeleteMapping("/{productId}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable("productId") UUID productId) {
-		log.info("Delete product {}", productId);
 		productService.removeProduct(productId);
-		log.info("Product deleted Successfully");
 		return ResponseEntity.noContent().build();
 	}
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fn.eureka.client.productservice.presentation.dto.CompanyInfoDto;
 
-@FeignClient(name = "company-service", path = "/api/companies")
+@FeignClient(name = "company-service", url = "http://localhost:19094/api/companies")
 public interface CompanyServiceClient {
 
 	@GetMapping("/{companyId}")

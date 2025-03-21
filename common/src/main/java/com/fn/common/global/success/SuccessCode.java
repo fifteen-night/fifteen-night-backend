@@ -11,15 +11,17 @@ public enum SuccessCode {
 
 	// HubToHub 관련 성공응답
 	HUBTOHUB_CREATE(HttpStatus.CREATED, "루트가 성공적으로 생성되었습니다.", "S_HUBTOHUB_CREATE"),
-	HUBTOHUB_SEARCH_ALL(HttpStatus.OK, "모든 루트가 성공적으로 조회되었습니다.", "S_HUBTOHUB_SEARCH_ALL"),
+	HUBTOHUB_SEARCH_ALL(HttpStatus.OK, "모든 루트가 성공적으로 조회되었습니다.","S_HUBTOHUB_SEARCH_ALL" ),
 	HUBTOHUB_SEARCH_ONE(HttpStatus.OK, "단건 루트가 성공적으로 조회되었습니다.", "S_HUBTOHUB_SEARCH_ONE"),
-	HUBTOHUB_SOFT_DELETE(HttpStatus.NO_CONTENT, "해당 루트가 삭제되었습니다.", "S_HUBTOHUB_SOFT_DELETE"),
-	HUBTOHUB_UPDATE(HttpStatus.OK, "루트가 성공적으로 수정되었습니다.", "S_HUBTOHUB_UPDATE"),
+	HUBTOHUB_SOFT_DELETE(HttpStatus.NO_CONTENT, "해당 루트가 삭제되었습니다.", "S_HUBTOHUB_SOFT_DELETE" ),
+	HUBTOHUB_UPDATE(HttpStatus.OK, "루트가 성공적으로 수정되었습니다.","S_HUBTOHUB_UPDATE" ),
 
 	// Delivery 관련 성공응답
-	DELIVERY_CREATE(HttpStatus.CREATED, "배송이 성공적으로 생성되었습니다.", "S_DELIVERY_CREATE"),
-	DELIVERY_SEARCH_ONE(HttpStatus.OK, "단건 배송이 성공적으로 조회되었습니다.", "S_DELIVERY_SEARCH_ONE"),
-	DELIVERY_SEARCH_ALL(HttpStatus.OK, "모든 배송이 성공적으로 조회되었습니다.", "S_DELIVERY_SEARCH_ALL"),
+	DELIVERY_CREATE(HttpStatus.CREATED, "배송이 성공적으로 생성되었습니다.", "S_DELIVERY_CREATE" ),
+	DELIVERY_SEARCH_ONE(HttpStatus.OK, "단건 배송이 성공적으로 조회되었습니다.","S_DELIVERY_SEARCH_ONE" ),
+	DELIVERY_SEARCH_ALL(HttpStatus.OK, "모든 배송이 성공적으로 조회되었습니다.","S_DELIVERY_SEARCH_ALL" ),
+	DELIVERY_DELETE(HttpStatus.NO_CONTENT, "해당 배송이 삭제되었습니다.", "S_DELIVERY_DELETE" ),
+	DELIVERY_UPDATE(HttpStatus.OK, "배송이 성공적으로 수정되었습니다.", "S_DELIVERY_UPDATE" ),
 
 	// Hub 관련 성공응답
 	HUB_CREATE(HttpStatus.CREATED, "허브가 성공적으로 생성되었습니다.", "S_HUB_CREATE"),
@@ -45,6 +47,10 @@ public enum SuccessCode {
 	SLACK_MESSAGE_FOUND(HttpStatus.OK, "Slack 메시지가 성공적으로 조회되었습니다.", "S_SLACK_MESSAGE_FOUND"),
 	SLACK_MESSAGE_LIST_FOUND(HttpStatus.OK, "Slack 메시지 목록이 성공적으로 조회되었습니다.", "S_SLACK_MESSAGE_LIST_FOUND"),
 	SLACK_MESSAGE_UPDATED(HttpStatus.OK, "Slack 메시지가 성공적으로 수정되었습니다.", "S_SLACK_MESSAGE_UPDATED"),
+	SLACK_MESSAGE_DELETED(HttpStatus.NO_CONTENT, "Slack 메시지가 성공적으로 삭제되었습니다.", "S_SLACK_MESSAGE_DELETED"),
+
+	// DeliveryManager 관련 성공 응답
+	DELIVERY_MANAGER_CREATED(HttpStatus.CREATED, "배송 관리자가 성공적으로 생성되었습니다.", "S_DELIVERY_MANAGER_CREATED")
 	;
 
 	private final HttpStatus statusCode;
