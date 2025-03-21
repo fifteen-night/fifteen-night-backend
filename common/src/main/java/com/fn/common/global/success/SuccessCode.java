@@ -42,7 +42,8 @@ public enum SuccessCode {
 	SLACK_MESSAGE_SENT(HttpStatus.CREATED, "Slack 메시지가 성공적으로 전송되었습니다.", "S_SLACK_MESSAGE_SENT"),
 	SLACK_MESSAGE_FOUND(HttpStatus.OK, "Slack 메시지가 성공적으로 조회되었습니다.", "S_SLACK_MESSAGE_FOUND"),
 	SLACK_MESSAGE_LIST_FOUND(HttpStatus.OK, "Slack 메시지 목록이 성공적으로 조회되었습니다.", "S_SLACK_MESSAGE_LIST_FOUND"),
-	SLACK_MESSAGE_UPDATED(HttpStatus.OK, "Slack 메시지가 성공적으로 수정되었습니다.", "S_SLACK_MESSAGE_UPDATED")
+	SLACK_MESSAGE_UPDATED(HttpStatus.OK, "Slack 메시지가 성공적으로 수정되었습니다.", "S_SLACK_MESSAGE_UPDATED"),
+	SLACK_MESSAGE_DELETED(HttpStatus.NO_CONTENT, "Slack 메시지가 성공적으로 삭제되었습니다.", "S_SLACK_MESSAGE_DELETED")
 	;
 
 	private final HttpStatus statusCode;

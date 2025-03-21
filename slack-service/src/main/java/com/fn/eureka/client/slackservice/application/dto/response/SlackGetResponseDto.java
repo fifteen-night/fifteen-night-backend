@@ -12,4 +12,7 @@ public class SlackGetResponseDto {
 	private String receiverId;
 	private String message;
 	private LocalDateTime sentAt;
+	private boolean isDeleted;
+	private LocalDateTime deletedAt;
 }
+
