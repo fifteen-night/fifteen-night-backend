@@ -1,4 +1,4 @@
-package com.fn.eureka.client.orderservice.application;
+package com.fn.eureka.client.orderservice.domain.service;
 
 import java.util.UUID;
 
@@ -6,8 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.orderservice.presentation.dto.OrderRequestDto;
-import com.fn.eureka.client.orderservice.presentation.dto.OrderResponseDto;
+import com.fn.eureka.client.orderservice.presentation.request.OrderRequestDto;
+import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 
 public interface OrderService {
 	OrderResponseDto addOrder(OrderRequestDto requestDto);

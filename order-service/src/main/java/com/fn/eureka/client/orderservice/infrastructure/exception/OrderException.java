@@ -1,4 +1,4 @@
-package com.fn.eureka.client.orderservice.exception;
+package com.fn.eureka.client.orderservice.infrastructure.exception;
 
 import org.springframework.http.HttpStatus;
 

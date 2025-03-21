@@ -1,19 +1,13 @@
-package com.fn.eureka.client.orderservice.infrastructure;
+package com.fn.eureka.client.orderservice.infrastructure.client;
 
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.orderservice.presentation.dto.CompanyInfoDto;
+import com.fn.eureka.client.orderservice.application.dto.CompanyInfoDto;
 
 @FeignClient(name = "company-service", path = "/api/companies")
 public interface CompanyServiceClient {

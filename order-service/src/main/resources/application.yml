@@ -28,6 +28,5 @@ eureka:
 
 logging:
   level:
-    com.fn.eureka.client.orderservice.infrastructure.CompanyServiceClient: DEBUG
     org.springframework.cloud.openfeign: DEBUG
     org.springframework.web.client.RestTemplate: DEBUG

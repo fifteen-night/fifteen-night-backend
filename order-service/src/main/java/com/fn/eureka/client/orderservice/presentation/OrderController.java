@@ -19,9 +19,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.orderservice.application.OrderService;
-import com.fn.eureka.client.orderservice.presentation.dto.OrderRequestDto;
-import com.fn.eureka.client.orderservice.presentation.dto.OrderResponseDto;
+import com.fn.eureka.client.orderservice.domain.service.OrderService;
+import com.fn.eureka.client.orderservice.presentation.request.OrderRequestDto;
+import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

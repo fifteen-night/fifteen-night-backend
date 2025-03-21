@@ -1,6 +1,5 @@
-package com.fn.eureka.client.orderservice.application;
+package com.fn.eureka.client.orderservice.infrastructure.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -10,16 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.orderservice.domain.Order;
-import com.fn.eureka.client.orderservice.domain.repository.OrderQueryRepository;
+import com.fn.eureka.client.orderservice.domain.model.Order;
+import com.fn.eureka.client.orderservice.domain.service.OrderService;
+import com.fn.eureka.client.orderservice.infrastructure.repository.OrderQueryRepositoryImpl;
 import com.fn.eureka.client.orderservice.domain.repository.OrderRepository;
-import com.fn.eureka.client.orderservice.exception.OrderException;
-import com.fn.eureka.client.orderservice.infrastructure.CompanyServiceClient;
-import com.fn.eureka.client.orderservice.infrastructure.DeliveryServiceClient;
-import com.fn.eureka.client.orderservice.infrastructure.HubServiceClient;
-import com.fn.eureka.client.orderservice.infrastructure.UserServiceClient;
-import com.fn.eureka.client.orderservice.presentation.dto.OrderRequestDto;
-import com.fn.eureka.client.orderservice.presentation.dto.OrderResponseDto;
+import com.fn.eureka.client.orderservice.infrastructure.exception.OrderException;
+import com.fn.eureka.client.orderservice.infrastructure.client.CompanyServiceClient;
+import com.fn.eureka.client.orderservice.infrastructure.client.DeliveryServiceClient;
+import com.fn.eureka.client.orderservice.infrastructure.client.HubServiceClient;
+import com.fn.eureka.client.orderservice.infrastructure.client.UserServiceClient;
+import com.fn.eureka.client.orderservice.presentation.request.OrderRequestDto;
+import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderServiceImpl implements OrderService {
 
 	private final OrderRepository orderRepository;
-	private final OrderQueryRepository orderQueryRepository;
+	private final OrderQueryRepositoryImpl orderQueryRepository;
 
 	private final UserServiceClient userServiceClient;
 	private final CompanyServiceClient companyServiceClient;
