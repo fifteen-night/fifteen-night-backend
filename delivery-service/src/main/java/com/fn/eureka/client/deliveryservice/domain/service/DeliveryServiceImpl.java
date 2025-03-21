@@ -9,15 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.exception.CustomApiException;
-import com.fn.eureka.client.deliveryservice.application.DeliveryRepository;
-import com.fn.eureka.client.deliveryservice.application.DeliveryService;
-import com.fn.eureka.client.deliveryservice.application.delivery.dto.request.CreateDeliveryRequestDto;
-import com.fn.eureka.client.deliveryservice.application.delivery.dto.request.UpdateDeliveryRequestDto;
-import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.CreateDeliveryResponseDto;
-import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.GetAllDeliveryResponseDto;
-import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.GetDeliveryResponseDto;
-import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.UpdateDeliveryResponseDto;
-import com.fn.eureka.client.deliveryservice.domain.delivery.Delivery;
+import com.fn.eureka.client.deliveryservice.domain.repository.DeliveryRepository;
+import com.fn.eureka.client.deliveryservice.application.service.DeliveryService;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.CreateDeliveryRequestDto;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.UpdateDeliveryRequestDto;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.CreateDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.GetAllDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.GetDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.UpdateDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.domain.model.delivery.Delivery;
 import com.fn.eureka.client.deliveryservice.exception.DeliveryException;
 
 import lombok.RequiredArgsConstructor;
