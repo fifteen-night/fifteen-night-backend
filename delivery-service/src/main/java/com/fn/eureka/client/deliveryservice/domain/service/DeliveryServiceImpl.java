@@ -66,6 +66,14 @@ public class DeliveryServiceImpl implements DeliveryService {
 		return new CommonPageResponse<>(getAllDeliveryResponseDtos);
 	}
 
+	@Override
+	public void deleteDelivery(UUID deliveryId) {
+
+		Delivery targetDelivery = findDeliveryById(deliveryId);
+
+		targetDelivery.markAsDeleted();
+	}
+
 	private Delivery findDeliveryById(UUID deliveryId) {
 
 		Delivery targetDelivery = deliveryRepository.findByDeliveryIdAndIsDeletedIsFalse(deliveryId)
