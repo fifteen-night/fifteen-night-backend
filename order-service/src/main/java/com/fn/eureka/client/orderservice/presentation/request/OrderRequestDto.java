@@ -1,4 +1,4 @@
-package com.fn.eureka.client.orderservice.presentation.dto;
+package com.fn.eureka.client.orderservice.presentation.request;
 
 import java.sql.Timestamp;
 import java.util.UUID;
