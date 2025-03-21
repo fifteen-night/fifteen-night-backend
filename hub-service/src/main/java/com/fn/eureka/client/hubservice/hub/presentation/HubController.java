@@ -21,8 +21,10 @@ import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.hubservice.hub.application.HubService;
+import com.fn.eureka.client.hubservice.hub.application.dto.request.CheckHubManagerRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.CreateHubRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.UpdateHubRequest;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.CheckHubManagerResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.CreateHubResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.request.CreateHubStockRequest;
@@ -65,6 +67,16 @@ public class HubController {
 
 		return ResponseEntity.status(SuccessCode.HUB_SEARCH.getStatusCode())
 			.body(new CommonPageResponse<>(response));
+	}
+
+	@PostMapping("/hub-manager")
+	public ResponseEntity<CommonResponse<CheckHubManagerResponse>> checkHubManager(
+		@RequestBody CheckHubManagerRequest request) {
+
+		CheckHubManagerResponse response = hubService.checkHubManager(request);
+
+		return ResponseEntity.status(SuccessCode.HUB_MANAGER_CHECK.getStatusCode())
+			.body(new CommonResponse<>(SuccessCode.HUB_MANAGER_CHECK, response));
 	}
 
 	@PatchMapping("/{hubId}")

@@ -5,7 +5,8 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.fn.eureka.client.hubservice.hub.domain.Hub;
-import com.fn.eureka.client.hubservice.hub.infrastructure.HubRepositoryCustom;
+import com.fn.eureka.client.hubservice.hub.infrastructure.repository.HubRepositoryCustom;
 
 public interface HubRepository extends JpaRepository<Hub, UUID>, HubRepositoryCustom {
+	boolean existsByHubAddress(String address);
 }
