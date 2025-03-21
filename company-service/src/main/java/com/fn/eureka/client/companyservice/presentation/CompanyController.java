@@ -1,5 +1,6 @@
 package com.fn.eureka.client.companyservice.presentation;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -22,7 +23,9 @@ import com.fn.eureka.client.companyservice.presentation.dto.CompanyRequestDto;
 import com.fn.eureka.client.companyservice.presentation.dto.CompanyResponseDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/companies")
@@ -76,5 +79,19 @@ public class CompanyController {
 	public ResponseEntity<Void> deleteCompany(@PathVariable("companyId") UUID companyId) {
 		companyService.removeCompany(companyId);
 		return ResponseEntity.noContent().build();
+	}
+
+	// for other services...
+
+	// 허브에 소속된 업체ID 목록 조회
+	@GetMapping("/hub/{hubId}")
+	public List<UUID> readCompaniesByHubId(@PathVariable("hubId") UUID hubId) {
+		return companyService.findAllCompaniesByHubId(hubId);
+	}
+
+	// 업체담당자ID로 업체 조회
+	@GetMapping("/company-manager/{companyManagerId}")
+	UUID readCompanyIdByCompanyManagerId(@PathVariable("companyManagerId")UUID companyManagerId) {
+		return companyService.findCompanyIdByCompanyManagerId(companyManagerId);
 	}
 }

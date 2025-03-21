@@ -1,5 +1,6 @@
 package com.fn.eureka.client.companyservice.application;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -20,4 +21,8 @@ public interface CompanyService {
 	CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto);
 
 	void removeCompany(UUID companyId);
+
+	List<UUID> findAllCompaniesByHubId(UUID hubId);
+
+	UUID findCompanyIdByCompanyManagerId(UUID companyManagerId);
 }

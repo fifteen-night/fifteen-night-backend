@@ -1,26 +1,25 @@
 package com.fn.eureka.client.orderservice.application;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fn.common.global.exception.ConflictException;
 import com.fn.common.global.exception.CustomApiException;
+import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.orderservice.domain.Order;
-import com.fn.eureka.client.orderservice.domain.OrderRepository;
+import com.fn.eureka.client.orderservice.domain.repository.OrderQueryRepository;
+import com.fn.eureka.client.orderservice.domain.repository.OrderRepository;
 import com.fn.eureka.client.orderservice.exception.OrderException;
 import com.fn.eureka.client.orderservice.infrastructure.CompanyServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.DeliveryServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.HubServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.UserServiceClient;
-import com.fn.eureka.client.orderservice.presentation.dto.CompanyInfoDto;
-import com.fn.eureka.client.orderservice.presentation.dto.DeliveryRequestDto;
-import com.fn.eureka.client.orderservice.presentation.dto.DeliveryResponseDto;
-import com.fn.eureka.client.orderservice.presentation.dto.HubStockResponseDto;
 import com.fn.eureka.client.orderservice.presentation.dto.OrderRequestDto;
 import com.fn.eureka.client.orderservice.presentation.dto.OrderResponseDto;
-import com.fn.eureka.client.orderservice.presentation.dto.UserResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderServiceImpl implements OrderService {
 
 	private final OrderRepository orderRepository;
+	private final OrderQueryRepository orderQueryRepository;
 
 	private final UserServiceClient userServiceClient;
 	private final CompanyServiceClient companyServiceClient;
@@ -84,5 +84,35 @@ public class OrderServiceImpl implements OrderService {
 		Order order = orderRepository.findByOrderIdAndIsDeletedFalse(orderId)
 			.orElseThrow(() -> new CustomApiException(OrderException.ORDER_NOT_FOUND));
 		return new OrderResponseDto(order);
+	}
+
+	// 주문 리스트 조회
+	@Override
+	public Page<OrderResponseDto> findAllOrdersByRole(String keyword, int page, int size, Sort.Direction sortDirection,
+		PageUtils.CommonSortBy sortBy, String userRole, UUID userId) {
+		// List<UUID> companies = null;
+		// List<UUID> deliveries = null;
+		UUID companyId = null;
+		switch (userRole) {
+			case "MASTER" :
+				break;
+			case "HUB_MANAGER" :
+				// UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
+				// // 허브에 소속된 업체ID 목록
+				// companies = companyServiceClient.readCompaniesByHubId(hubId);
+				// // orderSupplyCompanyId, orderReceiveCompanyId 중에 해당되는 주문 리스트 조회
+				break;
+			case "DELIVERY_MANAGER" :
+				// // 로그인 유저(배송담당자)가 담당하는 배송ID 리스트 받기
+				// deliveries = deliveryServiceClient.readeDeliveriesByDeliveryManagerId(userId);
+				break;
+			case "COMPANY_MANAGER" :
+				// orderSupplyCompanyId, orderReceiveCompanyId 중에 해당되는 주문 리스트 조회
+				companyId = companyServiceClient.readCompanyIdByCompanyManagerId(userId);
+				break;
+			default: throw new CustomApiException(OrderException.ORDER_NOT_FOUND);
+		}
+		Page<OrderResponseDto> orders = orderQueryRepository.findAllOrdersByRole(keyword, PageUtils.pageable(page, size), userRole, userId, companyId, sortDirection, sortBy);
+		return orders;
 	}
 }

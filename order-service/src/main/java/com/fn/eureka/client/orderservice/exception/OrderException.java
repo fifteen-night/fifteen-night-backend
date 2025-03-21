@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 public enum OrderException implements ExceptionType {
-	ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 주문을 찾을 수 없습니다.", "E_ORDER_NOT_FOUND"),
+	ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 조회할 수 없습니다.", "E_ORDER_NOT_FOUND"),
 	HUB_INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "허브에 재고가 부족합니다.", "E_HUB_INSUFFICIENT_STOCK");
 
 	private final HttpStatus httpStatus;
