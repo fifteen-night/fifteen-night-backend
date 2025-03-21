@@ -1,10 +1,10 @@
-package com.fn.eureka.client.orderservice.domain;
+package com.fn.eureka.client.orderservice.domain.model;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
-import com.fn.eureka.client.orderservice.presentation.dto.OrderRequestDto;
+import com.fn.eureka.client.orderservice.presentation.request.OrderRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

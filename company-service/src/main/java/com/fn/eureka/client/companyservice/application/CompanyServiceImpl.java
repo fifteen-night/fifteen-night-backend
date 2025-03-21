@@ -1,6 +1,8 @@
 package com.fn.eureka.client.companyservice.application;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -82,6 +84,19 @@ public class CompanyServiceImpl implements CompanyService {
 		Company company = companyRepository.findById(companyId)
 			.orElseThrow(() -> new NotFoundException("해당 업체를 찾을 수 없습니다"));
 		company.markAsDeleted();
+	}
+
+	// for other services...
+
+	// 허브별 업체ID 목록 조회
+	@Override
+	public List<UUID> findAllCompaniesByHubId(UUID hubId) {
+		return companyQueryRepository.findCompanyIdByCompanyHubId(hubId);
+	}
+
+	@Override
+	public UUID findCompanyIdByCompanyManagerId(UUID companyManagerId) {
+		return companyQueryRepository.findCompanyIdByCompanyManagerId(companyManagerId);
 	}
 
 }

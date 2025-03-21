@@ -8,6 +8,13 @@ import lombok.Getter;
 public enum SuccessCode {
 
 	// 여기서 공통 성공 응답 생성
+	// Order 관련 성공응답
+	ORDER_CREATE(HttpStatus.CREATED, "주문이 성공적으로 생성되었습니다.", "S_ORDER_CREATE"),
+	ORDER_SEARCH_ONE(HttpStatus.OK, "단건 주문이 성공적으로 조회되었습니다.", "S_ORDER_SEARCH_ONE"),
+	ORDER_SEARCH_ALL(HttpStatus.OK, "모든 주문이 성공적으로 조회되었습니다.","S_ORDER_SEARCH_ALL" ),
+	ORDER_UPDATE(HttpStatus.OK, "주문이 성공적으로 수정되었습니다.", "S_ORDER_UPDATE" ),
+	ORDER_DELETE(HttpStatus.NO_CONTENT, "해당 주문이 삭제되었습니다.", "S_ORDER_DELETE" ),
+
     // HubToHub 관련 성공응답
 	HUBTOHUB_CREATE(HttpStatus.CREATED, "루트가 성공적으로 생성되었습니다.", "S_HUBTOHUB_CREATE"),
 	HUBTOHUB_SEARCH_ALL(HttpStatus.OK, "모든 루트가 성공적으로 조회되었습니다.","S_HUBTOHUB_SEARCH_ALL" ),

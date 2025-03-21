@@ -1,4 +1,4 @@
-package com.fn.eureka.client.orderservice.config;
+package com.fn.eureka.client.orderservice.infrastructure.config;
 
 import java.util.Collection;
 

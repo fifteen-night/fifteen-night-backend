@@ -34,6 +34,7 @@ public class CompanyQueryRepository {
 		this.queryFactory = queryFactory;
 	}
 
+	// 업체 리스트 조회
 	public Page<CompanyResponseDto> findCompaniesByType(UUID hubId, String type, String keyword, Pageable pageable,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy,
 		String userRole) {
@@ -73,4 +74,25 @@ public class CompanyQueryRepository {
 
 		return new PageImpl<>(dtoList, pageable, total);
 	}
+
+	// 허브별 업체ID 목록 조회
+	public List<UUID> findCompanyIdByCompanyHubId(UUID hubId) {
+		QCompany company = QCompany.company;
+		return queryFactory
+			.select(company.companyId)
+			.from(company)
+			.where(company.companyHubId.eq(hubId))
+			.fetch();
+	}
+
+	// 업체담당자ID로 업체ID 조회
+	public UUID findCompanyIdByCompanyManagerId(UUID companyManagerId) {
+		QCompany company = QCompany.company;
+		return queryFactory
+			.select(company.companyId)
+			.from(company)
+			.where(company.companyManagerId.eq(companyManagerId))
+			.fetchOne();
+	}
+
 }

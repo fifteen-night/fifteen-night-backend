@@ -1,9 +1,9 @@
-package com.fn.eureka.client.orderservice.presentation.dto;
+package com.fn.eureka.client.orderservice.application.dto;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import com.fn.eureka.client.orderservice.domain.Order;
+import com.fn.eureka.client.orderservice.domain.model.Order;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
