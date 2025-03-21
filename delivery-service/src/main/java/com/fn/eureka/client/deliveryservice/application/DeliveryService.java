@@ -22,4 +22,5 @@ public interface DeliveryService {
 	void deleteDelivery(UUID deliveryId);
 
 	UpdateDeliveryResponseDto updateDelivery(UUID deliveryId, UpdateDeliveryRequestDto updateDeliveryRequestDto);
+
 }
