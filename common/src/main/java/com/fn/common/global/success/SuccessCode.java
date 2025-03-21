@@ -20,6 +20,7 @@ public enum SuccessCode {
 	DELIVERY_SEARCH_ONE(HttpStatus.OK, "단건 배송이 성공적으로 조회되었습니다.","S_DELIVERY_SEARCH_ONE" ),
 	DELIVERY_SEARCH_ALL(HttpStatus.OK, "모든 배송이 성공적으로 조회되었습니다.","S_DELIVERY_SEARCH_ALL" ),
 	DELIVERY_DELETE(HttpStatus.NO_CONTENT, "해당 배송이 삭제되었습니다.", "S_DELIVERY_DELETE" ),
+	DELIVERY_UPDATE(HttpStatus.OK, "배송이 성공적으로 수정되었습니다.", "S_DELIVERY_UPDATE" ),
 
 	// Hub 관련 성공응답
 	HUB_CREATE(HttpStatus.CREATED, "허브가 성공적으로 생성되었습니다.", "S_HUB_CREATE"),

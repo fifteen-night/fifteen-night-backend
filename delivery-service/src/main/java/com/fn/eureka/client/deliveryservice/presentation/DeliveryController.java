@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,10 +25,12 @@ import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliveryservice.application.DeliveryService;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.request.CreateDeliveryRequestDto;
+import com.fn.eureka.client.deliveryservice.application.delivery.dto.request.UpdateDeliveryRequestDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.CreateDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.DeleteDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.GetAllDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.GetDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.delivery.dto.response.UpdateDeliveryResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -92,6 +96,19 @@ public class DeliveryController {
 		return ResponseEntity
 			.ok()
 			.body(new CommonResponse<>(SuccessCode.DELIVERY_DELETE , null));
+	}
+
+	@PatchMapping("/deliveries/{deliveryId}")
+	@Operation(summary = "배송 수정하기" , description = "배송 수정은 'MASTER' , 'HUB_MANAGER' , 'DELIVERY_MANAGER' 만 가능")
+	public ResponseEntity<CommonResponse<UpdateDeliveryResponseDto>> updateDelivery(
+		@PathVariable UUID deliveryId,
+		@RequestBody UpdateDeliveryRequestDto updateDeliveryRequestDto){
+
+		UpdateDeliveryResponseDto updateDeliveryResponseDto = deliveryService.updateDelivery(deliveryId, updateDeliveryRequestDto);
+
+		return ResponseEntity.ok()
+			.body(new CommonResponse<>(SuccessCode.DELIVERY_UPDATE , updateDeliveryResponseDto));
+
 	}
 
 }

@@ -1,8 +1,10 @@
 package com.fn.eureka.client.deliveryservice.domain.delivery;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
+import com.fn.eureka.client.deliveryservice.application.delivery.dto.request.UpdateDeliveryRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -74,4 +76,17 @@ public class Delivery extends BaseEntity {
 		this.receiverSlackId = receiverSlackId;
 		this.cdmId = cdmId;
 	}
+
+	public void update(UpdateDeliveryRequestDto updateDeliveryRequestDto) {
+
+		Optional.ofNullable(updateDeliveryRequestDto.getOrderId()).ifPresent(value -> this.orderId = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getStatus()).ifPresent(value -> this.Status = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getDepartureHubId()).ifPresent(value -> this.departureHubId = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getDestinationHubId()).ifPresent(value -> this.destinationHubId = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getAddress()).ifPresent(value -> this.address = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getReceiverName()).ifPresent(value -> this.receiverName = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getReceiverSlackId()).ifPresent(value -> this.receiverSlackId = value);
+
+	}
+
 }
