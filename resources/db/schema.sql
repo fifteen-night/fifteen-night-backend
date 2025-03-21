@@ -19,3 +19,6 @@ CREATE SCHEMA IF NOT EXISTS "order";
 -- slack 도메인 스키마
 CREATE SCHEMA IF NOT EXISTS slack;
 
+-- delivery_manager 도메인 스키마
+CREATE SCHEMA IF NOT EXISTS delivery_manager;
+

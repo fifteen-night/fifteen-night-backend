@@ -69,4 +69,12 @@ public class UserController {
 		return ResponseEntity.status(SuccessCode.USER_DELETED.getStatusCode()).body(response);
 	}
 
+	// FeignClient용 유저 존재 여부 확인 메서드
+	@GetMapping("/internal/{userId}")
+	public ResponseEntity<Boolean> checkUserExists(@PathVariable UUID userId) {
+		boolean exists = userService.checkUserExists(userId);
+		return ResponseEntity.ok(exists);
+	}
+
+
 }

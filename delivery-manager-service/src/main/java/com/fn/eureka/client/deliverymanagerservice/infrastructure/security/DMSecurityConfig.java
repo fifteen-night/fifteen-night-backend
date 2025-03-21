@@ -1,23 +1,23 @@
-package com.fn.eureka.client.userservice.infrastructure.security;
+package com.fn.eureka.client.deliverymanagerservice.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fn.common.global.audit.SecurityContextHelper;
-import com.fn.eureka.client.userservice.infrastructure.filter.AuthenticationFilter;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.fn.eureka.client.deliverymanagerservice.infrastructure.filter.AuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class DMSecurityConfig {
 
 	private final AuthenticationFilter authenticationFilter;
 
@@ -28,7 +28,7 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/api/auth/**", "/api/users/internal/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
