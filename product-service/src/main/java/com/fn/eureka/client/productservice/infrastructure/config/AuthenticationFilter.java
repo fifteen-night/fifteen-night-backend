@@ -31,7 +31,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		log.info("현재 요청 URI: {}", requestUri);
 
 		// 인증 예외 경로
-		if (requestUri.startsWith("/api/auth/") ||
+		if (requestUri.startsWith("/api/") ||
 			requestUri.startsWith("/swagger-ui/") ||
 			requestUri.startsWith("/v3/api-docs"))
 		{

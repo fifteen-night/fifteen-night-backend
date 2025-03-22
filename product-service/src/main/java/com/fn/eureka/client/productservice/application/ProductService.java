@@ -17,7 +17,7 @@ public interface ProductService {
 
 	Page<ProductResponseDto> findAllProducts(String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole, UUID userId);
 
-	ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole);
+	ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole, UUID userId);
 
-	void removeProduct(UUID productId);
+	void removeProduct(UUID productId, String userRole, UUID userId);
 }

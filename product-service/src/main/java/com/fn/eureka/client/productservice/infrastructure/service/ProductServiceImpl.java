@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,20 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.exception.NotFoundException;
-import com.fn.common.global.exception.UnauthorizedException;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.ProductService;
+import com.fn.eureka.client.productservice.application.dto.CompanyInfoDto;
+import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 import com.fn.eureka.client.productservice.domain.model.Product;
-import com.fn.eureka.client.productservice.infrastructure.client.DeliveryServiceClient;
-import com.fn.eureka.client.productservice.infrastructure.client.OrderServiceClient;
-import com.fn.eureka.client.productservice.infrastructure.exception.ProductException;
-import com.fn.eureka.client.productservice.infrastructure.repository.ProductQueryRepositoryImpl;
+import com.fn.eureka.client.productservice.domain.repository.ProductQueryRepository;
 import com.fn.eureka.client.productservice.domain.repository.ProductRepository;
 import com.fn.eureka.client.productservice.infrastructure.client.CompanyServiceClient;
+import com.fn.eureka.client.productservice.infrastructure.client.DeliveryServiceClient;
 import com.fn.eureka.client.productservice.infrastructure.client.HubServiceClient;
-import com.fn.eureka.client.productservice.application.dto.CompanyInfoDto;
+import com.fn.eureka.client.productservice.infrastructure.client.OrderServiceClient;
+import com.fn.eureka.client.productservice.infrastructure.exception.ProductException;
 import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
-import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,8 +33,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
+	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 	private final ProductRepository productRepository;
-	private final ProductQueryRepositoryImpl productQueryRepository;
+	private final ProductQueryRepository productQueryRepository;
 
 	private final HubServiceClient hubServiceClient;
 	private final CompanyServiceClient companyServiceClient;
@@ -100,7 +102,7 @@ public class ProductServiceImpl implements ProductService {
 				// 배송ID로 주문된 상품ID 리스트 조회
 				products = orderServiceClient.readOrderProductIdListByDeliveryId(deliveries);
 				break;
-			case "COMANY_MANAGER" :
+			case "COMPANY_MANAGER" :
 				companyId = companyServiceClient.readCompanyIdByCompanyManagerId(userId);
 				break;
 			default: throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
@@ -112,24 +114,52 @@ public class ProductServiceImpl implements ProductService {
 	// 상품 수정
 	@Override
 	@Transactional
-	public ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole) {
-		// TODO 상품의 업체 담당자, <업체의 소속 허브 관리자만 삭제 가능
-		// TODO Security - 마스터, 허브관리자, 업체관리자만 상품 수정 가능
+	public ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole, UUID userId) {
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
+		validateUserPermission(product, userRole, userId);
 		updates.forEach((key, value) -> product.modifyProductInfo(key, value, userRole));
 		return new ProductResponseDto(product);
 	}
 
+	// 상품 삭제
 	@Override
 	@Transactional
-	public void removeProduct(UUID productId) {
-		// TODO 상품의 업체 담당자, < 업체의 소속 허브 관리자만 삭제 가능
+	public void removeProduct(UUID productId, String userRole, UUID userId) {
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
+		validateUserPermission(product, userRole, userId);
 		product.markAsDeleted();
 	}
 
+	// 주문 수정 삭제는 마스터, 허브 관리자(담당 허브일 경우)만 가능
+	private void validateUserPermission(Product product, String userRole, UUID userId) {
+		if ("MASTER".equals(userRole)) {
+			return;
+		}
+		if ("HUB_MANAGER".equals(userRole)) {
+			// 로그인 유저가 허브관리자인 경우, 유저ID(허브관리자ID)로 허브ID 조회
+			UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
+			// 업체ID로 업체 소속 허브ID 조회
+			UUID companyHubId = companyServiceClient.readHubIdByCompanyId(product.getProductCompanyId());
+			// 상품이 소속된 업체의 허브가 아닌 경우 권한 없음
+			if (!hubId.equals(companyHubId)) {
+				throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
+			}
+			return;
+		}
+		if ("COMPANY_MANAGER".equals(userRole)) {
+			// 업체담당자ID로 업체ID 조회
+			UUID companyId = companyServiceClient.readCompanyIdByCompanyManagerId(userId);
+			log.info("업체담당자ID로 조회해온 업체ID : {}", companyId);
+			// 상품이 소속된 업체가 아닌 경우 권한 없음
+			if (!companyId.equals(product.getProductCompanyId())) {
+				throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
+			}
+			return;
+		}
+		throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
+	}
 
 
 }

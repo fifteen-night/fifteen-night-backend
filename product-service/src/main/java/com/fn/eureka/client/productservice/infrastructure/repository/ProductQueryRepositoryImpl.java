@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 import com.fn.eureka.client.productservice.domain.model.Product;
-import com.fn.eureka.client.productservice.domain.QProduct;
+import com.fn.eureka.client.productservice.domain.model.QProduct;
 import com.fn.eureka.client.productservice.domain.repository.ProductQueryRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;

@@ -24,5 +24,8 @@ public interface CompanyServiceClient {
 	@GetMapping("/company-manager/{companyManagerId}")
 	UUID readCompanyIdByCompanyManagerId(@PathVariable("companyManagerId")UUID companyManagerId);
 
+	// 업체ID로 허브ID 반환
+	@GetMapping("/hub/{companyId}")
+	UUID readHubIdByCompanyId(@PathVariable("companyId") UUID companyId);
 
 }

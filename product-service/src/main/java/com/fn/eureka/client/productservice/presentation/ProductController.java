@@ -76,15 +76,19 @@ public class ProductController {
 	public ResponseEntity<CommonResponse<ProductResponseDto>> updateProduct(
 		@PathVariable("productId") UUID productId,
 		@RequestBody Map<String, Object> updates,
-		@RequestHeader("X-User-Role") String userRole) {
-		ProductResponseDto productResponseDto = productService.modifyProduct(productId, updates, userRole);
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId) {
+		ProductResponseDto productResponseDto = productService.modifyProduct(productId, updates, userRole, userId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.PRODUCT_UPDATE, productResponseDto));
 	}
 
 	// 상품 삭제
 	@DeleteMapping("/{productId}")
-	public ResponseEntity<CommonResponse> deleteProduct(@PathVariable("productId") UUID productId) {
-		productService.removeProduct(productId);
+	public ResponseEntity<CommonResponse> deleteProduct(
+		@PathVariable("productId") UUID productId,
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId) {
+		productService.removeProduct(productId, userRole, userId);
 		return ResponseEntity.status(SuccessCode.PRODUCT_DELETE.getStatusCode()).body(new CommonResponse<>(SuccessCode.PRODUCT_DELETE, productId));
 	}
 
