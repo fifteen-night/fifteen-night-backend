@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerCreateRequestDto;
+import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerGetResponseDto;
 import com.fn.eureka.client.deliverymanagerservice.application.service.DeliveryManagerService;
 
@@ -37,11 +39,11 @@ public class DeliveryManagerController {
 		return ResponseEntity.status(SuccessCode.DELIVERY_MANAGER_CREATED.getStatusCode()).body(response);
 	}
 
-	@GetMapping("/{deliveryManagerId}")
+	@GetMapping("/{dmId}")
 	public ResponseEntity<CommonResponse<DeliveryManagerGetResponseDto>> getDeliveryManager(
-		@PathVariable UUID deliveryManagerId) {
+		@PathVariable UUID dmId) {
 
-		CommonResponse<DeliveryManagerGetResponseDto> response = deliveryManagerService.getDeliveryManager(deliveryManagerId);
+		CommonResponse<DeliveryManagerGetResponseDto> response = deliveryManagerService.getDeliveryManager(dmId);
 		return ResponseEntity.status(SuccessCode.DELIVERY_MANAGER_FOUND.getStatusCode()).body(response);
 	}
 
@@ -57,5 +59,17 @@ public class DeliveryManagerController {
 			.status(SuccessCode.DELIVERY_MANAGER_LIST_FOUND.getStatusCode())
 			.body(response);
 	}
+
+	@PatchMapping("/{dmId}")
+	public ResponseEntity<CommonResponse<DeliveryManagerGetResponseDto>> updateDeliveryManager(
+		@PathVariable UUID dmId,
+		@Valid @RequestBody DeliveryManagerUpdateRequestDto requestDto) {
+
+		CommonResponse<DeliveryManagerGetResponseDto> response =
+			deliveryManagerService.updateDeliveryManager(dmId, requestDto);
+
+		return ResponseEntity.status(SuccessCode.DELIVERY_MANAGER_UPDATED.getStatusCode()).body(response);
+	}
+
 
 }
