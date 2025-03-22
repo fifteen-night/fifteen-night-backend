@@ -18,4 +18,6 @@ public interface OrderService {
 	Page<OrderResponseDto> findAllOrdersByRole(String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole, UUID userId);
 
 	OrderResponseDto modifyOrder(UUID orderId, Map<String, Object> updates, String userRole, UUID userId);
+
+	void removeOrder(UUID orderId, String userRole, UUID userId);
 }

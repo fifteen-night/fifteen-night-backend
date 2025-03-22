@@ -11,6 +11,7 @@ import com.fn.eureka.client.orderservice.application.dto.DeliveryResponseDto;
 public interface DeliveryServiceClient {
 
 	// TODO 메서드 이름 같은지 확인하기!!
+	// 배송 생성
 	@PostMapping
 	DeliveryResponseDto createdDelivery(@RequestBody DeliveryRequestDto deliveryRequestDto);
 }
