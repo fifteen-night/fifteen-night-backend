@@ -12,7 +12,7 @@ import com.fn.eureka.client.orderservice.application.dto.UserResponseDto;
 public interface UserServiceClient {
 
 	// 유저 조회
-	@GetMapping("/users/{userId}")
+	@GetMapping("/{userId}")
 	UserResponseDto getUser(@PathVariable("userId") UUID userId);
 
 }
