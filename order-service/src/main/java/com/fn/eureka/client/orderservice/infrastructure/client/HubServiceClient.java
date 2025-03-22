@@ -14,8 +14,10 @@ public interface HubServiceClient {
 
 	// TODO 메서드 이름 같은지 확인하기!!
 	// 허브 재고 조회
-	@GetMapping("/{hubId}")
-	HubStockResponseDto searchHubStock(
-		@PathVariable("hubId") UUID hubId,
-		@RequestParam(value = "productId", required = false) UUID productId);
+	@GetMapping("/{hubId}/stock/{productId}")
+	HubStockResponseDto readHubStock(@PathVariable("hubId") UUID hubId, @PathVariable("productId") UUID productId);
+
+	// TODO 만들어주세요 SELECT h.hubId FROM Hub h WHERE h.hubManagerId = :hubManagerId
+	@GetMapping("/hub-id/{hubManagerId}")
+	UUID readHubIdByHubManagerId(@PathVariable("hubManagerId") UUID hubManagerId);
 }
