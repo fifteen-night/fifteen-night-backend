@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		// 주문 생성
-		Order order = orderRepository.save(new Order(orderRequestDto));
+		Order order = orderRepository.save(Order.from(orderRequestDto));
 
 		// 배송 생성 요청
 		// 주문자(수령업체) 업체 조회
@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
 		// 생성된 배송ID 받아 저장
 		order.saveOrderDeliveryId(deliveryInfo.getDeliveryId());
 
-		return new OrderResponseDto(order);
+		return OrderResponseDto.from(order);
 	}
 
 	// 주문 조회
@@ -94,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
 	public OrderResponseDto findOrder(UUID orderId) {
 		Order order = orderRepository.findByOrderIdAndIsDeletedFalse(orderId)
 			.orElseThrow(() -> new CustomApiException(OrderException.ORDER_NOT_FOUND));
-		return new OrderResponseDto(order);
+		return OrderResponseDto.from(order);
 	}
 
 	// 주문 리스트 조회
@@ -135,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
 			.orElseThrow(() -> new CustomApiException(OrderException.ORDER_NOT_FOUND));
 		validateUserPermission(order, userRole, userId);
 		updates.forEach((key, value) -> order.modifyOrderInfo(key, value));
-		return new OrderResponseDto(order);
+		return OrderResponseDto.from(order);
 	}
 
 	// 주문 삭제

@@ -81,7 +81,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
 		// DTO 변환
 		List<OrderResponseDto> dtoList = orders.stream()
-			.map(OrderResponseDto::new)
+			.map(OrderResponseDto::from)
 			.collect(Collectors.toList());
 
 		return new PageImpl<>(dtoList, pageable, total);
