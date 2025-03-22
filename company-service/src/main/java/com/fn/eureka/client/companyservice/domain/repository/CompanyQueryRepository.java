@@ -95,4 +95,12 @@ public class CompanyQueryRepository {
 			.fetchOne();
 	}
 
+	public UUID findHubIdByCompanyId(UUID companyId) {
+		QCompany company = QCompany.company;
+		return queryFactory
+			.select(company.companyHubId)
+			.from(company)
+			.where(company.companyId.eq(companyId))
+			.fetchOne();
+	}
 }

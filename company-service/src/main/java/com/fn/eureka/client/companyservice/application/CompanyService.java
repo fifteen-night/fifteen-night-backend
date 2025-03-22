@@ -25,4 +25,6 @@ public interface CompanyService {
 	List<UUID> findAllCompaniesByHubId(UUID hubId);
 
 	UUID findCompanyIdByCompanyManagerId(UUID companyManagerId);
+
+	UUID findHubIdByCompanyId(UUID companyId);
 }

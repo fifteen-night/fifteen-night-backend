@@ -59,4 +59,13 @@ public class Order extends BaseEntity {
 	public void saveOrderDeliveryId(UUID deliveryId) {
 		this.orderDeliveryId = deliveryId;
 	}
+
+	public void modifyOrderInfo(String key, Object value) {
+		switch (key) {
+			case "orderProductQuantity" -> this.orderProductQuantity = (Integer) value;
+			case "orderDeadline" -> this.orderDeadline = (Timestamp) value;
+			case "orderRequirement" -> this.orderRequirement = (String) value;
+			default -> throw new IllegalArgumentException("잘못된 필드명 : " + key);
+		}
+	}
 }
