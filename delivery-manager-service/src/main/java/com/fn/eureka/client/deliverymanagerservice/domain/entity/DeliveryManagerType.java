@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum DeliveryManagerType {
-	HUB_MANAGER("HUB"),
-	COMPANY_MANAGER("COMPANY");
+	HUB("HUB"),
+	COMPANY("COMPANY");
 
 	private final String value;
 }

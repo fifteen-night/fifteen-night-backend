@@ -57,7 +57,9 @@ public enum SuccessCode {
 	SLACK_MESSAGE_DELETED(HttpStatus.NO_CONTENT, "Slack 메시지가 성공적으로 삭제되었습니다.", "S_SLACK_MESSAGE_DELETED"),
 
 	// DeliveryManager 관련 성공 응답
-	DELIVERY_MANAGER_CREATED(HttpStatus.CREATED, "배송 관리자가 성공적으로 생성되었습니다.", "S_DELIVERY_MANAGER_CREATED")
+	DELIVERY_MANAGER_CREATED(HttpStatus.CREATED, "배송 관리자가 성공적으로 생성되었습니다.", "S_DELIVERY_MANAGER_CREATED"),
+	DELIVERY_MANAGER_FOUND(HttpStatus.OK, "배송 관리자가 성공적으로 조회되었습니다.", "S_DELIVERY_MANAGER_FOUND"),
+	DELIVERY_MANAGER_LIST_FOUND(HttpStatus.OK, "배송 관리자 목록이 성공적으로 조회되었습니다.", "S_DELIVERY_MANAGER_LIST_FOUND")
 	;
 
 	private final HttpStatus statusCode;
