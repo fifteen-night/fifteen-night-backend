@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "hub-service", path = "/api/hubs")
 public interface HubServiceClient {
 
-	// TODO 요청 - 허브관리자ID로 허브ID 검색
-	@GetMapping("/{hubManagerId}")
-	UUID getHubByHubManagerId(@PathVariable("hubManagerId") UUID hubManagerId);
+	// 허브관리자ID로 허브ID 조회
+	@GetMapping("/hub-id/{hubManagerId}")
+	UUID readHubIdByHubManagerId(@PathVariable("hubManagerId") UUID hubManagerId);
 }

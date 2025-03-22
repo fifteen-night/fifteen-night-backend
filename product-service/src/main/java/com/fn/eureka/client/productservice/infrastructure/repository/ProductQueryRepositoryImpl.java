@@ -31,29 +31,22 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
 		this.queryFactory = new JPAQueryFactory(entityManager);
 	}
 
-	// @Autowired
-	// public ProductQueryRepository(JPAQueryFactory queryFactory) {
-	// 	this.queryFactory = queryFactory;
-	// }
-
 	// TODO client 문제 해결하면 List<UUID> companies 넣기
-	public Page<ProductResponseDto> findProductsByType(String type, UUID id, String keyword, Pageable pageable, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy) {
+	public Page<ProductResponseDto> findProducts(String userRole, List<UUID> companies, List<UUID> products, UUID companyId, String keyword, Pageable pageable, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy) {
 		QProduct product = QProduct.product;
 		BooleanBuilder builder = new BooleanBuilder();
 
 		// 삭제되지 않은 항목만 조회
 		builder.and(product.isDeleted.eq(false));
 
-		// 전체/허브별/업체별 조회 조건
-		if ("whole".equalsIgnoreCase(type)) {
-			// 전체 조회
-		} else if ("hub".equalsIgnoreCase(type)) {
-		// } else if ("hub".equalsIgnoreCase(type) && companies != null && !companies.isEmpty()) {
+		if (userRole.equals("HUB_MANAGER") && companies != null && !companies.isEmpty()) {
 			// 허브별 조회 : 허브ID가 일치하는 업체ID를 가지고 있는 상품 조회
-			// builder.and(product.productCompanyId.in(companies));
-		} else if ("company".equalsIgnoreCase(type) && id != null) {
+			builder.and(product.productCompanyId.in(companies));
+		} else if (userRole.equals("DELIVERY_MANAGER") && products != null && products.isEmpty()) {
+			builder.and(product.productId.in(products));
+		} else if (userRole.equals("COMPANY_MANAGER") && companyId != null) {
 			// 업체별 조회
-			builder.and(product.productCompanyId.eq(id));
+			builder.and(product.productCompanyId.eq(companyId));
 		}
 
 		// 검색어 조건 (상품명)

@@ -15,4 +15,6 @@ public interface OrderQueryRepository {
 	Page<OrderResponseDto> findAllOrdersByRole(
 		String keyword, Pageable pageable, String userRole, UUID userId, UUID companyId, List<UUID> companies,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy);
+
+	List<UUID> findOrderProductIdListByDeliveryId(List<UUID> deliveries);
 }

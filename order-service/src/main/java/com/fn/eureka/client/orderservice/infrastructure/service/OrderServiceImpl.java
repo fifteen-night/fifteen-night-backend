@@ -115,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
 				break;
 			case "DELIVERY_MANAGER" :
 				// // 로그인 유저(배송담당자)가 담당하는 배송ID 리스트 받기
-				// deliveries = deliveryServiceClient.readeDeliveriesByDeliveryManagerId(userId);
+				// deliveries = deliveryServiceClient.readDeliveriesByDeliveryManagerId(userId);
 				break;
 			case "COMPANY_MANAGER" :
 				// 공급업체ID/수령업체ID 중에 해당되는 주문 리스트 조회
@@ -168,6 +168,13 @@ public class OrderServiceImpl implements OrderService {
 			return;
 		}
 		throw new CustomApiException(OrderException.ORDER_UNAUTHORIZED);
+	}
+
+	// for other services...
+
+	@Override
+	public List<UUID> findOrderProductIdListByDeliveryId(List<UUID> deliveries) {
+		return orderQueryRepository.findOrderProductIdListByDeliveryId(deliveries);
 	}
 
 }

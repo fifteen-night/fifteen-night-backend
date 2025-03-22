@@ -1,5 +1,6 @@
 package com.fn.eureka.client.productservice.infrastructure.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -8,11 +9,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.exception.UnauthorizedException;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.ProductService;
 import com.fn.eureka.client.productservice.domain.model.Product;
+import com.fn.eureka.client.productservice.infrastructure.client.DeliveryServiceClient;
+import com.fn.eureka.client.productservice.infrastructure.client.OrderServiceClient;
+import com.fn.eureka.client.productservice.infrastructure.exception.ProductException;
 import com.fn.eureka.client.productservice.infrastructure.repository.ProductQueryRepositoryImpl;
 import com.fn.eureka.client.productservice.domain.repository.ProductRepository;
 import com.fn.eureka.client.productservice.infrastructure.client.CompanyServiceClient;
@@ -32,6 +37,8 @@ public class ProductServiceImpl implements ProductService {
 
 	private final HubServiceClient hubServiceClient;
 	private final CompanyServiceClient companyServiceClient;
+	private final DeliveryServiceClient deliveryServiceClient;
+	private final OrderServiceClient orderServiceClient;
 
 	// 상품 생성
 	@Override
@@ -46,19 +53,19 @@ public class ProductServiceImpl implements ProductService {
 			// HUB MANAGER 본인 허브에 소속된 상품만 생성 가능 (업체ID로 허브ID 확인 필요)
 			case "HUB_MANAGER" :
 				// 허브관리자ID로 허브ID 검색
-				// UUID hubId = hubServiceClient.getHubByHubManagerId(userId);
-				// if (!companyInfo.getCompanyHubId().equals(hubId)) {
-				// 	throw new UnauthorizedException("해당 허브는 상품 업체의 소속 허브가 아닙니다.");
-				// }
+				UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
+				if (!companyInfo.getCompanyHubId().equals(hubId)) {
+					throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
+				}
 				break;
 			// COMPANY MANAGER 본인 업체 상품만 생성 가능
 			case "COMPANY_MANAGER" :
 				if (!companyInfo.getCompanyManagerId().equals(userId)) {
-					throw new UnauthorizedException("해당 업체의 상품이 아닙니다.");
+					throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
 				}
 				break;
 			default:
-				throw new UnauthorizedException("상품을 생성할 권한이 없습니다.");
+				throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
 		}
 		Product product = productRepository.save(new Product(productRequestDto));
 		return new ProductResponseDto(product);
@@ -74,15 +81,32 @@ public class ProductServiceImpl implements ProductService {
 
 	// 전체/허브별/업체별 상품 리스트 조회 + 검색
 	@Override
-	public Page<ProductResponseDto> findAllProductsByType(String type, UUID id, String keyword, int page, int size,
-		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy) {
+	public Page<ProductResponseDto> findAllProducts(String keyword, int page, int size,
+		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole, UUID userId) {
 		// TODO client 해결되면 허브별 상품 리스트 조회 코드 추가
-		// id와 같은 HubID를 가진 업체ID 목록 가져오기
-		// List<UUID> companies = null;
-		// if ("hub".equalsIgnoreCase(type) && id != null) {
-		// 	companies = companyServiceClient.getCompanyIdByCompanyHubId(id);
-		// }
-		return productQueryRepository.findProductsByType(type, id, keyword, PageUtils.pageable(page, size), sortDirection, sortBy);
+		List<UUID> companies = null;
+		List<UUID> products = null;
+		UUID companyId = null;
+		switch (userRole) {
+			case "MASTER" : break;
+			case "HUB_MANAGER" :
+				UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
+				// 허브가 같은 업체 리스트
+				companies = companyServiceClient.readCompaniesByHubId(hubId);
+				break;
+			case "DELIVERY_MANAGAER" :
+				// 로그인 유저(배송담당자)가 담당하는 배송ID 리스트 조회
+				List<UUID> deliveries = deliveryServiceClient.readDeliveriesByDeliveryManagerId(userId);
+				// 배송ID로 주문된 상품ID 리스트 조회
+				products = orderServiceClient.readOrderProductIdListByDeliveryId(deliveries);
+				break;
+			case "COMANY_MANAGER" :
+				companyId = companyServiceClient.readCompanyIdByCompanyManagerId(userId);
+				break;
+			default: throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
+		}
+
+		return productQueryRepository.findProducts(userRole, companies, products, companyId, keyword, PageUtils.pageable(page, size), sortDirection, sortBy);
 	}
 
 	// 상품 수정
@@ -92,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
 		// TODO 상품의 업체 담당자, <업체의 소속 허브 관리자만 삭제 가능
 		// TODO Security - 마스터, 허브관리자, 업체관리자만 상품 수정 가능
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
-			.orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
 		updates.forEach((key, value) -> product.modifyProductInfo(key, value, userRole));
 		return new ProductResponseDto(product);
 	}
@@ -102,8 +126,10 @@ public class ProductServiceImpl implements ProductService {
 	public void removeProduct(UUID productId) {
 		// TODO 상품의 업체 담당자, < 업체의 소속 허브 관리자만 삭제 가능
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
-			.orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
 		product.markAsDeleted();
 	}
+
+
 
 }

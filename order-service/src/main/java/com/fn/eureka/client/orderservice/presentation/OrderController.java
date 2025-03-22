@@ -1,6 +1,7 @@
 package com.fn.eureka.client.orderservice.presentation;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -86,5 +87,13 @@ public class OrderController {
 		@RequestHeader("X-User-Id") UUID userId) {
 		orderService.removeOrder(orderId, userRole, userId);
 		return ResponseEntity.status(SuccessCode.ORDER_DELETE.getStatusCode()).body(new CommonResponse<>(SuccessCode.ORDER_DELETE, orderId));
+	}
+
+	// for other services...
+
+	@PostMapping("/order-products")
+	List<UUID> readOrderProductIdListByDeliveryId(@RequestBody List<UUID> deliveries) {
+		log.info("Deliveries : ", deliveries);
+		return orderService.findOrderProductIdListByDeliveryId(deliveries);
 	}
 }

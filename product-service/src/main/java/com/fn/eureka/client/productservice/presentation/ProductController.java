@@ -59,15 +59,15 @@ public class ProductController {
 	// 상품 리스트 조회 (전체, 허브별, 업체별)
 	@GetMapping
 	public ResponseEntity<CommonResponse<Page<ProductResponseDto>>> getProducts(
-		@RequestParam(defaultValue = "whole", required = false) String type,
-		@RequestParam(required = false) UUID id,
 		@RequestParam(required = false) String keyword,
 		@RequestParam(defaultValue = "0", required = false) int page,
 		@RequestParam(defaultValue = "10", required = false) int size,
 		@RequestParam(defaultValue = "DESC", required = false) Sort.Direction sortDirection,
-		@RequestParam(defaultValue = "UPDATED_AT", required = false) PageUtils.CommonSortBy sortBy
+		@RequestParam(defaultValue = "UPDATED_AT", required = false) PageUtils.CommonSortBy sortBy,
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId
 	) {
-		Page<ProductResponseDto> products = productService.findAllProductsByType(type, id, keyword, page, size, sortDirection, sortBy);
+		Page<ProductResponseDto> products = productService.findAllProducts(keyword, page, size, sortDirection, sortBy, userRole, userId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_SEARCH_ALL, products));
 	}
 
