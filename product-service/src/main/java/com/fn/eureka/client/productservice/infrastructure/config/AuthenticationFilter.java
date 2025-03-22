@@ -1,4 +1,4 @@
-package com.fn.eureka.client.productservice.config;
+package com.fn.eureka.client.productservice.infrastructure.config;
 
 import java.io.IOException;
 import java.util.List;

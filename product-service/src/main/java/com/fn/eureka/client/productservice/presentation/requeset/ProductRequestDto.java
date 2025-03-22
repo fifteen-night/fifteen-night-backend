@@ -1,4 +1,4 @@
-package com.fn.eureka.client.productservice.presentation.dto;
+package com.fn.eureka.client.productservice.presentation.requeset;
 
 import java.util.UUID;
 

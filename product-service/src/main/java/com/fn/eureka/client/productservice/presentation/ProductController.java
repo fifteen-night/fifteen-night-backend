@@ -1,5 +1,6 @@
 package com.fn.eureka.client.productservice.presentation;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.fn.common.global.dto.CommonResponse;
+import com.fn.common.global.success.SuccessCode;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.ProductService;
-import com.fn.eureka.client.productservice.presentation.dto.ProductRequestDto;
-import com.fn.eureka.client.productservice.presentation.dto.ProductResponseDto;
+import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
+import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,28 +37,28 @@ public class ProductController {
 
 	private final ProductService productService;
 
-	// TODO url을 못찾아 404 Not Found 나는데 원인을 모르겠음.
 	// 상품 생성
 	@PostMapping
-	public ResponseEntity<ProductResponseDto> createProduct(
-		@RequestBody ProductRequestDto requestDto,
+	public ResponseEntity<CommonResponse<ProductResponseDto>> createProduct(
+		@RequestBody ProductRequestDto productRequestDto,
 		@RequestHeader("X-User-Role") String userRole,
 		@RequestHeader("X-User-Id") UUID userId
 		) {
-		ProductResponseDto response = productService.addProduct(requestDto, userRole, userId);
-		return ResponseEntity.ok(response);
+		ProductResponseDto productResponseDto = productService.addProduct(productRequestDto, userRole, userId);
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/products").build().toUri();
+		return ResponseEntity.created(location).body(new CommonResponse<>(SuccessCode.PRODUCT_CREATE, productResponseDto));
 	}
 
 	// 상품 조회
 	@GetMapping("/{productId}")
-	public ResponseEntity<ProductResponseDto> getProduct(@PathVariable("productId") UUID productId) {
-		ProductResponseDto response = productService.findProduct(productId);
-		return ResponseEntity.ok(response);
+	public ResponseEntity<CommonResponse<ProductResponseDto>> getProduct(@PathVariable("productId") UUID productId) {
+		ProductResponseDto productResponseDto = productService.findProduct(productId);
+		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_SEARCH_ONE, productResponseDto));
 	}
 
 	// 상품 리스트 조회 (전체, 허브별, 업체별)
 	@GetMapping
-	public ResponseEntity<Page<ProductResponseDto>> getProducts(
+	public ResponseEntity<CommonResponse<Page<ProductResponseDto>>> getProducts(
 		@RequestParam(defaultValue = "whole", required = false) String type,
 		@RequestParam(required = false) UUID id,
 		@RequestParam(required = false) String keyword,
@@ -64,24 +68,24 @@ public class ProductController {
 		@RequestParam(defaultValue = "UPDATED_AT", required = false) PageUtils.CommonSortBy sortBy
 	) {
 		Page<ProductResponseDto> products = productService.findAllProductsByType(type, id, keyword, page, size, sortDirection, sortBy);
-		return ResponseEntity.ok(products);
+		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_SEARCH_ALL, products));
 	}
 
 	// 상품 수정
 	@PatchMapping("/{productId}")
-	public ResponseEntity<ProductResponseDto> updateProduct(
+	public ResponseEntity<CommonResponse<ProductResponseDto>> updateProduct(
 		@PathVariable("productId") UUID productId,
 		@RequestBody Map<String, Object> updates,
 		@RequestHeader("X-User-Role") String userRole) {
-		ProductResponseDto response = productService.modifyProduct(productId, updates, userRole);
-		return ResponseEntity.ok(response);
+		ProductResponseDto productResponseDto = productService.modifyProduct(productId, updates, userRole);
+		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.PRODUCT_UPDATE, productResponseDto));
 	}
 
 	// 상품 삭제
 	@DeleteMapping("/{productId}")
-	public ResponseEntity<Void> deleteProduct(@PathVariable("productId") UUID productId) {
+	public ResponseEntity<CommonResponse> deleteProduct(@PathVariable("productId") UUID productId) {
 		productService.removeProduct(productId);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.status(SuccessCode.PRODUCT_DELETE.getStatusCode()).body(new CommonResponse<>(SuccessCode.PRODUCT_DELETE, productId));
 	}
 
 }

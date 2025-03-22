@@ -1,4 +1,4 @@
-package com.fn.eureka.client.productservice.application;
+package com.fn.eureka.client.productservice.infrastructure.service;
 
 import java.util.Map;
 import java.util.UUID;
@@ -11,14 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.exception.UnauthorizedException;
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.productservice.domain.Product;
-import com.fn.eureka.client.productservice.domain.repository.ProductQueryRepository;
+import com.fn.eureka.client.productservice.application.ProductService;
+import com.fn.eureka.client.productservice.domain.model.Product;
+import com.fn.eureka.client.productservice.infrastructure.repository.ProductQueryRepositoryImpl;
 import com.fn.eureka.client.productservice.domain.repository.ProductRepository;
-import com.fn.eureka.client.productservice.infrastructure.CompanyServiceClient;
-import com.fn.eureka.client.productservice.infrastructure.HubServiceClient;
-import com.fn.eureka.client.productservice.presentation.dto.CompanyInfoDto;
-import com.fn.eureka.client.productservice.presentation.dto.ProductRequestDto;
-import com.fn.eureka.client.productservice.presentation.dto.ProductResponseDto;
+import com.fn.eureka.client.productservice.infrastructure.client.CompanyServiceClient;
+import com.fn.eureka.client.productservice.infrastructure.client.HubServiceClient;
+import com.fn.eureka.client.productservice.application.dto.CompanyInfoDto;
+import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
+import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductServiceImpl implements ProductService {
 
 	private final ProductRepository productRepository;
-	private final ProductQueryRepository productQueryRepository;
+	private final ProductQueryRepositoryImpl productQueryRepository;
 
 	private final HubServiceClient hubServiceClient;
 	private final CompanyServiceClient companyServiceClient;

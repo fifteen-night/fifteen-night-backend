@@ -1,4 +1,4 @@
-package com.fn.eureka.client.productservice.infrastructure;
+package com.fn.eureka.client.productservice.infrastructure.client;
 
 import java.util.UUID;
 

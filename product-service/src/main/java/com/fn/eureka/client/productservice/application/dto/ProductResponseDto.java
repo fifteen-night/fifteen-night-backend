@@ -1,8 +1,8 @@
-package com.fn.eureka.client.productservice.presentation.dto;
+package com.fn.eureka.client.productservice.application.dto;
 
 import java.util.UUID;
 
-import com.fn.eureka.client.productservice.domain.Product;
+import com.fn.eureka.client.productservice.domain.model.Product;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

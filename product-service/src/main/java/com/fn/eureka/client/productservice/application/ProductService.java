@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.productservice.presentation.dto.ProductRequestDto;
-import com.fn.eureka.client.productservice.presentation.dto.ProductResponseDto;
+import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
+import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 
 public interface ProductService {
 	ProductResponseDto addProduct(ProductRequestDto requestDto, String userRole, UUID userId);
