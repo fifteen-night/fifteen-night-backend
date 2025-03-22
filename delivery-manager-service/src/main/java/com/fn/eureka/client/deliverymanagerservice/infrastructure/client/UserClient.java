@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "user-service", path = "/api/users")
-public interface UserFeignClient {
+public interface UserClient {
 
 	@GetMapping("/internal/{userId}")
 	boolean checkUserExists(@PathVariable("userId") UUID userId);

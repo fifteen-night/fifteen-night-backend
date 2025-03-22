@@ -18,7 +18,7 @@ import com.fn.eureka.client.deliverymanagerservice.application.dto.response.Deli
 import com.fn.eureka.client.deliverymanagerservice.application.exception.DeliveryManagerException;
 import com.fn.eureka.client.deliverymanagerservice.domain.entity.DeliveryManager;
 import com.fn.eureka.client.deliverymanagerservice.domain.repository.DeliveryManagerRepository;
-import com.fn.eureka.client.deliverymanagerservice.infrastructure.client.UserFeignClient;
+import com.fn.eureka.client.deliverymanagerservice.infrastructure.client.UserClient;
 import com.fn.eureka.client.deliverymanagerservice.infrastructure.security.RequestUserDetails;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class DeliveryManagerService {
 
 	private final DeliveryManagerRepository deliveryManagerRepository;
-	private final UserFeignClient userFeignClient;
+	private final UserClient userClient;
 
 	@Transactional
 	public CommonResponse<DeliveryManagerGetResponseDto> createDeliveryManager(DeliveryManagerCreateRequestDto requestDto) {
@@ -163,7 +163,7 @@ public class DeliveryManagerService {
 
 	// 사용자 존재 여부 확인 (UserFeignClient 호출, 없으면 예외 발생)
 	private void validateUserExists(UUID userId) {
-		if (!userFeignClient.checkUserExists(userId)) {
+		if (!userClient.checkUserExists(userId)) {
 			throw new CustomApiException(DeliveryManagerException.USER_NOT_FOUND);
 		}
 	}
