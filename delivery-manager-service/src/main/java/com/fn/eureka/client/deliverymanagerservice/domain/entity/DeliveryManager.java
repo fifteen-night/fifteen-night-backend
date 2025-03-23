@@ -3,6 +3,7 @@ package com.fn.eureka.client.deliverymanagerservice.domain.entity;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
+import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -54,4 +55,20 @@ public class DeliveryManager extends BaseEntity {
 		this.dmType = dmType;
 		this.dmTurn = dmTurn;
 	}
+
+	public void updateDeliveryManager(DeliveryManagerUpdateRequestDto requestDto) {
+		if (requestDto.getDmHubId() != null) {
+			this.dmHubId = requestDto.getDmHubId();
+		}
+		if (requestDto.getDmSlackId() != null) {
+			this.dmSlackId = requestDto.getDmSlackId();
+		}
+		if (requestDto.getDmType() != null) {
+			this.dmType = requestDto.getDmType();
+		}
+		if (requestDto.getDmTurn() != null) {
+			this.dmTurn = requestDto.getDmTurn();
+		}
+	}
+
 }
