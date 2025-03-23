@@ -1,9 +1,13 @@
 package com.fn.eureka.client.deliverymanagerservice.application.service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -122,6 +126,11 @@ public class DeliveryManagerService {
 		RequestUserDetails userDetails = getAuthenticatedUser();
 		Page<DeliveryManager> page;
 
+		int size = pageable.getPageSize();
+		if (size != 10 && size != 30 && size != 50) {
+			pageable = PageRequest.of(pageable.getPageNumber(), 10, pageable.getSort());
+		}
+
 		// 1) 권한별 조회 처리
 		if (hasMasterRole(userDetails)) {
 			page = deliveryManagerRepository.findByKeyword(keyword, pageable);
@@ -183,6 +192,30 @@ public class DeliveryManagerService {
 
 		return new CommonResponse<>(SuccessCode.DELIVERY_MANAGER_UPDATED, responseDto);
 	}
+
+	@Transactional
+	public CommonResponse<Void> deleteDeliveryManager(UUID dmId) {
+		RequestUserDetails userDetails = getAuthenticatedUser();
+
+		// 1) 삭제 대상 조회 (삭제되지 않은 배송 관리자만)
+		DeliveryManager manager = deliveryManagerRepository.findActiveByDmId(dmId)
+			.orElseThrow(() -> new CustomApiException(DeliveryManagerException.MANAGER_NOT_FOUND));
+
+		// 2) 권한 확인
+		if (hasMasterRole(userDetails)) {
+			// 마스터는 전체 삭제 가능
+			manager.markAsDeleted();
+		} else if (hasHubManagerRole(userDetails)) {
+			// 허브 관리자는 본인 허브 소속만 삭제 가능
+			validateHubAccess(manager.getDmHubId(), userDetails.getUserId());
+			manager.markAsDeleted();
+		} else {
+			throw new CustomApiException(DeliveryManagerException.ACCESS_DENIED);
+		}
+
+		return new CommonResponse<>(SuccessCode.DELIVERY_MANAGER_DELETED, null);
+	}
+
 
 	// 현재 인증된 사용자 정보 조회
 	private RequestUserDetails getAuthenticatedUser() {

@@ -60,7 +60,8 @@ public enum SuccessCode {
 	DELIVERY_MANAGER_CREATED(HttpStatus.CREATED, "배송 관리자가 성공적으로 생성되었습니다.", "S_DELIVERY_MANAGER_CREATED"),
 	DELIVERY_MANAGER_FOUND(HttpStatus.OK, "배송 관리자가 성공적으로 조회되었습니다.", "S_DELIVERY_MANAGER_FOUND"),
 	DELIVERY_MANAGER_LIST_FOUND(HttpStatus.OK, "배송 관리자 목록이 성공적으로 조회되었습니다.", "S_DELIVERY_MANAGER_LIST_FOUND"),
-	DELIVERY_MANAGER_UPDATED(HttpStatus.OK, "배송 관리자 정보가 성공적으로 수정되었습니다.", "S_DELIVERY_MANAGER_UPDATED")
+	DELIVERY_MANAGER_UPDATED(HttpStatus.OK, "배송 관리자 정보가 성공적으로 수정되었습니다.", "S_DELIVERY_MANAGER_UPDATED"),
+	DELIVERY_MANAGER_DELETED(HttpStatus.NO_CONTENT, "배송 관리자가 성공적으로 삭제되었습니다.", "S_DELIVERY_MANAGER_DELETED")
 	;
 
 	private final HttpStatus statusCode;
