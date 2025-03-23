@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "p_hub_stock")
+@Table(name = "p_hub_stock", schema = "hub")
 public class HubStock extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
