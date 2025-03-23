@@ -32,7 +32,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
 		this.queryFactory = new JPAQueryFactory(entityManager);
 	}
 
-	// TODO client 문제 해결하면 List<UUID> companies 넣기
+	// 상품 리스트 조회
 	public Page<ProductResponseDto> findProducts(String userRole, List<UUID> companies, List<UUID> products, UUID companyId, String keyword, Pageable pageable, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy) {
 		QProduct product = QProduct.product;
 		BooleanBuilder builder = new BooleanBuilder();
@@ -76,6 +76,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
 		return new PageImpl<>(dtoList, pageable, total);
 	}
 
+	// 상품ID 리스트로 상품 정보 리스트 조회
 	@Override
 	public List<Product> findProductListByProductIdList(List<UUID> products) {
 		if (products == null || products.isEmpty()) {

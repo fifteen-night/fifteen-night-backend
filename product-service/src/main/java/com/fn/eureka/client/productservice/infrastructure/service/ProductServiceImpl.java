@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -35,7 +33,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 	private final ProductRepository productRepository;
 	private final ProductQueryRepository productQueryRepository;
 
@@ -43,6 +40,8 @@ public class ProductServiceImpl implements ProductService {
 	private final CompanyServiceClient companyServiceClient;
 	private final DeliveryServiceClient deliveryServiceClient;
 	private final OrderServiceClient orderServiceClient;
+
+	// TODO userDetails 변경
 
 	// 상품 생성
 	@Override
@@ -87,7 +86,6 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Page<ProductResponseDto> findAllProducts(String keyword, int page, int size,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole, UUID userId) {
-		// TODO client 해결되면 허브별 상품 리스트 조회 코드 추가
 		List<UUID> companies = null;
 		List<UUID> products = null;
 		UUID companyId = null;
@@ -168,7 +166,6 @@ public class ProductServiceImpl implements ProductService {
 		if ("COMPANY_MANAGER".equals(userRole)) {
 			// 업체담당자ID로 업체ID 조회
 			UUID companyId = companyServiceClient.readCompanyIdByCompanyManagerId(userId);
-			log.info("업체담당자ID로 조회해온 업체ID : {}", companyId);
 			// 상품이 소속된 업체가 아닌 경우 권한 없음
 			if (!companyId.equals(product.getProductCompanyId())) {
 				throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
