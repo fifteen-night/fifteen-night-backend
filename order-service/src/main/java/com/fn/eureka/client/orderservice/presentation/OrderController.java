@@ -1,12 +1,14 @@
 package com.fn.eureka.client.orderservice.presentation;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,5 +77,23 @@ public class OrderController {
 		@RequestHeader("X-User-Id") UUID userId) {
 		OrderResponseDto orderResponseDto = orderService.modifyOrder(orderId, updates, userRole, userId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_UPDATE, orderResponseDto));
+	}
+
+	// 주문 삭제
+	@DeleteMapping("/{orderId}")
+	public ResponseEntity<CommonResponse> deleteOrder(
+		@PathVariable("orderId") UUID orderId,
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId) {
+		orderService.removeOrder(orderId, userRole, userId);
+		return ResponseEntity.status(SuccessCode.ORDER_DELETE.getStatusCode()).body(new CommonResponse<>(SuccessCode.ORDER_DELETE, orderId));
+	}
+
+	// for other services...
+
+	@PostMapping("/order-products")
+	List<UUID> readOrderProductIdListByDeliveryId(@RequestBody List<UUID> deliveries) {
+		log.info("Deliveries : ", deliveries);
+		return orderService.findOrderProductIdListByDeliveryId(deliveries);
 	}
 }

@@ -1,5 +1,6 @@
 package com.fn.eureka.client.orderservice.infrastructure.repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
 	// List<UUID> companies, List<UUID> deliveries,
 	public Page<OrderResponseDto> findAllOrdersByRole(
-		String keyword, Pageable pageable, String userRole, UUID userId, UUID companyId,
+		String keyword, Pageable pageable, String userRole, UUID userId, UUID companyId, List<UUID> companies,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy) {
 		QOrder order = QOrder.order;
 		BooleanBuilder builder = new BooleanBuilder();
@@ -42,12 +43,12 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 		// 기본 조건: 삭제되지 않은 주문
 		builder.and(order.isDeleted.eq(false));
 
-		// // 허브별 조회
-		// if ("HUB_MANAGER".equals(userRole) && companies != null && !companies.isEmpty()) {
-		// 	builder.and(order.orderSupplyCompanyId.in(companies)
-		// 		.or(order.orderReceiveCompanyId.in(companies)));
-		// }
-		//
+		// 허브별 조회
+		if ("HUB_MANAGER".equals(userRole) && companies != null && !companies.isEmpty()) {
+			builder.and(order.orderSupplyCompanyId.in(companies)
+				.or(order.orderReceiveCompanyId.in(companies)));
+		}
+
 		// // 배송담당자별 조회
 		// if ("DELIVERY_MANAGER".equals(userRole) && deliveries != null && !deliveries.isEmpty()) {
 		// 	builder.and(order.orderDeliveryId.in(deliveries));
@@ -81,10 +82,25 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
 		// DTO 변환
 		List<OrderResponseDto> dtoList = orders.stream()
-			.map(OrderResponseDto::new)
+			.map(OrderResponseDto::from)
 			.collect(Collectors.toList());
 
 		return new PageImpl<>(dtoList, pageable, total);
+	}
+
+	@Override
+	public List<UUID> findOrderProductIdListByDeliveryId(List<UUID> deliveries) {
+		if (deliveries == null || deliveries.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		QOrder order = QOrder.order;
+		return queryFactory
+			.select(order.orderProductId)
+			.from(order)
+			.where(order.orderDeliveryId.in(deliveries)
+				.and(order.orderProductId.isNotNull()))
+			.fetch();
 	}
 
 }
