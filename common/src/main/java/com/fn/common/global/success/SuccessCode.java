@@ -20,9 +20,9 @@ public enum SuccessCode {
 	// Order 관련 성공응답
 	ORDER_CREATE(HttpStatus.CREATED, "주문이 성공적으로 생성되었습니다.", "S_ORDER_CREATE"),
 	ORDER_SEARCH_ONE(HttpStatus.OK, "단건 주문이 성공적으로 조회되었습니다.", "S_ORDER_SEARCH_ONE"),
-	ORDER_SEARCH_ALL(HttpStatus.OK, "모든 주문이 성공적으로 조회되었습니다.","S_ORDER_SEARCH_ALL"),
-	ORDER_UPDATE(HttpStatus.OK, "주문이 성공적으로 수정되었습니다.", "S_ORDER_UPDATE"),
-	ORDER_DELETE(HttpStatus.NO_CONTENT, "해당 주문이 삭제되었습니다.", "S_ORDER_DELETE"),
+	ORDER_SEARCH_ALL(HttpStatus.OK, "모든 주문이 성공적으로 조회되었습니다.","S_ORDER_SEARCH_ALL" ),
+	ORDER_UPDATE(HttpStatus.OK, "주문이 성공적으로 수정되었습니다.", "S_ORDER_UPDATE" ),
+	ORDER_DELETE(HttpStatus.NO_CONTENT, "해당 주문이 삭제되었습니다.", "S_ORDER_DELETE" ),
 
   // HubToHub 관련 성공응답
 	HUBTOHUB_CREATE(HttpStatus.CREATED, "루트가 성공적으로 생성되었습니다.", "S_HUBTOHUB_CREATE"),
@@ -42,10 +42,12 @@ public enum SuccessCode {
 	HUB_CREATE(HttpStatus.CREATED, "허브가 성공적으로 생성되었습니다.", "S_HUB_CREATE"),
 	HUB_SEARCH(HttpStatus.OK, "허브가 성공적으로 조회되었습니다.", "S_HUB_SEARCH"),
 	HUB_MANAGER_CHECK(HttpStatus.OK, "허브 매니저가 확인되었습니다.", "S_HUB_MANAGER_CHECK"),
+	HUB_UPDATE(HttpStatus.OK, "허브가 성공적으로 수정되었습니다.", "S_HUB_UPDATE"),
 
 	// HubStock 관련 성공 응답
 	HUB_STOCK_CREATE(HttpStatus.CREATED, "허브 재고가 성공적으로 생성되었습니다.", "S_HUB_STOCK_CREATE"),
 	HUB_STOCK_SEARCH(HttpStatus.OK, "허브 재고가 성공적으로 조회되었습니다.", "S_HUB_STOCK_SEARCH"),
+	HUB_STOCK_UPDATE(HttpStatus.OK, "허브 재고가 성공적으로 수정되었습니다.", "S_HUB_STOCK_UPDATE"),
 
 	// Auth 관련 성공 응답
 	AUTH_SIGNUP(HttpStatus.CREATED, "회원가입이 성공적으로 완료되었습니다.", "S_AUTH_SIGNUP"),

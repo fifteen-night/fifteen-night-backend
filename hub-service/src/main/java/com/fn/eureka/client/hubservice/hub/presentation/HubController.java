@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,13 +25,14 @@ import com.fn.eureka.client.hubservice.hub.application.HubService;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.CheckHubManagerRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.CreateHubRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.UpdateHubRequest;
-import com.fn.eureka.client.hubservice.hub.application.dto.response.CheckHubManagerResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.CreateHubResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.UpdateHubResponse;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.request.CreateHubStockRequest;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.request.UpdateHubStockRequest;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.CreateHubStockResponse;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.ReadHubStockResponse;
+import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.UpdateHubStockResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,7 +62,8 @@ public class HubController {
 	}
 
 	@GetMapping
-	public ResponseEntity<CommonPageResponse<ReadHubResponse>> searchHub(Pageable pageable,
+	public ResponseEntity<CommonPageResponse<ReadHubResponse>> searchHub(
+		@PageableDefault(size = 10) Pageable pageable,
 		@RequestParam(value = "hubName", required = false) String hubName) {
 
 		Page<ReadHubResponse> response = hubService.searchHub(pageable, hubName);
@@ -69,22 +72,21 @@ public class HubController {
 			.body(new CommonPageResponse<>(response));
 	}
 
+	// 외부 서비스용
 	@PostMapping("/hub-manager")
-	public ResponseEntity<CommonResponse<CheckHubManagerResponse>> checkHubManager(
-		@RequestBody CheckHubManagerRequest request) {
+	public boolean checkHubManager(@RequestBody CheckHubManagerRequest request) {
 
-		CheckHubManagerResponse response = hubService.checkHubManager(request);
-
-		return ResponseEntity.status(SuccessCode.HUB_MANAGER_CHECK.getStatusCode())
-			.body(new CommonResponse<>(SuccessCode.HUB_MANAGER_CHECK, response));
+		return hubService.checkHubManager(request);
 	}
 
 	@PatchMapping("/{hubId}")
-	public ResponseEntity<Void> updateHub(@PathVariable("hubId") UUID hubId, @RequestBody UpdateHubRequest request) {
+	public ResponseEntity<CommonResponse<UpdateHubResponse>> updateHub(@PathVariable("hubId") UUID hubId,
+		@RequestBody UpdateHubRequest request) {
 
-		hubService.updateHub(hubId, request);
+		UpdateHubResponse response = hubService.updateHub(hubId, request);
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		return ResponseEntity.status(SuccessCode.HUB_UPDATE.getStatusCode())
+			.body(new CommonResponse<>(SuccessCode.HUB_UPDATE, response));
 	}
 
 	@DeleteMapping("/{hubId}")
@@ -93,6 +95,13 @@ public class HubController {
 		hubService.deleteHub(hubId);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	// 외부 서비스용
+	@GetMapping("/hub-id/{hubManagerId}")
+	public UUID readHubIdByHubManagerId(@PathVariable("hubManagerId") UUID hubManagerId) {
+
+		return hubService.readHubIdByHubManagerId(hubManagerId);
 	}
 	// 허브 관련 끝
 
@@ -120,7 +129,7 @@ public class HubController {
 	@GetMapping("/{hubId}/stock")
 	public ResponseEntity<CommonPageResponse<ReadHubStockResponse>> searchHubStock(
 		@PathVariable("hubId") UUID hubId,
-		Pageable pageable,
+		@PageableDefault(size = 10) Pageable pageable,
 		@RequestParam(value = "productId", required = false) UUID productId,
 		@RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity,
 		@RequestParam(value = "startDateTime", required = false, defaultValue = "1970-01-01T00:00:00") LocalDateTime startDateTime,
@@ -133,14 +142,14 @@ public class HubController {
 	}
 
 	@PatchMapping("/{hubId}/stock/{productId}")
-	public ResponseEntity<Void> updateHubStock(
+	public ResponseEntity<CommonResponse<UpdateHubStockResponse>> updateHubStock(
 		@PathVariable("hubId") UUID hubId,
 		@PathVariable("productId") UUID productId,
 		@RequestBody UpdateHubStockRequest request
 	) {
-		hubService.updateHubStock(hubId, productId, request);
+		UpdateHubStockResponse response = hubService.updateHubStock(hubId, productId, request);
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(SuccessCode.HUB_STOCK_UPDATE, response));
 	}
 
 	@DeleteMapping("/{hubId}/stock/{productId}")
