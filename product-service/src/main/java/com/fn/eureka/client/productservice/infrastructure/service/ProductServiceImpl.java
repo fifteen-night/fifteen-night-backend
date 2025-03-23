@@ -69,8 +69,8 @@ public class ProductServiceImpl implements ProductService {
 			default:
 				throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
 		}
-		Product product = productRepository.save(new Product(productRequestDto));
-		return new ProductResponseDto(product);
+		Product product = productRepository.save(Product.from(productRequestDto));
+		return ProductResponseDto.from(product);
 	}
 
 	// 상품 조회
@@ -78,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
 	public ProductResponseDto findProduct(UUID productId) {
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new NotFoundException("해당 상품은 존재하지 않습니다."));
-		return new ProductResponseDto(product);
+		return ProductResponseDto.from(product);
 	}
 
 	// 전체/허브별/업체별 상품 리스트 조회 + 검색
@@ -119,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
 			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
 		validateUserPermission(product, userRole, userId);
 		updates.forEach((key, value) -> product.modifyProductInfo(key, value, userRole));
-		return new ProductResponseDto(product);
+		return ProductResponseDto.from(product);
 	}
 
 	// 상품 삭제
@@ -161,5 +161,10 @@ public class ProductServiceImpl implements ProductService {
 		throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
 	}
 
-
+	// 상품ID 리스트로 상품 리스트 조회
+	@Override
+	public List<ProductResponseDto> findProductListByProductIdList(List<UUID> products) {
+		List<Product> productInfoListByproducts = productQueryRepository.findProductListByProductIdList(products);
+		return productInfoListByproducts.stream().map(ProductResponseDto::from).toList();
+	}
 }

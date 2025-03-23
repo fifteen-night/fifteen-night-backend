@@ -1,6 +1,7 @@
 package com.fn.eureka.client.productservice.presentation;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.ProductService;
+import com.fn.eureka.client.productservice.domain.model.Product;
 import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
 import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 
@@ -90,6 +92,13 @@ public class ProductController {
 		@RequestHeader("X-User-Id") UUID userId) {
 		productService.removeProduct(productId, userRole, userId);
 		return ResponseEntity.status(SuccessCode.PRODUCT_DELETE.getStatusCode()).body(new CommonResponse<>(SuccessCode.PRODUCT_DELETE, productId));
+	}
+
+	// for other services...
+
+	@PostMapping("/product-list")
+	public List<ProductResponseDto> readProductListByProductIdList(@RequestBody List<UUID> products) {
+		return productService.findProductListByProductIdList(products);
 	}
 
 }

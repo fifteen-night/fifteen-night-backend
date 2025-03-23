@@ -1,5 +1,6 @@
 package com.fn.eureka.client.productservice.infrastructure.repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -69,9 +70,22 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
 		long total = query.fetchCount();
 
 		List<ProductResponseDto> dtoList = result.stream()
-			.map(ProductResponseDto::new)
+			.map(ProductResponseDto::from)
 			.collect(Collectors.toList());
 
 		return new PageImpl<>(dtoList, pageable, total);
+	}
+
+	@Override
+	public List<Product> findProductListByProductIdList(List<UUID> products) {
+		if (products == null || products.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		QProduct product = QProduct.product;
+		return queryFactory
+			.selectFrom(product)
+			.where(product.productId.in(products))
+			.fetch();
 	}
 }

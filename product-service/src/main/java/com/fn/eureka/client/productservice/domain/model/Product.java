@@ -2,6 +2,8 @@ package com.fn.eureka.client.productservice.domain.model;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.Comment;
+
 import com.fn.common.global.BaseEntity;
 import com.fn.common.global.exception.UnauthorizedException;
 import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
@@ -12,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,24 +25,32 @@ import lombok.Setter;
 @Entity
 @Table(name="p_product")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
+	@Comment("상품 ID")
 	private UUID productId;
 
 	@Column(nullable = false)
+	@Comment("상품명")
 	private String productName;
 
 	@Column(nullable = false)
+	@Comment("업체 ID")
 	private UUID productCompanyId;
 
 	@Column(nullable = false)
+	@Comment("상품 수량")
 	private Integer productQuantity;
 
-	public Product(ProductRequestDto productRequestDto) {
-		this.productName = productRequestDto.getProductName();
-		this.productCompanyId = productRequestDto.getProductCompanyId();
-		this.productQuantity = productRequestDto.getProductQuantity();
+	public static Product from(ProductRequestDto productRequestDto) {
+		return Product.builder()
+			.productName(productRequestDto.getProductName())
+			.productCompanyId(productRequestDto.getProductCompanyId())
+			.productQuantity(productRequestDto.getProductQuantity())
+			.build();
 	}
 
 	public void modifyProductInfo(String key, Object value, String userRole) {

@@ -4,11 +4,15 @@ import java.util.UUID;
 
 import com.fn.eureka.client.productservice.domain.model.Product;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductResponseDto {
 
 	private UUID productId;
@@ -16,10 +20,12 @@ public class ProductResponseDto {
 	private UUID productCompanyId;
 	private Integer productQuantity;
 
-	public ProductResponseDto(Product product) {
-		this.productId = product.getProductId();
-		this.productName = product.getProductName();
-		this.productCompanyId = product.getProductCompanyId();
-		this.productQuantity = product.getProductQuantity();
+	public static ProductResponseDto from(Product product) {
+		return ProductResponseDto.builder()
+			.productId(product.getProductId())
+			.productName(product.getProductName())
+			.productCompanyId(product.getProductCompanyId())
+			.productQuantity(product.getProductQuantity())
+			.build();
 	}
 }
