@@ -68,7 +68,7 @@ public class CompanyController {
 		@RequestParam(defaultValue = "UPDATED_AT", required = false) PageUtils.CommonSortBy sortBy,
 		@RequestHeader("X-User-Role") String userRole
 		) {
-		Page<CompanyResponseDto> companies = companyService.findAllCompaniesByType(hubId, type, keyword, page, size, sortDirection, sortBy, userRole);
+		Page<CompanyResponseDto> companies = companyService.findAllCompanies(hubId, type, keyword, page, size, sortDirection, sortBy, userRole);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.COMPANY_SEARCH_ALL, companies));
 	}
 

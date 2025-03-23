@@ -12,7 +12,7 @@ import com.fn.eureka.client.companyservice.application.dto.CompanyResponseDto;
 
 public interface CompanyQueryRepository {
 
-	Page<CompanyResponseDto> findCompaniesByType(UUID hubId, String type, String keyword, Pageable pageable,
+	Page<CompanyResponseDto> findCompanies(UUID hubId, String type, String keyword, Pageable pageable,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy,
 		String userRole);
 

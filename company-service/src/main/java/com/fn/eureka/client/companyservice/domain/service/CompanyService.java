@@ -16,7 +16,7 @@ public interface CompanyService {
 
 	CompanyResponseDto findTheCompany(UUID companyId);
 
-	Page<CompanyResponseDto> findAllCompaniesByType(UUID hubId, String type, String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole);
+	Page<CompanyResponseDto> findAllCompanies(UUID hubId, String type, String keyword, int page, int size, Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole);
 
 	CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto, String userRole, UUID userId);
 

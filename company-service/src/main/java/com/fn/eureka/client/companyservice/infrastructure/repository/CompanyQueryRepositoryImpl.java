@@ -36,7 +36,7 @@ public class CompanyQueryRepositoryImpl implements CompanyQueryRepository {
 	}
 
 	// 업체 리스트 조회
-	public Page<CompanyResponseDto> findCompaniesByType(UUID hubId, String type, String keyword, Pageable pageable,
+	public Page<CompanyResponseDto> findCompanies(UUID hubId, String type, String keyword, Pageable pageable,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy,
 		String userRole) {
 		QCompany company = QCompany.company;
@@ -70,7 +70,7 @@ public class CompanyQueryRepositoryImpl implements CompanyQueryRepository {
 		long total = query.fetchCount();
 
 		List<CompanyResponseDto> dtoList = result.stream()
-			.map(CompanyResponseDto::new)
+			.map(CompanyResponseDto::from)
 			.collect(Collectors.toList());
 
 		return new PageImpl<>(dtoList, pageable, total);

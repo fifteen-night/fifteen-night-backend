@@ -55,8 +55,8 @@ public class CompanyServiceImpl implements CompanyService {
 			throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
 		}
 
-		Company company = companyRepository.save(new Company(companyRequestDto));
-		return new CompanyResponseDto(company);
+		Company company = companyRepository.save(Company.from(companyRequestDto));
+		return CompanyResponseDto.from(company);
 	}
 
 	// 업체 조회
@@ -64,14 +64,14 @@ public class CompanyServiceImpl implements CompanyService {
 	public CompanyResponseDto findTheCompany(UUID companyId) {
 		Company company = companyRepository.findById(companyId)
 			.orElseThrow(() -> new CustomApiException(CompanyException.COMPANY_NOT_FOUND));
-		return new CompanyResponseDto(company);
+		return CompanyResponseDto.from(company);
 	}
 
 	// 업체 리스트 조회 (전체, 허브별) + 검색
 	@Override
-	public Page<CompanyResponseDto> findAllCompaniesByType(UUID hubId, String type, String keyword, int page, int size,
+	public Page<CompanyResponseDto> findAllCompanies(UUID hubId, String type, String keyword, int page, int size,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy, String userRole) {
-		return companyQueryRepository.findCompaniesByType(hubId, type, keyword, PageUtils.pageable(page, size), sortDirection, sortBy, userRole);
+		return companyQueryRepository.findCompanies(hubId, type, keyword, PageUtils.pageable(page, size), sortDirection, sortBy, userRole);
 	}
 
 	// 업체 수정
@@ -94,7 +94,7 @@ public class CompanyServiceImpl implements CompanyService {
 			}
 		}
 		company.modifyCompanyInfo(requestDto);
-		return new CompanyResponseDto(company);
+		return CompanyResponseDto.from(company);
 	}
 
 	// 업체 삭제

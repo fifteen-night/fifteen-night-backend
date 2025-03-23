@@ -4,11 +4,15 @@ import java.util.UUID;
 
 import com.fn.eureka.client.companyservice.domain.model.Company;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CompanyResponseDto {
 
 	private UUID companyId;
@@ -19,12 +23,14 @@ public class CompanyResponseDto {
 	private UUID companyHubId;
 	private UUID companyManagerId;
 
-	public CompanyResponseDto(Company company) {
-		this.companyId = company.getCompanyId();
-		this.companyName = company.getCompanyName();
-		this.companyAddress = company.getCompanyAddress();
-		this.companyType = company.getCompanyType().name();
-		this.companyHubId = company.getCompanyHubId();
-		this.companyManagerId = company.getCompanyManagerId();
+	public static CompanyResponseDto from(Company company) {
+		return CompanyResponseDto.builder()
+			.companyId(company.getCompanyId())
+			.companyName(company.getCompanyName())
+			.companyAddress(company.getCompanyAddress())
+			.companyType(company.getCompanyType().name())
+			.companyHubId(company.getCompanyHubId())
+			.companyManagerId(company.getCompanyManagerId())
+			.build();
 	}
 }
