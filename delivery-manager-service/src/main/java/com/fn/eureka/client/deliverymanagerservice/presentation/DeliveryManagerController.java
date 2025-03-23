@@ -20,6 +20,7 @@ import com.fn.eureka.client.deliverymanagerservice.application.dto.request.Deliv
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerSearchCondition;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerGetResponseDto;
+import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerUpdateResponseDto;
 import com.fn.eureka.client.deliverymanagerservice.application.service.DeliveryManagerService;
 
 import jakarta.validation.Valid;
@@ -62,11 +63,11 @@ public class DeliveryManagerController {
 	}
 
 	@PatchMapping("/{dmId}")
-	public ResponseEntity<CommonResponse<DeliveryManagerGetResponseDto>> updateDeliveryManager(
+	public ResponseEntity<CommonResponse<DeliveryManagerUpdateResponseDto>> updateDeliveryManager(
 		@PathVariable UUID dmId,
 		@Valid @RequestBody DeliveryManagerUpdateRequestDto requestDto) {
 
-		CommonResponse<DeliveryManagerGetResponseDto> response =
+		CommonResponse<DeliveryManagerUpdateResponseDto> response =
 			deliveryManagerService.updateDeliveryManager(dmId, requestDto);
 
 		return ResponseEntity.status(SuccessCode.DELIVERY_MANAGER_UPDATED.getStatusCode()).body(response);

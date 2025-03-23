@@ -18,6 +18,7 @@ import com.fn.eureka.client.deliverymanagerservice.application.dto.request.Deliv
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerSearchCondition;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerGetResponseDto;
+import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerUpdateResponseDto;
 import com.fn.eureka.client.deliverymanagerservice.application.exception.DeliveryManagerException;
 import com.fn.eureka.client.deliverymanagerservice.domain.entity.DeliveryManager;
 import com.fn.eureka.client.deliverymanagerservice.domain.repository.DeliveryManagerRepository;
@@ -165,7 +166,7 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 
 
 	@Transactional
-	public CommonResponse<DeliveryManagerGetResponseDto> updateDeliveryManager(UUID dmId, DeliveryManagerUpdateRequestDto requestDto) {
+	public CommonResponse<DeliveryManagerUpdateResponseDto> updateDeliveryManager(UUID dmId, DeliveryManagerUpdateRequestDto requestDto) {
 		RequestUserDetails userDetails = getAuthenticatedUser();
 
 		// 1) 수정 권한 확인 - 마스터 또는 허브 관리자만 수정 가능
@@ -186,8 +187,7 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 		manager.updateDeliveryManager(requestDto);
 
 		// 5) DTO 반환
-		DeliveryManagerGetResponseDto responseDto = DeliveryManagerGetResponseDto.builder()
-			.id(manager.getDmId())
+		DeliveryManagerUpdateResponseDto responseDto = DeliveryManagerUpdateResponseDto.builder()
 			.dmUserId(manager.getDmUserId())
 			.dmHubId(manager.getDmHubId())
 			.dmSlackId(manager.getDmSlackId())

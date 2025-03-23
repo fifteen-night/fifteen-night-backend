@@ -10,6 +10,7 @@ import com.fn.eureka.client.deliverymanagerservice.application.dto.request.Deliv
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerSearchCondition;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerGetResponseDto;
+import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerUpdateResponseDto;
 
 public interface DeliveryManagerService {
 	CommonResponse<DeliveryManagerGetResponseDto> createDeliveryManager(DeliveryManagerCreateRequestDto requestDto);
@@ -18,7 +19,7 @@ public interface DeliveryManagerService {
 
 	CommonResponse<Page<DeliveryManagerGetResponseDto>> getDeliveryManagers(DeliveryManagerSearchCondition condition, Pageable pageable);
 
-	CommonResponse<DeliveryManagerGetResponseDto> updateDeliveryManager(UUID dmId, DeliveryManagerUpdateRequestDto requestDto);
+	CommonResponse<DeliveryManagerUpdateResponseDto> updateDeliveryManager(UUID dmId, DeliveryManagerUpdateRequestDto requestDto);
 
 	CommonResponse<Void> deleteDeliveryManager(UUID dmId);
 }
