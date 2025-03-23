@@ -5,11 +5,15 @@ import java.util.UUID;
 
 import com.fn.eureka.client.orderservice.domain.model.Order;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderResponseDto {
 	private UUID orderId;
 	private UUID orderSupplyCompanyId;
@@ -20,14 +24,16 @@ public class OrderResponseDto {
 	private Timestamp orderDeadline;
 	private String orderRequirement;
 
-	public OrderResponseDto(Order order) {
-		this.orderId = order.getOrderId();
-		this.orderSupplyCompanyId = order.getOrderSupplyCompanyId();
-		this.orderReceiveCompanyId = order.getOrderReceiveCompanyId();
-		this.orderDeliveryId = order.getOrderDeliveryId();
-		this.orderProductId = order.getOrderProductId();
-		this.orderProductQuantity = order.getOrderProductQuantity();
-		this.orderDeadline = order.getOrderDeadline();
-		this.orderRequirement = order.getOrderRequirement();
+	public static OrderResponseDto from(Order order) {
+		return OrderResponseDto.builder()
+			.orderId(order.getOrderId())
+			.orderSupplyCompanyId(order.getOrderSupplyCompanyId())
+			.orderReceiveCompanyId(order.getOrderReceiveCompanyId())
+			.orderDeliveryId(order.getOrderDeliveryId())
+			.orderProductId(order.getOrderProductId())
+			.orderProductQuantity(order.getOrderProductQuantity())
+			.orderDeadline(order.getOrderDeadline())
+			.orderRequirement(order.getOrderRequirement())
+			.build();
 	}
 }
