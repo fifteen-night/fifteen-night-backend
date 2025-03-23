@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice.config;
+package com.fn.eureka.client.companyservice.infrastructure.config;
 
 import java.util.Collection;
 

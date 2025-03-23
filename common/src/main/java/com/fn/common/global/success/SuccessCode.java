@@ -9,6 +9,13 @@ public enum SuccessCode {
 
 	// 여기서 공통 성공 응답 생성
 
+	// Company 관련 성공응답
+	COMPANY_CREATE(HttpStatus.CREATED, "업체가 성공적으로 생성되었습니다.", "S_COMPANY_CREATE"),
+	COMPANY_SEARCH_ONE(HttpStatus.OK, "단건 업체가 성공적으로 조회되었습니다.", "S_COMPANY_SEARCH_ONE"),
+	COMPANY_SEARCH_ALL(HttpStatus.OK, "모든 업체가 성공적으로 조회되었습니다.","S_COMPANY_SEARCH_ALL"),
+	COMPANY_UPDATE(HttpStatus.OK, "업체가 성공적으로 수정되었습니다.", "S_COMPANY_UPDATE"),
+	COMPANY_DELETE(HttpStatus.NO_CONTENT, "해당 업체가 삭제되었습니다.", "S_COMPANY_DELETE"),
+
 	// Product 관련 성공응답
 	PRODUCT_CREATE(HttpStatus.CREATED, "상품이 성공적으로 생성되었습니다.", "S_PRODUCT_CREATE"),
 	PRODUCT_SEARCH_ONE(HttpStatus.OK, "단건 상품이 성공적으로 조회되었습니다.", "S_PRODUCT_SEARCH_ONE"),

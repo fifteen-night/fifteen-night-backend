@@ -1,10 +1,8 @@
-package com.fn.eureka.client.companyservice.config;
+package com.fn.eureka.client.companyservice.infrastructure.config;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
