@@ -1,5 +1,6 @@
 package com.fn.eureka.client.orderservice.infrastructure.repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -85,6 +86,21 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 			.collect(Collectors.toList());
 
 		return new PageImpl<>(dtoList, pageable, total);
+	}
+
+	@Override
+	public List<UUID> findOrderProductIdListByDeliveryId(List<UUID> deliveries) {
+		if (deliveries == null || deliveries.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		QOrder order = QOrder.order;
+		return queryFactory
+			.select(order.orderProductId)
+			.from(order)
+			.where(order.orderDeliveryId.in(deliveries)
+				.and(order.orderProductId.isNotNull()))
+			.fetch();
 	}
 
 }

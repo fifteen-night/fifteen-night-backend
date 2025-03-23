@@ -1,5 +1,6 @@
 package com.fn.eureka.client.orderservice.domain.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,4 +21,6 @@ public interface OrderService {
 	OrderResponseDto modifyOrder(UUID orderId, Map<String, Object> updates, String userRole, UUID userId);
 
 	void removeOrder(UUID orderId, String userRole, UUID userId);
+
+	List<UUID> findOrderProductIdListByDeliveryId(List<UUID> deliveries);
 }
