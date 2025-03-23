@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerCreateRequestDto;
+import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerSearchCondition;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerGetResponseDto;
 import com.fn.eureka.client.deliverymanagerservice.application.service.DeliveryManagerService;
@@ -50,11 +50,11 @@ public class DeliveryManagerController {
 
 	@GetMapping
 	public ResponseEntity<CommonResponse<Page<DeliveryManagerGetResponseDto>>> getDeliveryManagers(
-		@RequestParam(required = false) String keyword,
+		DeliveryManagerSearchCondition condition,
 		Pageable pageable) {
 
 		CommonResponse<Page<DeliveryManagerGetResponseDto>> response =
-			deliveryManagerService.getDeliveryManagers(keyword, pageable);
+			deliveryManagerService.getDeliveryManagers(condition, pageable);
 
 		return ResponseEntity
 			.status(SuccessCode.DELIVERY_MANAGER_LIST_FOUND.getStatusCode())

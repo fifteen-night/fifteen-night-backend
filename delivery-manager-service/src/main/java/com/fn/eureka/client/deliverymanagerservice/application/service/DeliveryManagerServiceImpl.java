@@ -15,6 +15,7 @@ import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerCreateRequestDto;
+import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerSearchCondition;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.response.DeliveryManagerGetResponseDto;
 import com.fn.eureka.client.deliverymanagerservice.application.exception.DeliveryManagerException;
@@ -119,32 +120,37 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 	}
 
 	@Transactional(readOnly = true)
-	public CommonResponse<Page<DeliveryManagerGetResponseDto>> getDeliveryManagers(String keyword, Pageable pageable) {
+	public CommonResponse<Page<DeliveryManagerGetResponseDto>> getDeliveryManagers(
+		DeliveryManagerSearchCondition condition, Pageable pageable) {
 		RequestUserDetails userDetails = getAuthenticatedUser();
-		Page<DeliveryManager> page;
 
+		// 1) 조회 권한 확인 (MASTER, HUB_MANAGER, DELIVERY_MANAGER 중 하나여야 함)
+		validateReadRole(userDetails);
+
+		// 2) 배송 담당자는 본인 정보만 조회 가능하므로 userId 조건 강제 세팅
+		if (hasDeliveryManagerRole(userDetails)) {
+			condition.setDmUserId(UUID.fromString(userDetails.getUserId()));
+		}
+
+		// 3) 허브 관리자는 본인 허브 소속만 검색 가능하므로 hubId 조건 강제 세팅
+		if (hasHubManagerRole(userDetails)) {
+			UUID userId = UUID.fromString(userDetails.getUserId());
+			DeliveryManager hubManager = deliveryManagerRepository.findActiveByDmUserId(userId)
+				.orElseThrow(() -> new CustomApiException(DeliveryManagerException.MANAGER_NOT_FOUND));
+			condition.setDmHubId(hubManager.getDmHubId());
+		}
+
+		// 4) 페이지 사이즈 유효성 검사 (10, 30, 50만 허용)
 		int size = pageable.getPageSize();
 		if (size != 10 && size != 30 && size != 50) {
 			pageable = PageRequest.of(pageable.getPageNumber(), 10, pageable.getSort());
 		}
 
-		// 1) 권한별 조회 처리
-		if (hasMasterRole(userDetails)) {
-			page = deliveryManagerRepository.findByKeyword(keyword, pageable);
-		} else if (hasHubManagerRole(userDetails)) {
-			UUID userId = UUID.fromString(userDetails.getUserId());
-			DeliveryManager hubManager = deliveryManagerRepository.findActiveByDmUserId(userId)
-				.orElseThrow(() -> new CustomApiException(DeliveryManagerException.MANAGER_NOT_FOUND));
-			page = deliveryManagerRepository.findByHubIdAndKeyword(hubManager.getDmHubId(), keyword, pageable);
-		} else if (hasDeliveryManagerRole(userDetails)) {
-			page = deliveryManagerRepository.findByKeywordAndUserId(
-				UUID.fromString(userDetails.getUserId()), keyword, pageable);
-		} else {
-			throw new CustomApiException(DeliveryManagerException.ACCESS_DENIED);
-		}
+		// 5) QueryDSL을 이용한 조건 검색 실행
+		Page<DeliveryManager> result = deliveryManagerRepository.search(condition, pageable);
 
-		// 2) DTO 매핑 및 응답 반환
-		Page<DeliveryManagerGetResponseDto> responsePage = page.map(manager -> DeliveryManagerGetResponseDto.builder()
+		// 6) Entity → DTO 매핑
+		Page<DeliveryManagerGetResponseDto> responsePage = result.map(manager -> DeliveryManagerGetResponseDto.builder()
 			.id(manager.getDmId())
 			.dmUserId(manager.getDmUserId())
 			.dmHubId(manager.getDmHubId())
@@ -153,8 +159,10 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 			.dmTurn(manager.getDmTurn())
 			.build());
 
+		// 7) 응답 반환
 		return new CommonResponse<>(SuccessCode.DELIVERY_MANAGER_LIST_FOUND, responsePage);
 	}
+
 
 	@Transactional
 	public CommonResponse<DeliveryManagerGetResponseDto> updateDeliveryManager(UUID dmId, DeliveryManagerUpdateRequestDto requestDto) {
