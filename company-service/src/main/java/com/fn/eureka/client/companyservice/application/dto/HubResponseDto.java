@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice.presentation.dto;
+package com.fn.eureka.client.companyservice.application.dto;
 
 import java.util.UUID;
 

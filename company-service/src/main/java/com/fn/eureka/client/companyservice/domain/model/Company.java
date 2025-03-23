@@ -1,9 +1,9 @@
-package com.fn.eureka.client.companyservice.domain.entity;
+package com.fn.eureka.client.companyservice.domain.model;
 
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
-import com.fn.eureka.client.companyservice.presentation.dto.CompanyRequestDto;
+import com.fn.eureka.client.companyservice.presentation.request.CompanyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

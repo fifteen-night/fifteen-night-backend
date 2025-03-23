@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice.infrastructure;
+package com.fn.eureka.client.companyservice.infrastructure.client;
 
 import java.util.UUID;
 
@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.fn.eureka.client.companyservice.presentation.dto.UserResponseDto;
+import com.fn.eureka.client.companyservice.application.dto.UserResponseDto;
 
 import feign.FeignException;
 

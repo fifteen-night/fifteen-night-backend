@@ -1,8 +1,7 @@
-package com.fn.eureka.client.companyservice.application;
+package com.fn.eureka.client.companyservice.infrastructure.service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -11,13 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.companyservice.presentation.dto.CompanyRequestDto;
-import com.fn.eureka.client.companyservice.presentation.dto.CompanyResponseDto;
-import com.fn.eureka.client.companyservice.domain.entity.Company;
 import com.fn.eureka.client.companyservice.domain.repository.CompanyQueryRepository;
+import com.fn.eureka.client.companyservice.domain.service.CompanyService;
+import com.fn.eureka.client.companyservice.presentation.request.CompanyRequestDto;
+import com.fn.eureka.client.companyservice.application.dto.CompanyResponseDto;
+import com.fn.eureka.client.companyservice.domain.model.Company;
 import com.fn.eureka.client.companyservice.domain.repository.CompanyRepository;
-import com.fn.eureka.client.companyservice.infrastructure.HubServiceClient;
-import com.fn.eureka.client.companyservice.infrastructure.UserServiceClient;
+import com.fn.eureka.client.companyservice.infrastructure.client.HubServiceClient;
+import com.fn.eureka.client.companyservice.infrastructure.client.UserServiceClient;
 
 import lombok.RequiredArgsConstructor;
 

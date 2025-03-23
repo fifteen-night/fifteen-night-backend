@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice.config;
+package com.fn.eureka.client.companyservice.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

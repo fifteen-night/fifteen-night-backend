@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice.application;
+package com.fn.eureka.client.companyservice.domain.service;
 
 import java.util.List;
 import java.util.UUID;
@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.companyservice.presentation.dto.CompanyRequestDto;
-import com.fn.eureka.client.companyservice.presentation.dto.CompanyResponseDto;
+import com.fn.eureka.client.companyservice.presentation.request.CompanyRequestDto;
+import com.fn.eureka.client.companyservice.application.dto.CompanyResponseDto;
 
 public interface CompanyService {
 

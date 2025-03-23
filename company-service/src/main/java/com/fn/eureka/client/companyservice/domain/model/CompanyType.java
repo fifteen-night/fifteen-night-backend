@@ -1,4 +1,4 @@
-package com.fn.eureka.client.companyservice.domain.entity;
+package com.fn.eureka.client.companyservice.domain.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package com.fn.eureka.client.companyservice.presentation.dto;
+package com.fn.eureka.client.companyservice.application.dto;
 
 import java.util.UUID;
 
-import com.fn.eureka.client.companyservice.domain.entity.Company;
+import com.fn.eureka.client.companyservice.domain.model.Company;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
