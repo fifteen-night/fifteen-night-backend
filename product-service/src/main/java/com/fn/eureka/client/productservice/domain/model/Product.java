@@ -66,4 +66,8 @@ public class Product extends BaseEntity {
 			default -> throw new IllegalStateException("잘못된 필드명 : " + key);
 		}
 	}
+
+	public void updateProductQuantity(int storedQuantity) {
+		this.productQuantity -= storedQuantity;
+	}
 }

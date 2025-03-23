@@ -15,6 +15,7 @@ public enum SuccessCode {
 	PRODUCT_SEARCH_ALL(HttpStatus.OK, "모든 상품이 성공적으로 조회되었습니다.","S_PRODUCT_SEARCH_ALL"),
 	PRODUCT_UPDATE(HttpStatus.OK, "상품이 성공적으로 수정되었습니다.", "S_PRODUCT_UPDATE"),
 	PRODUCT_DELETE(HttpStatus.NO_CONTENT, "해당 상품이 삭제되었습니다.", "S_PRODUCT_DELETE"),
+	PRODUCT_STORE_HUB(HttpStatus.OK, "허브에 상품을 성공적으로 입고했습니다.", "S_PRODUCT_STORE_HUB"),
 
 	// Order 관련 성공응답
 	ORDER_CREATE(HttpStatus.CREATED, "주문이 성공적으로 생성되었습니다.", "S_ORDER_CREATE"),

@@ -16,6 +16,8 @@ import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.ProductService;
 import com.fn.eureka.client.productservice.application.dto.CompanyInfoDto;
+import com.fn.eureka.client.productservice.application.dto.HubStockRequestDto;
+import com.fn.eureka.client.productservice.application.dto.HubStockResponseDto;
 import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
 import com.fn.eureka.client.productservice.domain.model.Product;
 import com.fn.eureka.client.productservice.domain.repository.ProductQueryRepository;
@@ -130,6 +132,21 @@ public class ProductServiceImpl implements ProductService {
 			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
 		validateUserPermission(product, userRole, userId);
 		product.markAsDeleted();
+	}
+
+	// 허브에 상품 입고 요청
+	@Override
+	@Transactional
+	public HubStockResponseDto addProductInHub(UUID hubId, HubStockRequestDto hubStockRequestDto, String userRole, UUID userId) {
+		UUID productId = hubStockRequestDto.getProductId();
+		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
+			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
+		// 허브에 입고하는 건 마스터, 허브관리자, 업체담당자만 가능
+		validateUserPermission(product, userRole, userId);
+		// 이미 허브에 상품이 있으면 수량 추가되고, 없으면 생성
+		HubStockResponseDto hubStockResponseDto = hubServiceClient.createHubStock(hubId, hubStockRequestDto);
+		product.updateProductQuantity(hubStockRequestDto.getQuantity());
+		return hubStockResponseDto;
 	}
 
 	// 주문 수정 삭제는 마스터, 허브 관리자(담당 허브일 경우)만 가능

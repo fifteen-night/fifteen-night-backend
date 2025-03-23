@@ -24,6 +24,8 @@ import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.productservice.application.ProductService;
+import com.fn.eureka.client.productservice.application.dto.HubStockRequestDto;
+import com.fn.eureka.client.productservice.application.dto.HubStockResponseDto;
 import com.fn.eureka.client.productservice.domain.model.Product;
 import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
 import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
@@ -94,11 +96,21 @@ public class ProductController {
 		return ResponseEntity.status(SuccessCode.PRODUCT_DELETE.getStatusCode()).body(new CommonResponse<>(SuccessCode.PRODUCT_DELETE, productId));
 	}
 
+	// 허브에 상품 입고 요청
+	@PostMapping("/store-hub/{hubId}/{productId}")
+	public ResponseEntity<CommonResponse<HubStockResponseDto>> storeProductInHub(
+		@PathVariable("hubId") UUID hubId,
+		@RequestBody HubStockRequestDto hubStockRequestDto,
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId) {
+		HubStockResponseDto hubStockResponseDto = productService.addProductInHub(hubId, hubStockRequestDto, userRole, userId);
+		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.PRODUCT_STORE_HUB, hubStockResponseDto));
+	}
+
 	// for other services...
 
 	@PostMapping("/product-list")
 	public List<ProductResponseDto> readProductListByProductIdList(@RequestBody List<UUID> products) {
 		return productService.findProductListByProductIdList(products);
 	}
-
 }

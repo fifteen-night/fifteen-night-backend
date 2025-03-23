@@ -8,9 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import com.fn.common.global.util.PageUtils;
-import com.fn.eureka.client.productservice.domain.model.Product;
-import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
+import com.fn.eureka.client.productservice.application.dto.HubStockRequestDto;
+import com.fn.eureka.client.productservice.application.dto.HubStockResponseDto;
 import com.fn.eureka.client.productservice.application.dto.ProductResponseDto;
+import com.fn.eureka.client.productservice.presentation.requeset.ProductRequestDto;
 
 public interface ProductService {
 	ProductResponseDto addProduct(ProductRequestDto requestDto, String userRole, UUID userId);
@@ -24,4 +25,6 @@ public interface ProductService {
 	void removeProduct(UUID productId, String userRole, UUID userId);
 
 	List<ProductResponseDto> findProductListByProductIdList(List<UUID> products);
+
+	HubStockResponseDto addProductInHub(UUID hubId, HubStockRequestDto hubStockRequestDto, String userRole, UUID userId);
 }
