@@ -18,10 +18,11 @@ import com.fn.eureka.client.hubservice.hub.application.dto.mapper.HubMapper;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.CheckHubManagerRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.CreateHubRequest;
 import com.fn.eureka.client.hubservice.hub.application.dto.request.UpdateHubRequest;
-import com.fn.eureka.client.hubservice.hub.application.dto.response.CheckHubManagerResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.CreateHubResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.Point;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadHubResponse;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadProductResponse;
+import com.fn.eureka.client.hubservice.hub.application.dto.response.UpdateHubResponse;
 import com.fn.eureka.client.hubservice.hub.domain.Hub;
 import com.fn.eureka.client.hubservice.hub.domain.repository.HubRepository;
 import com.fn.eureka.client.hubservice.hub.exception.HubException;
@@ -30,7 +31,9 @@ import com.fn.eureka.client.hubservice.hub_stock.application.dto.request.CreateH
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.request.UpdateHubStockRequest;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.CreateHubStockResponse;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.ReadHubStockResponse;
+import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.UpdateHubStockResponse;
 import com.fn.eureka.client.hubservice.hub_stock.domain.HubStock;
+import com.fn.eureka.client.hubservice.hub_stock.domain.repository.HubStockRepository;
 import com.fn.eureka.client.hubservice.hub_stock.exception.HubStockException;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HubServiceImpl implements HubService {
 	private final HubRepository hubRepository;
+	private final HubStockRepository hubStockRepository;
 	private final GeoClientService geoClientService;
 	private final UserClientService userClientService;
 	private final ProductClientService productClientService;
@@ -59,7 +63,7 @@ public class HubServiceImpl implements HubService {
 
 		Hub hub = hubRepository.save(HubMapper.toEntity(request, point));
 
-		return HubMapper.toDto(hub);
+		return HubMapper.toCreateDto(hub);
 	}
 
 	@Override
@@ -67,7 +71,7 @@ public class HubServiceImpl implements HubService {
 	public ReadHubResponse readHub(UUID hubId) {
 		Hub hub = findHubById(hubId);
 
-		return HubMapper.toDto(hub, hubId);
+		return HubMapper.toReadDto(hub);
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public class HubServiceImpl implements HubService {
 
 	@Override
 	@Transactional
-	public void updateHub(UUID hubId, UpdateHubRequest request) {
+	public UpdateHubResponse updateHub(UUID hubId, UpdateHubRequest request) {
 		Hub hub = findHubById(hubId);
 
 		if (request.getHubName() != null) {
@@ -92,6 +96,8 @@ public class HubServiceImpl implements HubService {
 		if (request.getHubManagerId() != null) {
 			hub.updateHubManagerId(request.getHubManagerId());
 		}
+
+		return HubMapper.toUpdateDto(hub);
 	}
 
 	@Override
@@ -103,15 +109,25 @@ public class HubServiceImpl implements HubService {
 	}
 
 	@Override
-	public Hub findHubById(UUID id) {
-		return hubRepository.findById(id).orElseThrow(() -> new CustomApiException(HubException.HUB_NOT_FOUND));
+	@Transactional(readOnly = true)
+	public boolean checkHubManager(CheckHubManagerRequest request) {
+		Hub hub = findHubById(request.getHubId());
+
+		return hub.getHubManagerId().equals(request.getUserId());
 	}
 
 	@Override
-	public CheckHubManagerResponse checkHubManager(CheckHubManagerRequest request) {
-		Hub hub = findHubById(request.getHubId());
+	@Transactional(readOnly = true)
+	public UUID readHubIdByHubManagerId(UUID hubManagerId) {
+		Hub hub = hubRepository.findByHubManagerIdAndIsDeletedIsFalse(hubManagerId)
+			.orElseThrow(() -> new CustomApiException(HubException.HUB_NOT_FOUND));
 
-		return new CheckHubManagerResponse(hub.getHubManagerId().equals(request.getUserId()));
+		return hub.getHubId();
+	}
+
+	private Hub findHubById(UUID hubId) {
+		return hubRepository.findByHubIdAndIsDeletedIsFalse(hubId)
+			.orElseThrow(() -> new CustomApiException(HubException.HUB_NOT_FOUND));
 	}
 	// 허브 관련 끝
 
@@ -125,8 +141,8 @@ public class HubServiceImpl implements HubService {
 			throw new CustomApiException(HubException.PRODUCT_NOT_FOUND);
 		}
 
-		Optional<HubStock> optionalHubStock = hubRepository.findHubStockByHubIdAndProductId(hubId,
-			request.getProductId());
+		Optional<HubStock> optionalHubStock = hubStockRepository.findByHsHubHubIdAndHsProductIdAndIsDeletedIsFalse(
+			hubId, request.getProductId());
 		HubStock hubStock;
 
 		if (optionalHubStock.isPresent()) {
@@ -136,36 +152,38 @@ public class HubServiceImpl implements HubService {
 		} else {
 			// 없을 시 재고 생성
 			hubStock = HubStockMapper.toEntity(request, hub);
-			hub.addHubStock(hubStock);
 		}
 
-		hubRepository.save(hub);
-
-		return HubStockMapper.toDto(hubStock);
+		return HubStockMapper.toCreateDto(hubStockRepository.save(hubStock));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public ReadHubStockResponse readHubStock(UUID hubId, UUID productId) {
-		return hubRepository.readHubStock(hubId, productId);
+		HubStock hubStock = findHubStockByHubIdAndProductId(hubId, productId);
+		ReadProductResponse response = productClientService.readProduct(productId);
+
+		return HubStockMapper.toReadDto(hubStock, response);
 	}
 
 	@Override
 	public Page<ReadHubStockResponse> searchHubStock(UUID hubId, Pageable pageable, UUID productId, int quantity,
 		LocalDateTime startDateTime, LocalDateTime endDateTime) {
-		return hubRepository.searchHubStock(hubId, pageable, productId, quantity, startDateTime, endDateTime);
+		return hubStockRepository.searchHubStock(hubId, pageable, productId, quantity, startDateTime, endDateTime);
 	}
 
 	@Override
 	@Transactional
-	public void updateHubStock(UUID hubId, UUID productId, UpdateHubStockRequest request) {
+	public UpdateHubStockResponse updateHubStock(UUID hubId, UUID productId, UpdateHubStockRequest request) {
 		HubStock hubStock = findHubStockByHubIdAndProductId(hubId, productId);
 
-		if (hubStock.getHsQuantity() - request.getQuantity() < 0) {
+		if (hubStock.getHsQuantity() + request.getQuantity() < 0) {
 			throw new CustomApiException(HubException.HUB_STOCK_LESS_QUANTITY);
 		}
 
 		hubStock.updateQuantity(request.getQuantity());
+
+		return HubStockMapper.toUpdateDto(hubStock);
 	}
 
 	@Override
@@ -176,9 +194,9 @@ public class HubServiceImpl implements HubService {
 		hubStock.markAsDeleted();
 	}
 
-	@Override
-	public HubStock findHubStockByHubIdAndProductId(UUID hubId, UUID productId) {
-		return hubRepository.findHubStockByHubIdAndProductId(hubId, productId)
+	private HubStock findHubStockByHubIdAndProductId(UUID hubId, UUID productId) {
+		return hubStockRepository.findByHsHubHubIdAndHsProductIdAndIsDeletedIsFalse(hubId, productId)
 			.orElseThrow(() -> new CustomApiException(HubStockException.HUB_STOCK_NOT_FOUND));
 	}
+	// 허브 재고 관련 끝
 }
