@@ -82,7 +82,8 @@ public class CompanyQueryRepositoryImpl implements CompanyQueryRepository {
 		return queryFactory
 			.select(company.companyId)
 			.from(company)
-			.where(company.companyHubId.eq(hubId))
+			.where(company.companyHubId.eq(hubId)
+				.and(company.isDeleted.eq(false)))
 			.fetch();
 	}
 
@@ -92,16 +93,19 @@ public class CompanyQueryRepositoryImpl implements CompanyQueryRepository {
 		return queryFactory
 			.select(company.companyId)
 			.from(company)
-			.where(company.companyManagerId.eq(companyManagerId))
+			.where(company.companyManagerId.eq(companyManagerId)
+				.and(company.isDeleted.eq(false)))
 			.fetchOne();
 	}
 
+	// 업체ID로 허브ID 조회
 	public UUID findHubIdByCompanyId(UUID companyId) {
 		QCompany company = QCompany.company;
 		return queryFactory
 			.select(company.companyHubId)
 			.from(company)
-			.where(company.companyId.eq(companyId))
+			.where(company.companyId.eq(companyId)
+				.and(company.isDeleted.eq(false)))
 			.fetchOne();
 	}
 }

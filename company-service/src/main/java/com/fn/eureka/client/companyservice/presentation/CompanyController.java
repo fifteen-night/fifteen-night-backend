@@ -1,5 +1,6 @@
 package com.fn.eureka.client.companyservice.presentation;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.fn.common.global.dto.CommonResponse;
+import com.fn.common.global.success.SuccessCode;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.companyservice.domain.service.CompanyService;
 import com.fn.eureka.client.companyservice.presentation.request.CompanyRequestDto;
@@ -35,24 +39,26 @@ public class CompanyController {
 
 	// 업체 생성
 	@PostMapping
-	public ResponseEntity<CompanyResponseDto> createCompany(
-		@RequestBody CompanyRequestDto requestDto,
-		@RequestHeader("X-User-Role") String userRole
+	public ResponseEntity<CommonResponse<CompanyResponseDto>> createCompany(
+		@RequestBody CompanyRequestDto companyRequestDto,
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId
 	) {
-		CompanyResponseDto response = companyService.addCompany(requestDto, userRole);
-		return ResponseEntity.ok(response);
+		CompanyResponseDto companyResponseDto = companyService.addCompany(companyRequestDto, userRole, userId);
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/companies").build().toUri();
+		return ResponseEntity.created(location).body(new CommonResponse<>(SuccessCode.COMPANY_CREATE, companyResponseDto));
 	}
 
 	// 업체 조회
 	@GetMapping("/{companyId}")
-	public ResponseEntity<CompanyResponseDto> getCompany(@PathVariable("companyId") UUID companyId) {
-		CompanyResponseDto response = companyService.findTheCompany(companyId);
-		return ResponseEntity.ok(response);
+	public ResponseEntity<CommonResponse<CompanyResponseDto>> getCompany(@PathVariable("companyId") UUID companyId) {
+		CompanyResponseDto companyResponseDto = companyService.findTheCompany(companyId);
+		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.COMPANY_SEARCH_ONE, companyResponseDto));
 	}
 
 	// 업체 리스트 조회 + 검색
 	@GetMapping
-	public ResponseEntity<Page<CompanyResponseDto>> getCompanies(
+	public ResponseEntity<CommonResponse<Page<CompanyResponseDto>>> getCompanies(
 		@RequestParam(required = false) UUID hubId,
 		@RequestParam(defaultValue = "whole", required = false) String type,
 		@RequestParam(required = false) String keyword,
@@ -63,22 +69,28 @@ public class CompanyController {
 		@RequestHeader("X-User-Role") String userRole
 		) {
 		Page<CompanyResponseDto> companies = companyService.findAllCompaniesByType(hubId, type, keyword, page, size, sortDirection, sortBy, userRole);
-		return ResponseEntity.ok(companies);
+		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.COMPANY_SEARCH_ALL, companies));
 	}
 
 	// 업체 수정
 	@PutMapping("/{companyId}")
-	public ResponseEntity<CompanyResponseDto> updateCompany(@PathVariable("companyId") UUID companyId,
-		@RequestBody CompanyRequestDto requestDto) {
-		CompanyResponseDto response = companyService.modifyCompany(companyId, requestDto);
-		return ResponseEntity.ok(response);
+	public ResponseEntity<CommonResponse<CompanyResponseDto>> updateCompany(
+		@PathVariable("companyId") UUID companyId,
+		@RequestBody CompanyRequestDto companyRequestDto,
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId) {
+		CompanyResponseDto companyResponseDto = companyService.modifyCompany(companyId, companyRequestDto, userRole, userId);
+		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.COMPANY_UPDATE, companyResponseDto));
 	}
 
 	// 업체 삭제
 	@DeleteMapping("/{companyId}")
-	public ResponseEntity<Void> deleteCompany(@PathVariable("companyId") UUID companyId) {
-		companyService.removeCompany(companyId);
-		return ResponseEntity.noContent().build();
+	public ResponseEntity<CommonResponse> deleteCompany(
+		@PathVariable("companyId") UUID companyId,
+		@RequestHeader("X-User-Role") String userRole,
+		@RequestHeader("X-User-Id") UUID userId) {
+		companyService.removeCompany(companyId, userRole, userId);
+		return ResponseEntity.status(SuccessCode.COMPANY_DELETE.getStatusCode()).body(new CommonResponse<>(SuccessCode.COMPANY_DELETE, companyId));
 	}
 
 	// for other services...

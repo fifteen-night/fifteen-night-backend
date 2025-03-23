@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserResponseDto {
-
 	private UUID userId;
-	private String username;
+	private String userName;
 	private String userNickname;
-	private String userSlackId;
+	private String userEmail;
 	private String userRole;
-	private String email;
 	private String userPhone;
+	private String userSlackId;
 }

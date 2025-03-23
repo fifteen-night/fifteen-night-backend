@@ -8,10 +8,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
+import com.fn.eureka.client.companyservice.application.dto.HubResponseDto;
+import com.fn.eureka.client.companyservice.application.dto.UserResponseDto;
 import com.fn.eureka.client.companyservice.domain.repository.CompanyQueryRepository;
 import com.fn.eureka.client.companyservice.domain.service.CompanyService;
+import com.fn.eureka.client.companyservice.infrastructure.exception.CompanyException;
 import com.fn.eureka.client.companyservice.presentation.request.CompanyRequestDto;
 import com.fn.eureka.client.companyservice.application.dto.CompanyResponseDto;
 import com.fn.eureka.client.companyservice.domain.model.Company;
@@ -34,20 +38,23 @@ public class CompanyServiceImpl implements CompanyService {
 	// 업체 생성
 	@Override
 	@Transactional
-	public CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto, String userRole) {
-		// TODO 권한 - 유저 ROLE이 허브관리자 또는 업체담당자일 경우만 업체 생성 가능
-		// TODO 질문 - 만약 프론트엔드에서 이미 검증된 데이터를 보낸다면 굳이 필요없을 것 같음.
+	public CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto, String userRole, UUID userId) {
 		// TODO kafka를 이용해서 메세징 - 나 company 데이터 받았으니까 맞는지 확인해줘! 메세지 보내고 업체 생성하되 만약에 데이터가 안 맞는다는 메세지가 온다? 하면 바로 삭제
-		// companyHubId라는 허브가 존재하는지 확인
-		// boolean existedHubId = hubServiceClient.checkExistHubIdInHubList(companyCreateRequestDto.getCompanyHubId());
-		// if (!existedHubId) {
-		// 	throw new NotFoundException("해당 허브는 존재하지 않습니다.");
-		// }
-		// 허브 관리자의 경우, companyManagerId가 존재하는 유저 ID인지 확인
-		// boolean existedCompanyManagerId = userServiceClient.checkExistUserIdInUserList(companyCreateRequestDto.getCompanyManagerId());
-		// if ("HUB MANAGER".equalsIgnoreCase(userRole) && !existedCompanyManagerId){
-		// 	throw new NotFoundException("해당 업체 담당자ID는 존재하지 않습니다.");
-		// }
+		if ("MASTER".equals(userRole) || "HUB_MANAGER".equals(userRole)) {
+			HubResponseDto hubInfo = hubServiceClient.readHub(companyRequestDto.getCompanyHubId());
+			if (hubInfo == null) {
+				throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
+			}
+			// 허브 관리자의 경우, 업체담당자ID가 존재하는 유저 ID인지 확인
+			UserResponseDto userInfo = userServiceClient.getUser(companyRequestDto.getCompanyManagerId());
+			if (userInfo == null){
+				throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
+			}
+		}
+		if ("COMPANY_MANAGER".equals(userRole) && !userId.equals(companyRequestDto.getCompanyManagerId())) {
+			throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
+		}
+
 		Company company = companyRepository.save(new Company(companyRequestDto));
 		return new CompanyResponseDto(company);
 	}
@@ -56,7 +63,7 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	public CompanyResponseDto findTheCompany(UUID companyId) {
 		Company company = companyRepository.findById(companyId)
-			.orElseThrow(() -> new NotFoundException("해당 업체는 존재하지 않습니다."));
+			.orElseThrow(() -> new CustomApiException(CompanyException.COMPANY_NOT_FOUND));
 		return new CompanyResponseDto(company);
 	}
 
@@ -70,19 +77,40 @@ public class CompanyServiceImpl implements CompanyService {
 	// 업체 수정
 	@Override
 	@Transactional
-	public CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto) {
+	public CompanyResponseDto modifyCompany(UUID companyId, CompanyRequestDto requestDto, String userRole, UUID userId) {
 		Company company = companyRepository.findById(companyId)
-			.orElseThrow(() -> new NotFoundException("해당 업체를 찾을 수 없습니다"));
+			.orElseThrow(() -> new CustomApiException(CompanyException.COMPANY_NOT_FOUND));
+		if ("HUB_MANAGER".equals(userRole)) {
+			// 로그인 유저가 허브관리자인 경우, 유저ID(허브관리자ID)로 허브ID 조회
+			UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
+			// 상품이 소속된 업체의 허브가 아닌 경우 권한 없음
+			if (!hubId.equals(company.getCompanyHubId())) {
+				throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
+			}
+		} else if ("COMPANY_MANAGER".equals(userRole)) {
+			// 로그인 유저가 업체담당자인 경우, 본인 업체 아니면 권한 없음
+			if (!userId.equals(company.getCompanyManagerId())) {
+				throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
+			}
+		}
 		company.modifyCompanyInfo(requestDto);
 		return new CompanyResponseDto(company);
 	}
 
-	// 업체 삭제 soft-delete
+	// 업체 삭제
 	@Override
 	@Transactional
-	public void removeCompany(UUID companyId) {
+	public void removeCompany(UUID companyId, String userRole, UUID userId) {
 		Company company = companyRepository.findById(companyId)
-			.orElseThrow(() -> new NotFoundException("해당 업체를 찾을 수 없습니다"));
+			.orElseThrow(() -> new CustomApiException(CompanyException.COMPANY_NOT_FOUND));
+		if ("HUB_MANAGER".equals(userRole)) {
+			// 로그인 유저가 허브관리자인 경우, 유저ID(허브관리자ID)로 허브ID 조회
+			UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
+			// 상품이 소속된 업체의 허브가 아닌 경우 권한 없음
+			if (!hubId.equals(company.getCompanyHubId())) {
+				throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
+			}
+		}
 		company.markAsDeleted();
 	}
 
@@ -94,11 +122,13 @@ public class CompanyServiceImpl implements CompanyService {
 		return companyQueryRepository.findCompanyIdByCompanyHubId(hubId);
 	}
 
+	// 업체담당자ID로 업체ID 조회
 	@Override
 	public UUID findCompanyIdByCompanyManagerId(UUID companyManagerId) {
 		return companyQueryRepository.findCompanyIdByCompanyManagerId(companyManagerId);
 	}
 
+	// 허브ID로 업체ID 조회
 	@Override
 	public UUID findHubIdByCompanyId(UUID companyId) {
 		return companyQueryRepository.findHubIdByCompanyId(companyId);
