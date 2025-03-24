@@ -20,11 +20,16 @@ public class HubRouteScheduler {
 	@Scheduled(cron = "0 30 * * * *")
 	public void updateHubRoutes() {
 
+		long startTime = System.currentTimeMillis();
+
 		log.info("주기적인 허브 루트 갱신");
 
 		hubToHubServiceImpl.updateAllRoutes();
 
-		log.info("허브 업데이트 종료");
+		long endTime = System.currentTimeMillis();
+		long duration = endTime - startTime;
+
+		log.info("허브 업데이트 종료, 업데이트 소요 시간: {} ms", duration);
 
 	}
 }
