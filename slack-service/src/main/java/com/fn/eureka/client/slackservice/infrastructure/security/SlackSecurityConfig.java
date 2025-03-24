@@ -27,7 +27,9 @@ public class SlackSecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+				.requestMatchers("/")
+				// .requestMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**")
+				.permitAll()
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)

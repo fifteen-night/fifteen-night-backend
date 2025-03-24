@@ -20,3 +20,9 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER}  # Eureka 서버 주소
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+  model:
+    name: ${GEMINI_MODEL_NAME}

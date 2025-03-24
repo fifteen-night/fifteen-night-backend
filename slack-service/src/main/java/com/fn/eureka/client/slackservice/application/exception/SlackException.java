@@ -7,7 +7,8 @@ import com.fn.common.global.exception.type.ExceptionType;
 public enum SlackException implements ExceptionType {
 
 	SLACK_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "Slack 메시지를 찾을 수 없습니다.", "E_SLACK_MESSAGE_NOT_FOUND"),
-	UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "마스터 권한이 필요합니다.", "E_UNAUTHORIZED_ACCESS");
+	UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "마스터 권한이 필요합니다.", "E_UNAUTHORIZED_ACCESS"),
+	AI_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "AI 메세지를 생성할 정보가 조회되지 않습니다.", "E_AI_INFO_NOT_FOUND");
 
 	private final HttpStatus httpStatus;
 	private final String message;
