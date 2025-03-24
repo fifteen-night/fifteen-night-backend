@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
+import com.fn.eureka.client.deliveryservice.application.dto.deliveryRouteSequence.request.UpdateSequenceRequestDto;
 import com.fn.eureka.client.deliveryservice.domain.model.deliveryRoute.DeliveryRoute;
 
 import jakarta.persistence.Column;
@@ -66,4 +67,13 @@ public class DeliveryRouteSequence extends BaseEntity {
 		this.hubDeliveryManagerId = hubDeliveryManagerId;
 	}
 
+	public void update(UpdateSequenceRequestDto updateSequence) {
+
+		this.sequenceNumber = updateSequence.getSequenceNumber();
+		this.departureHubAddress = updateSequence.getDepartureHubAddress();
+		this.arrivalHubAddress = updateSequence.getArrivalHubAddress();
+		this.quantity = updateSequence.getQuantity();
+		this.distance = updateSequence.getDistance();
+		this.deliveryRoute = updateSequence.getDeliveryRoute();
+	}
 }

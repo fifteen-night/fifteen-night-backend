@@ -3,6 +3,7 @@ package com.fn.eureka.client.deliveryservice.application.dto.delivery.request;
 import java.util.UUID;
 
 import com.fn.eureka.client.deliveryservice.domain.model.delivery.DeliveryStatus;
+import com.fn.eureka.client.deliveryservice.domain.model.deliveryRoute.DeliveryRouteStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +20,7 @@ public class UpdateDeliveryRequestDto {
 	private String address;
 	private String receiverName;
 	private UUID receiverSlackId;
-	private DeliveryStatus status;
+	private UUID cdmId;
+	private DeliveryStatus deliveryStatus;
+	private DeliveryRouteStatus deliveryRouteStatus;
 }
