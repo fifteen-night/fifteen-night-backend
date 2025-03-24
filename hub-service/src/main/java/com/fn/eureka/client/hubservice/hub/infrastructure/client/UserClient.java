@@ -6,10 +6,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.fn.common.global.config.FeignInterceptor;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadUserResponse;
 
-@FeignClient(name = "user-service", path = "/api/users")
+@FeignClient(name = "user-service", path = "/api/users", configuration = FeignInterceptor.class)
 public interface UserClient {
 
 	@GetMapping("/{userId}")

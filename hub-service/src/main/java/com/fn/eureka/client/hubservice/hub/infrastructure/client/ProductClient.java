@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fn.common.global.config.FeignInterceptor;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.eureka.client.hubservice.hub.application.dto.response.ReadProductResponse;
 
-@FeignClient(name = "product-service", path = "/api/products")
+@FeignClient(name = "product-service", path = "/api/products", configuration = FeignInterceptor.class)
 public interface ProductClient {
 
 	@GetMapping("/{productId}")
