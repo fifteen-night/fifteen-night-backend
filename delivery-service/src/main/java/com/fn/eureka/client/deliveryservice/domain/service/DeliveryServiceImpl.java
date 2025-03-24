@@ -19,20 +19,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.exception.CustomApiException;
-import com.fn.eureka.client.deliveryservice.application.dto.deliveryRoute.request.CreateDeliveryRouteRequestDto;
-import com.fn.eureka.client.deliveryservice.application.dto.deliveryRouteSequence.request.CreateSequenceRequestDto;
-import com.fn.eureka.client.deliveryservice.domain.model.deliveryRoute.DeliveryRoute;
-import com.fn.eureka.client.deliveryservice.domain.model.deliveryRouteSequence.DeliveryRouteSequence;
-import com.fn.eureka.client.deliveryservice.domain.model.route.HubToHub;
-import com.fn.eureka.client.deliveryservice.domain.repository.DeliveryRepository;
-import com.fn.eureka.client.deliveryservice.application.service.DeliveryService;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.CreateDeliveryRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.UpdateDeliveryRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.CreateDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.GetAllDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.GetDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.UpdateDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.deliveryRoute.request.CreateDeliveryRouteRequestDto;
+import com.fn.eureka.client.deliveryservice.application.dto.deliveryRouteSequence.request.CreateSequenceRequestDto;
+import com.fn.eureka.client.deliveryservice.application.dto.deliveryRouteSequence.request.UpdateSequenceRequestDto;
+import com.fn.eureka.client.deliveryservice.application.service.DeliveryService;
 import com.fn.eureka.client.deliveryservice.domain.model.delivery.Delivery;
+import com.fn.eureka.client.deliveryservice.domain.model.deliveryRoute.DeliveryRoute;
+import com.fn.eureka.client.deliveryservice.domain.model.deliveryRoute.DeliveryRouteStatus;
+import com.fn.eureka.client.deliveryservice.domain.model.deliveryRouteSequence.DeliveryRouteSequence;
+import com.fn.eureka.client.deliveryservice.domain.model.route.HubToHub;
+import com.fn.eureka.client.deliveryservice.domain.repository.DeliveryRepository;
 import com.fn.eureka.client.deliveryservice.domain.repository.DeliveryRouteRepository;
 import com.fn.eureka.client.deliveryservice.domain.repository.DeliveryRouteSequenceRepository;
 import com.fn.eureka.client.deliveryservice.domain.repository.HubToHubRepository;
@@ -73,7 +75,8 @@ public class DeliveryServiceImpl implements DeliveryService {
 		DeliveryRoute savedDeliveryRoute = deliveryRouteRepository.save(deliveryRoute);
 
 		// 3. 배송루트가 생성이 되면 다익스트라 알고리즘을 통해 시퀀스를 생성
-		List<DeliveryRouteSequence> deliveryRouteSequences = startAlgorithm(savedDeliveryRoute);
+		boolean iscreate = true;
+		List<DeliveryRouteSequence> deliveryRouteSequences = startAlgorithm(savedDeliveryRoute, iscreate);
 
 		// 4. 생성된 시퀀스를 배송 루트에 업데이트
 		int totalTime = 0;
@@ -87,7 +90,8 @@ public class DeliveryServiceImpl implements DeliveryService {
 		savedDeliveryRoute.updateDeliverySequence(
 			deliveryRouteSequences,
 			TimeUtils.convertTime(totalTime),
-			totalDistance);
+			totalDistance,
+			DeliveryRouteStatus.WAITING);
 
 		// 5. 값 리턴
 		return CreateDeliveryResponseDto.fromDelivery(savedDelivery, savedDeliveryRoute);
@@ -124,12 +128,14 @@ public class DeliveryServiceImpl implements DeliveryService {
 
 		targetDelivery.markAsDeleted();
 
-		DeliveryRoute targetDeliveryRoute = deliveryRouteRepository.findByDeliveryRouteIdAndIsDeletedIsFalse(targetDelivery.getDeliveryId())
+		DeliveryRoute targetDeliveryRoute = deliveryRouteRepository.findByDeliveryAndIsDeletedIsFalse(
+				targetDelivery)
 			.orElseThrow(() -> new CustomApiException(DeliveryException.DELIVERY_ROUTE_NOT_FOUND));
 
 		targetDeliveryRoute.markAsDeleted();
 
-		List<DeliveryRouteSequence> sequences = deliveryRouteSequenceRepository.findBySequenceIdAndIsDeletedIsFalse(targetDeliveryRoute.getDeliveryRouteId());
+		List<DeliveryRouteSequence> sequences = deliveryRouteSequenceRepository.findBySequenceIdAndIsDeletedIsFalse(
+			targetDeliveryRoute.getDeliveryRouteId());
 
 		for (DeliveryRouteSequence sequence : sequences) {
 			sequence.markAsDeleted();
@@ -144,9 +150,42 @@ public class DeliveryServiceImpl implements DeliveryService {
 
 		Delivery targetDelivery = findDeliveryById(deliveryId);
 
+		boolean isChanged = validateChangeLocation(updateDeliveryRequestDto, targetDelivery);
+
 		targetDelivery.update(updateDeliveryRequestDto);
 
-		return UpdateDeliveryResponseDto.fromDelivery(targetDelivery);
+		DeliveryRoute targetDeliveryRoute = deliveryRouteRepository.findByDeliveryAndIsDeletedIsFalse(
+				targetDelivery)
+			.orElseThrow(() -> new CustomApiException(DeliveryException.DELIVERY_ROUTE_NOT_FOUND));
+
+		List<DeliveryRouteSequence> deliveryRouteSequences = null;
+
+		int totalTime = 0;
+		BigDecimal totalDistance = BigDecimal.ZERO;
+
+		if (isChanged) {
+			boolean iscreate = false;
+			deliveryRouteSequences = startAlgorithm(targetDeliveryRoute, iscreate);
+			for (DeliveryRouteSequence deliveryRouteSequence : deliveryRouteSequences) {
+				totalTime += TimeUtils.convertMilliseconds(deliveryRouteSequence.getQuantity());
+				totalDistance = totalDistance.add(deliveryRouteSequence.getDistance());
+			}
+		}
+
+		targetDeliveryRoute.updateDeliverySequence(
+			deliveryRouteSequences,
+			TimeUtils.convertTime(totalTime),
+			totalDistance,
+			updateDeliveryRequestDto.getDeliveryRouteStatus()
+		);
+
+		return UpdateDeliveryResponseDto.fromDelivery(targetDelivery , targetDeliveryRoute);
+	}
+
+	private boolean validateChangeLocation(UpdateDeliveryRequestDto updateDeliveryRequestDto, Delivery targetDelivery) {
+
+		return updateDeliveryRequestDto.getDepartureHubId().equals(targetDelivery.getDepartureHubId()) ||
+			updateDeliveryRequestDto.getDestinationHubId().equals(targetDelivery.getDestinationHubId());
 	}
 
 	private Delivery findDeliveryById(UUID deliveryId) {
@@ -157,7 +196,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 		return targetDelivery;
 	}
 
-	private List<DeliveryRouteSequence> startAlgorithm(DeliveryRoute deliveryRoute) {
+	private List<DeliveryRouteSequence> startAlgorithm(DeliveryRoute deliveryRoute, boolean iscreate) {
 
 		UUID departureHubId = deliveryRoute.getDepartureHubAddress();
 		UUID destinationHubId = deliveryRoute.getDestinationHubAddress();
@@ -188,21 +227,42 @@ public class DeliveryServiceImpl implements DeliveryService {
 				if (hubRoute.getDepartureHubAddress().equals(result.get(i - 1)) &&
 					hubRoute.getArrivalHubAddress().equals(result.get(i))) {
 
-					CreateSequenceRequestDto sequence = CreateSequenceRequestDto.builder()
-						.deliveryRoute(deliveryRoute)
-						.sequenceNumber(i)
-						.departureHubAddress(hubRoute.getDepartureHubAddress())
-						.arrivalHubAddress(hubRoute.getArrivalHubAddress())
-						.quantity(hubRoute.getHthQuantity())
-						.distance(hubRoute.getHthDistance())
-						.build();
+					if (iscreate) {
 
-					DeliveryRouteSequence deliveryRouteSequence = CreateSequenceRequestDto.toSequence(sequence);
-					// 여기서 허브 배송자 꺼내오기
+						CreateSequenceRequestDto sequence = CreateSequenceRequestDto.builder()
+							.deliveryRoute(deliveryRoute)
+							.sequenceNumber(i)
+							.departureHubAddress(hubRoute.getDepartureHubAddress())
+							.arrivalHubAddress(hubRoute.getArrivalHubAddress())
+							.quantity(hubRoute.getHthQuantity())
+							.distance(hubRoute.getHthDistance())
+							.build();
 
-					deliveryRouteSequenceRepository.save(deliveryRouteSequence);
+						DeliveryRouteSequence deliveryRouteSequence = CreateSequenceRequestDto.toSequence(sequence);
+						// 여기서 허브 배송자 넣어주기
 
-					deliveryRouteSequences.add(deliveryRouteSequence);
+						deliveryRouteSequenceRepository.save(deliveryRouteSequence);
+
+						deliveryRouteSequences.add(deliveryRouteSequence);
+					} else {
+						DeliveryRouteSequence existingSequence = deliveryRouteSequenceRepository
+							.findByDeliveryRouteAndSequenceNumber(deliveryRoute, i)
+							.orElseThrow(
+								() -> new CustomApiException(DeliveryException.DELIVERY_ROUTE_SEQUENCE_NOT_FOUND));
+
+						UpdateSequenceRequestDto updateSequence = UpdateSequenceRequestDto.builder()
+							.deliveryRoute(deliveryRoute)
+							.sequenceNumber(i)
+							.departureHubAddress(hubRoute.getDepartureHubAddress())
+							.arrivalHubAddress(hubRoute.getArrivalHubAddress())
+							.quantity(hubRoute.getHthQuantity())
+							.distance(hubRoute.getHthDistance())
+							.build();
+
+						existingSequence.update(updateSequence);
+
+						deliveryRouteSequences.add(existingSequence);
+					}
 
 					break;
 				}

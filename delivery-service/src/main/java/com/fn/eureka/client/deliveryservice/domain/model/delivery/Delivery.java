@@ -87,7 +87,7 @@ public class Delivery extends BaseEntity {
 	public void update(UpdateDeliveryRequestDto updateDeliveryRequestDto) {
 
 		Optional.ofNullable(updateDeliveryRequestDto.getOrderId()).ifPresent(value -> this.orderId = value);
-		Optional.ofNullable(updateDeliveryRequestDto.getStatus()).ifPresent(value -> this.status = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getDeliveryStatus()).ifPresent(value -> this.status = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getDepartureHubId()).ifPresent(value -> this.departureHubId = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getDestinationHubId()).ifPresent(value -> this.destinationHubId = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getAddress()).ifPresent(value -> this.address = value);
