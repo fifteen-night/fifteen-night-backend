@@ -5,14 +5,18 @@ import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.UpdateDeliveryRequestDto;
+import com.fn.eureka.client.deliveryservice.domain.model.deliveryRoute.DeliveryRoute;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,7 +39,7 @@ public class Delivery extends BaseEntity {
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private DeliveryStatus Status;
+	private DeliveryStatus status;
 
 	@Column(nullable = false)
 	private UUID departureHubId;
@@ -51,6 +55,9 @@ public class Delivery extends BaseEntity {
 
 	@Column(nullable = false)
 	private UUID receiverSlackId;
+
+	@OneToOne(mappedBy = "delivery", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private DeliveryRoute deliveryRoute;
 
 	// 업체 배송 담당자 id
 	// @Column(nullable = false)
@@ -68,7 +75,7 @@ public class Delivery extends BaseEntity {
 		UUID cdmId) {
 
 		this.orderId = orderId;
-		this.Status = status;
+		this.status = status;
 		this.departureHubId = departureHubId;
 		this.destinationHubId = destinationHubId;
 		this.address = address;
@@ -80,7 +87,7 @@ public class Delivery extends BaseEntity {
 	public void update(UpdateDeliveryRequestDto updateDeliveryRequestDto) {
 
 		Optional.ofNullable(updateDeliveryRequestDto.getOrderId()).ifPresent(value -> this.orderId = value);
-		Optional.ofNullable(updateDeliveryRequestDto.getStatus()).ifPresent(value -> this.Status = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getStatus()).ifPresent(value -> this.status = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getDepartureHubId()).ifPresent(value -> this.departureHubId = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getDestinationHubId()).ifPresent(value -> this.destinationHubId = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getAddress()).ifPresent(value -> this.address = value);

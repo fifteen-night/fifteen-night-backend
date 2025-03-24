@@ -21,6 +21,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,18 +36,18 @@ public class DeliveryRoute extends BaseEntity {
 	private UUID deliveryRouteId;
 
 	@OneToOne
-	@JoinColumn(name = "deliveryId",  nullable = false)
+	@JoinColumn(name = "deliveryId", nullable = false)
 	private Delivery delivery;
 
 	// 여기에 ARRAY
-	@OneToMany(mappedBy = "deliveryRoute" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "deliveryRoute", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<DeliveryRouteSequence> routeSequences = new ArrayList<>();
 
 	@Column(nullable = false)
-	private UUID departureHubId;
+	private UUID departureHubAddress;
 
 	@Column(nullable = false)
-	private UUID destinationHubId;
+	private UUID destinationHubAddress;
 
 	private BigDecimal estimatedDistance;
 
@@ -62,4 +63,36 @@ public class DeliveryRoute extends BaseEntity {
 
 	// 배송 담당자 ID
 	private UUID managerId;
+
+	@Builder
+	public DeliveryRoute(
+		Delivery delivery,
+		List<DeliveryRouteSequence> routeSequences,
+		UUID departureHubAddress,
+		UUID destinationHubAddress,
+		BigDecimal estimatedDistance,
+		LocalTime estimatedTime,
+		BigDecimal actualDistance,
+		LocalTime actualTime,
+		DeliveryRouteStatus currentStatus,
+		UUID managerId
+	) {
+		this.delivery = delivery;
+		this.routeSequences = routeSequences;
+		this.departureHubAddress = departureHubAddress;
+		this.destinationHubAddress = destinationHubAddress;
+		this.estimatedDistance = estimatedDistance;
+		this.estimatedTime = estimatedTime;
+		this.actualDistance = actualDistance;
+		this.actualTime = actualTime;
+		this.currentStatus = currentStatus;
+		this.managerId = managerId;
+	}
+
+	public void updateDeliverySequence(List<DeliveryRouteSequence> deliveryRouteSequences , LocalTime estimatedTime , BigDecimal estimatedDistance) {
+		this.currentStatus = DeliveryRouteStatus.WAITING;	// 초기는 WAITING
+		this. estimatedTime = estimatedTime;
+		this.estimatedDistance = estimatedDistance;
+		this.routeSequences = deliveryRouteSequences;
+	}
 }
