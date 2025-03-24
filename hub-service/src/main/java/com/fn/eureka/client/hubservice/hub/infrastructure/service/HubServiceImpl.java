@@ -57,7 +57,7 @@ public class HubServiceImpl implements HubService {
 			throw new CustomApiException(HubException.USER_NOT_QUALIFIED);
 		}
 
-		if (hubRepository.existsByHubAddress(request.getHubAddress())) {
+		if (hubRepository.existsByHubAddressAndIsDeletedIsFalse(request.getHubAddress())) {
 			throw new CustomApiException(HubException.HUB_ALREADY_EXISTS);
 		}
 
@@ -106,23 +106,6 @@ public class HubServiceImpl implements HubService {
 		Hub hub = findHubById(hubId);
 
 		hub.markAsDeleted();
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public boolean checkHubManager(CheckHubManagerRequest request) {
-		Hub hub = findHubById(request.getHubId());
-
-		return hub.getHubManagerId().equals(request.getUserId());
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public UUID readHubIdByHubManagerId(UUID hubManagerId) {
-		Hub hub = hubRepository.findByHubManagerIdAndIsDeletedIsFalse(hubManagerId)
-			.orElseThrow(() -> new CustomApiException(HubException.HUB_NOT_FOUND));
-
-		return hub.getHubId();
 	}
 
 	private Hub findHubById(UUID hubId) {
@@ -199,4 +182,30 @@ public class HubServiceImpl implements HubService {
 			.orElseThrow(() -> new CustomApiException(HubStockException.HUB_STOCK_NOT_FOUND));
 	}
 	// 허브 재고 관련 끝
+
+	// 외부 서비스용
+	@Override
+	@Transactional(readOnly = true)
+	public boolean checkHubManager(CheckHubManagerRequest request) {
+		Hub hub = findHubById(request.getHubId());
+
+		return hub.getHubManagerId().equals(request.getUserId());
+	}
+
+	// 외부 서비스용
+	@Override
+	public boolean checkHub(UUID hubId) {
+
+		return hubRepository.existsByHubIdAndIsDeletedIsFalse(hubId);
+	}
+
+	// 외부 서비스용
+	@Override
+	@Transactional(readOnly = true)
+	public UUID readHubIdByHubManagerId(UUID hubManagerId) {
+		Hub hub = hubRepository.findByHubManagerIdAndIsDeletedIsFalse(hubManagerId)
+			.orElseThrow(() -> new CustomApiException(HubException.HUB_NOT_FOUND));
+
+		return hub.getHubId();
+	}
 }
