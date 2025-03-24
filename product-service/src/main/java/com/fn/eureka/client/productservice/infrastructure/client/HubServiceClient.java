@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fn.common.global.config.FeignInterceptor;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.eureka.client.productservice.application.dto.HubStockRequestDto;
 import com.fn.eureka.client.productservice.application.dto.HubStockResponseDto;
 
-@FeignClient(name = "hub-service", path = "/api/hubs")
+@FeignClient(name = "hub-service", path = "/api/hubs", configuration = FeignInterceptor.class)
 public interface HubServiceClient {
 
 	// 허브관리자ID로 허브ID 조회

@@ -101,7 +101,7 @@ public class ProductController {
 	}
 
 	// 허브에 상품 입고 요청
-	@PostMapping("/store-hub/{hubId}/{productId}")
+	@PostMapping("/store-hub/{hubId}")
 	public ResponseEntity<CommonResponse<HubStockResponseDto>> storeProductInHub(
 		@PathVariable("hubId") UUID hubId,
 		@RequestBody HubStockRequestDto hubStockRequestDto,

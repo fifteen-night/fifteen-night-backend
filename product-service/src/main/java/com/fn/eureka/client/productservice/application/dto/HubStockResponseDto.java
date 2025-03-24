@@ -11,10 +11,8 @@ public class HubStockResponseDto {
 	private String message;
 	private HubStockData data;
 
+	@Getter
 	public static class HubStockData {
-		private UUID hsId;
-		private UUID hsProductId;
-		private UUID hsHubId;
-		private int hsQuantity;
+		private UUID hubStockId;
 	}
 }

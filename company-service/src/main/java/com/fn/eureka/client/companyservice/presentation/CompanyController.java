@@ -44,14 +44,14 @@ public class CompanyController {
 	@PostMapping
 	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<CompanyResponseDto>> createCompany(
-		@RequestBody CompanyRequestDto companyRequestDto,
-		@RequestHeader("X-User-Role") String userRole,
-		@RequestHeader("X-User-Id") UUID userId,
-		@RequestHeader("X-User-Name") String userName
+		@RequestBody CompanyRequestDto companyRequestDto
+		// @RequestHeader("X-User-Role") String userRole,
+		// @RequestHeader("X-User-Id") UUID userId,
+		// @RequestHeader("X-User-Name") String userName
 		// @RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken
 	) {
 		log.info("Create company: {}", companyRequestDto.getCompanyName());
-		CompanyResponseDto companyResponseDto = companyService.addCompany(companyRequestDto, userRole, userId, userName);
+		CompanyResponseDto companyResponseDto = companyService.addCompany(companyRequestDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/companies").build().toUri();
 		return ResponseEntity.created(location).body(new CommonResponse<>(SuccessCode.COMPANY_CREATE, companyResponseDto));
 	}

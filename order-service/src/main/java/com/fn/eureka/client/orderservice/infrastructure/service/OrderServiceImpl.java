@@ -46,7 +46,6 @@ public class OrderServiceImpl implements OrderService {
 	private final HubServiceClient hubServiceClient;
 	private final DeliveryServiceClient deliveryServiceClient;
 
-	// TODO CustomApiException으로 바꾸기...
 
 	// 주문 생성
 	@Override
@@ -57,12 +56,13 @@ public class OrderServiceImpl implements OrderService {
 		UUID supplyCompanyId = orderRequestDto.getOrderSupplyCompanyId();
 		// 공급업체의 소속 허브ID
 		UUID supplyCompanyHubId = companyServiceClient.readHubIdByCompanyId(supplyCompanyId);
-		// 주문상품 ID
+		// 주문상품 IDi :19095
+
 		UUID orderProductId = orderRequestDto.getOrderProductId();
 		// 허브 재고 조회
 		HubStockResponseDto hubStockInfo = hubServiceClient.readHubStock(supplyCompanyHubId, orderProductId);
 		// 재고 부족 예외 처리
-		if (hubStockInfo.getData() != null || hubStockInfo.getData().getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
+		if (hubStockInfo.getData() == null || hubStockInfo.getData().getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
 			throw new CustomApiException(OrderException.HUB_INSUFFICIENT_STOCK);
 		}
 
