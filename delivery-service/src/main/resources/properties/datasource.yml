@@ -12,4 +12,4 @@ spring:
     init:
       mode: always
       # 나중에 더미데이터 넣고 시작
-      # data-locations: classpath:db/data.sql
+      data-locations: classpath:db/data.sql
