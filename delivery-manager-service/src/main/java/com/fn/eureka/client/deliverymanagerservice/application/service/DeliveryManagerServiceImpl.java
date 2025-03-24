@@ -1,7 +1,10 @@
 package com.fn.eureka.client.deliverymanagerservice.application.service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.success.SuccessCode;
+import com.fn.eureka.client.deliverymanagerservice.application.dto.request.CheckHubManagerRequest;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerCreateRequestDto;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerSearchCondition;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
@@ -22,6 +26,7 @@ import com.fn.eureka.client.deliverymanagerservice.application.dto.response.Deli
 import com.fn.eureka.client.deliverymanagerservice.application.exception.DeliveryManagerException;
 import com.fn.eureka.client.deliverymanagerservice.domain.entity.DeliveryManager;
 import com.fn.eureka.client.deliverymanagerservice.domain.repository.DeliveryManagerRepository;
+import com.fn.eureka.client.deliverymanagerservice.infrastructure.client.HubClient;
 import com.fn.eureka.client.deliverymanagerservice.infrastructure.client.UserClient;
 import com.fn.eureka.client.deliverymanagerservice.infrastructure.security.RequestUserDetails;
 
@@ -33,6 +38,68 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 
 	private final DeliveryManagerRepository deliveryManagerRepository;
 	private final UserClient userClient;
+	private final HubClient hubClient;
+
+	// 라운드로빈 배정을 위한 마지막 turn 저장용 맵 (임시)
+	private final Map<String, Integer> lastAssignedTurnMap = new ConcurrentHashMap<>();
+
+	/**
+	 * [라운드로빈] 허브(HUB) 배송 담당자 배정
+	 */
+	@Transactional
+	public UUID assignHubDeliveryManager() {
+		// 1) 허브 담당자 목록(dmType=HUB, isDeleted=false) dmTurn ASC
+		List<DeliveryManager> managers = deliveryManagerRepository.getHubManagers();
+
+		if (managers.isEmpty()) {
+			throw new CustomApiException(DeliveryManagerException.NO_MANAGER_FOUND);
+		}
+
+		// 2) key="HUB"로, 마지막 배정 turn을 가져와 +1
+		String key = "HUB";
+		int lastTurn = lastAssignedTurnMap.getOrDefault(key, -1);
+		int candidate = lastTurn + 1;
+
+		// 3) candidate 이상인 turn 보유자를 찾고, 없으면 wrap-around
+		DeliveryManager selected = managers.stream()
+			.filter(m -> m.getDmTurn() >= candidate)
+			.findFirst()
+			.orElse(managers.get(0)); // ASC 첫 번째
+
+		// 4) turnMap 갱신
+		lastAssignedTurnMap.put(key, selected.getDmTurn());
+
+		// 5) 결과 반환
+		return selected.getDmId();
+	}
+
+	/**
+	 * [라운드로빈] 업체(COMPANY) 배송 담당자 배정
+	 *  - 동일 hubId를 가진 COMPANY 담당자 중에서만
+	 */
+	@Transactional
+	public UUID assignCompanyDeliveryManager(UUID hubId) {
+		// 1) 해당 hubId + COMPANY, isDeleted=false, dmTurn ASC
+		List<DeliveryManager> managers = deliveryManagerRepository.getCompanyManagersByHub(hubId);
+		if (managers.isEmpty()) {
+			throw new CustomApiException(DeliveryManagerException.NO_MANAGER_FOUND);
+		}
+
+		// 2) key="COMPANY-{hubId}"
+		String key = "COMPANY-" + hubId;
+		int lastTurn = lastAssignedTurnMap.getOrDefault(key, -1);
+		int candidate = lastTurn + 1;
+
+		// 3) candidate 이상인 turn 보유자를 찾고, 없으면 wrap-around
+		DeliveryManager selected = managers.stream()
+			.filter(m -> m.getDmTurn() >= candidate)
+			.findFirst()
+			.orElse(managers.get(0));
+
+		lastAssignedTurnMap.put(key, selected.getDmTurn());
+
+		return selected.getDmId();
+	}
 
 	@Transactional
 	public CommonResponse<DeliveryManagerGetResponseDto> createDeliveryManager(DeliveryManagerCreateRequestDto requestDto) {
@@ -51,8 +118,13 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 		// 3) 사용자 존재 여부 확인
 		validateUserExists(requestDto.getDmUserId());
 
+		// 3-1) 이미 배송담당자로 등록된 유저인지 확인
+		if (deliveryManagerRepository.existsByDmUserId(requestDto.getDmUserId())) {
+			throw new CustomApiException(DeliveryManagerException.DUPLICATE_MANAGER);
+		}
+
 		// 4) 허브 존재 여부 확인
-		validateHubExists(requestDto.getDmHubId());
+		// validateHubExists(requestDto.getDmHubId(), requestDto.getDmUserId());
 
 		// 5) 순번 계산 (Turn: 동일 허브 및 타입 내 최대값 + 1)
 		int newTurn = Optional.ofNullable(
@@ -252,11 +324,19 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 		}
 	}
 
-	// 허브 존재 여부 확인 (현재는 항상 true, TODO: HubFeignClient 연동 필요)
-	private boolean validateHubExists(UUID hubId) {
-		// TODO: 허브 서비스 연동 필요
-		return true;
+	// 허브 존재 여부 確因
+	private void validateHubExists(UUID hubId, UUID userId) {
+		CheckHubManagerRequest request = new CheckHubManagerRequest(hubId, userId);
+		try {
+			boolean isManager = hubClient.checkHubManager(request);
+			if (!Boolean.TRUE.equals(isManager)) {
+				throw new CustomApiException(DeliveryManagerException.HUB_NOT_FOUND);
+			}
+		} catch (Exception e) {
+			throw new CustomApiException(DeliveryManagerException.HUB_SERVICE_UNAVAILABLE);
+		}
 	}
+
 
 	// 허브 관리자 권한자의 접근 권한 검사
 	private void validateHubAccess(UUID hubId, String requestUserId) {

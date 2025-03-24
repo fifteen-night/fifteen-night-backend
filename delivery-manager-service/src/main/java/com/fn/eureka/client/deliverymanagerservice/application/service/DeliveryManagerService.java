@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerCreateRequestDto;
@@ -22,4 +23,8 @@ public interface DeliveryManagerService {
 	CommonResponse<DeliveryManagerUpdateResponseDto> updateDeliveryManager(UUID dmId, DeliveryManagerUpdateRequestDto requestDto);
 
 	CommonResponse<Void> deleteDeliveryManager(UUID dmId);
+
+	UUID assignHubDeliveryManager();
+
+	UUID assignCompanyDeliveryManager(UUID hubId);
 }
