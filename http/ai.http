@@ -1,0 +1,49 @@
+POST http://localhost:19099/api/slack/ai
+Content-Type: application/json
+
+{
+  "data": {
+    "deliveryId": "bfc71ea8-b5b5-417d-99c4-be365e5b460b",
+    "orderId": "a821517e-e3d2-42f7-9ef1-b07a2c27b81b",
+    "departureHubId": "2d2fe858-8ff7-44d0-933e-7b78b35175d0",
+    "destinationHubId": "b0ac35ac-e5fd-44ed-b56b-472fb7e4da0b",
+    "status": "PENDING",
+    "address": "123 Main St, Cityville, Country",
+    "receiverName": "John Doe",
+    "receiverSlackId": "b0ac35ac-e5fd-44ed-b56b-472fb7e4da0c",
+    "cdmId": null,
+    "deliveryRoute": {
+      "deliveryRouteId": "1e28f181-6c99-4dd9-a4e8-057b4f002f8f",
+      "sequence": [
+        {
+          "sequenceId": "720ec499-6305-4963-a419-96c1283e175d",
+          "sequenceNumber": 1,
+          "departureHubAddress": "경기도 고양시 덕양구 권율대로 570",
+          "arrivalHubAddress": "경기도 이천시 덕평로 257-21",
+          "quantity": "02:08:57",
+          "distance": 102264.00
+        },
+        {
+          "sequenceId": "210a9733-c14f-462c-96fa-96ad2f9cf158",
+          "sequenceNumber": 2,
+          "departureHubAddress": "경기도 이천시 덕평로 257-21",
+          "arrivalHubAddress": "대구광역시 북구 태평로 161",
+          "quantity": "02:53:12",
+          "distance": 244431.00
+        },
+        {
+          "sequenceId": "fdc6fca1-87a6-44e0-8d09-b674270cf512",
+          "sequenceNumber": 3,
+          "departureHubAddress": "대구광역시 북구 태평로 161",
+          "arrivalHubAddress": "울산광역시 남구 중앙로 201",
+          "quantity": "01:48:32",
+          "distance": 121088.00
+        }
+      ],
+      "totalTime": "06:50:41",
+      "totalDistance": 467783.00,
+      "status": "WAITING"
+    }
+  },
+  "message": "배송이 성공적으로 생성되었습니다."
+}
