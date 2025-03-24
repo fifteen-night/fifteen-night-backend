@@ -123,6 +123,18 @@ public class DeliveryServiceImpl implements DeliveryService {
 		Delivery targetDelivery = findDeliveryById(deliveryId);
 
 		targetDelivery.markAsDeleted();
+
+		DeliveryRoute targetDeliveryRoute = deliveryRouteRepository.findByDeliveryRouteIdAndIsDeletedIsFalse(targetDelivery.getDeliveryId())
+			.orElseThrow(() -> new CustomApiException(DeliveryException.DELIVERY_ROUTE_NOT_FOUND));
+
+		targetDeliveryRoute.markAsDeleted();
+
+		List<DeliveryRouteSequence> sequences = deliveryRouteSequenceRepository.findBySequenceIdAndIsDeletedIsFalse(targetDeliveryRoute.getDeliveryRouteId());
+
+		for (DeliveryRouteSequence sequence : sequences) {
+			sequence.markAsDeleted();
+		}
+
 	}
 
 	@Override
@@ -186,7 +198,10 @@ public class DeliveryServiceImpl implements DeliveryService {
 						.build();
 
 					DeliveryRouteSequence deliveryRouteSequence = CreateSequenceRequestDto.toSequence(sequence);
+					// 여기서 허브 배송자 꺼내오기
+
 					deliveryRouteSequenceRepository.save(deliveryRouteSequence);
+
 					deliveryRouteSequences.add(deliveryRouteSequence);
 
 					break;
