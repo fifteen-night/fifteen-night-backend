@@ -44,6 +44,7 @@ public enum SuccessCode {
 	DELIVERY_SEARCH_ALL(HttpStatus.OK, "모든 배송이 성공적으로 조회되었습니다.","S_DELIVERY_SEARCH_ALL" ),
 	DELIVERY_DELETE(HttpStatus.NO_CONTENT, "해당 배송이 삭제되었습니다.", "S_DELIVERY_DELETE" ),
 	DELIVERY_UPDATE(HttpStatus.OK, "배송이 성공적으로 수정되었습니다.", "S_DELIVERY_UPDATE" ),
+	QUERY_SUCCESS(HttpStatus.OK, "모든 배송 ID를 조회했습니다.", "S_QUERY_SUCCESS"),
 
 	// Hub 관련 성공응답
 	HUB_CREATE(HttpStatus.CREATED, "허브가 성공적으로 생성되었습니다.", "S_HUB_CREATE"),
@@ -78,7 +79,7 @@ public enum SuccessCode {
 	DELIVERY_MANAGER_FOUND(HttpStatus.OK, "배송 관리자가 성공적으로 조회되었습니다.", "S_DELIVERY_MANAGER_FOUND"),
 	DELIVERY_MANAGER_LIST_FOUND(HttpStatus.OK, "배송 관리자 목록이 성공적으로 조회되었습니다.", "S_DELIVERY_MANAGER_LIST_FOUND"),
 	DELIVERY_MANAGER_UPDATED(HttpStatus.OK, "배송 관리자 정보가 성공적으로 수정되었습니다.", "S_DELIVERY_MANAGER_UPDATED"),
-	DELIVERY_MANAGER_DELETED(HttpStatus.NO_CONTENT, "배송 관리자가 성공적으로 삭제되었습니다.", "S_DELIVERY_MANAGER_DELETED")
+	DELIVERY_MANAGER_DELETED(HttpStatus.NO_CONTENT, "배송 관리자가 성공적으로 삭제되었습니다.", "S_DELIVERY_MANAGER_DELETED"),
 	;
 
 	private final HttpStatus statusCode;

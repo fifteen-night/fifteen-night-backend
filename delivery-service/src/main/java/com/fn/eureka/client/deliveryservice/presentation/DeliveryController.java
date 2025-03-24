@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.QueryAllDeliveriesResponseDto;
 import com.fn.eureka.client.deliveryservice.application.service.DeliveryService;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.CreateDeliveryRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.UpdateDeliveryRequestDto;
@@ -113,6 +114,17 @@ public class DeliveryController {
 		return ResponseEntity.ok()
 			.body(new CommonResponse<>(SuccessCode.DELIVERY_UPDATE , updateDeliveryResponseDto));
 
+	}
+
+	@GetMapping("/allDeliveries/{deliveryManagerId}")
+	@Operation(summary = "배송 담당자 ID로 모든 배송 ID리스트 만들기" , description = "조회는 모두 가능")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<CommonResponse<QueryAllDeliveriesResponseDto>> queryAllDeliveries(@PathVariable UUID deliveryManagerId){
+
+		QueryAllDeliveriesResponseDto queryAllDeliveriesResponseDto = deliveryService.getAllDeliveries(deliveryManagerId);
+
+		return ResponseEntity.ok()
+			.body(new CommonResponse<>(SuccessCode.QUERY_SUCCESS , queryAllDeliveriesResponseDto));
 	}
 
 }
