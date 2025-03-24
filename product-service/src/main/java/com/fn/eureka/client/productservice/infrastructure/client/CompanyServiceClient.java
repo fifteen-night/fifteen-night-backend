@@ -15,7 +15,7 @@ public interface CompanyServiceClient {
 
 	// 업체 조회
 	@GetMapping("/{companyId}")
-	CommonResponse<CompanyInfoDto> getCompany(@PathVariable("companyId") UUID companyId);
+	CompanyInfoDto getCompany(@PathVariable("companyId") UUID companyId);
 
 	// 허브별 업체ID 목록 조회
 	@GetMapping("/company-list/{hubId}")

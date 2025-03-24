@@ -6,7 +6,10 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,12 +42,16 @@ public class CompanyController {
 
 	// 업체 생성
 	@PostMapping
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<CompanyResponseDto>> createCompany(
 		@RequestBody CompanyRequestDto companyRequestDto,
 		@RequestHeader("X-User-Role") String userRole,
-		@RequestHeader("X-User-Id") UUID userId
+		@RequestHeader("X-User-Id") UUID userId,
+		@RequestHeader("X-User-Name") String userName
+		// @RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken
 	) {
-		CompanyResponseDto companyResponseDto = companyService.addCompany(companyRequestDto, userRole, userId);
+		log.info("Create company: {}", companyRequestDto.getCompanyName());
+		CompanyResponseDto companyResponseDto = companyService.addCompany(companyRequestDto, userRole, userId, userName);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/companies").build().toUri();
 		return ResponseEntity.created(location).body(new CommonResponse<>(SuccessCode.COMPANY_CREATE, companyResponseDto));
 	}
@@ -74,6 +81,7 @@ public class CompanyController {
 
 	// 업체 수정
 	@PutMapping("/{companyId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER', 'COMPANY_MANAGER')")
 	public ResponseEntity<CommonResponse<CompanyResponseDto>> updateCompany(
 		@PathVariable("companyId") UUID companyId,
 		@RequestBody CompanyRequestDto companyRequestDto,
@@ -85,6 +93,7 @@ public class CompanyController {
 
 	// 업체 삭제
 	@DeleteMapping("/{companyId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse> deleteCompany(
 		@PathVariable("companyId") UUID companyId,
 		@RequestHeader("X-User-Role") String userRole,

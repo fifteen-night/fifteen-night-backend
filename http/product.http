@@ -1,0 +1,55 @@
+### 상품 생성
+POST http://localhost:19095/api/products
+Content-Type: application/json
+X-User-Role: MASTER
+X-User-Id: 223e4567-e89b-12d3-a456-426614174001
+
+{
+  "productName": "씽크패드 ver.1",
+  "productCompanyId": "6fa459ea-ee8a-3ca4-894e-db77e160355e",
+  "productQuantity": 100
+}
+
+### 상품 조회
+GET http://localhost:19095/api/products/b2c3d4e5-f6a7-4890-bcde-23456789abcd
+
+### 상품 리스트 조회
+GET http://localhost:19095/api/products?keyword=&page=&size=&sortDirection=&sortBy=
+X-User-Role: COMPANY_MANAGER
+X-User-Id: 723e4567-e89b-12d3-a456-426614174006
+
+### 상품 수정
+PATCH http://localhost:19095/api/products/a7b8c9d0-e1f2-4345-0123-789abcdef012
+Content-Type: application/json
+X-User-Role: COMPANY_MANAGER
+X-User-Id: 723e4567-e89b-12d3-a456-426614174006
+
+{
+  "productName": "맥북 프로 m4 - 수정",
+  "productQuantity": 500
+}
+
+### 상품 삭제
+DELETE http://localhost:19095/api/products/a7b8c9d0-e1f2-4345-0123-789abcdef012
+X-User-Role: COMPANY_MANAGER
+X-User-Id: 723e4567-e89b-12d3-a456-426614174006
+
+### 배송ID로 상품ID 리스트 받기
+POST http://localhost:19096/api/orders/order-products
+Content-Type: application/json
+
+[
+  "4b7ce718-bc81-4bdc-a659-2a38cfbb0469"
+]
+
+### 상품ID 리스트로 상품 리스트 조회
+POST http://localhost:19095/api/products/product-list
+Content-Type: application/json
+
+[
+  "b2c3d4e5-f6a7-4890-bcde-23456789abcd",
+  "c3d4e5f6-a7b8-4901-cdef-3456789abcde",
+  "d4e5f6a7-b8c9-4012-def0-456789abcdef",
+  "e5f6a7b8-c9d0-4123-ef01-56789abcdef0",
+  "a1b2c3d4-e5f6-4789-abcd-123456789abc"
+]

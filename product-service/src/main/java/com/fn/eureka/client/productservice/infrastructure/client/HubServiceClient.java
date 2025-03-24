@@ -21,5 +21,5 @@ public interface HubServiceClient {
 
 	// 허브 재고 생성
 	@PostMapping("/{hubId}/stock")
-	CommonResponse<HubStockResponseDto> createHubStock(@PathVariable("hubId") UUID hubId, @RequestBody HubStockRequestDto hubStockRequestDto);
+	HubStockResponseDto createHubStock(@PathVariable("hubId") UUID hubId, @RequestBody HubStockRequestDto hubStockRequestDto);
 }

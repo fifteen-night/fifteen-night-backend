@@ -14,6 +14,6 @@ public interface UserServiceClient {
 
 	// 유저 조회
 	@GetMapping("/{userId}")
-	CommonResponse<UserResponseDto> getUser(@PathVariable("userId") UUID userId);
+	UserResponseDto getUser(@PathVariable("userId") UUID userId);
 
 }

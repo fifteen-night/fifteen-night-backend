@@ -8,8 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class HubStockResponseDto {
-	private UUID hsId;
-	private UUID hsProductId;
-	private UUID hsHubId;
-	private int hsQuantity;
+	private String message;
+	private HubStockData data;
+
+	public static class HubStockData {
+		private UUID hsId;
+		private UUID hsProductId;
+		private UUID hsHubId;
+		private int hsQuantity;
+	}
 }

@@ -15,7 +15,7 @@ public interface HubServiceClient {
 
 	// 허브 재고 조회
 	@GetMapping("/{hubId}/stock/{productId}")
-	CommonResponse<HubStockResponseDto> readHubStock(@PathVariable("hubId") UUID hubId, @PathVariable("productId") UUID productId);
+	HubStockResponseDto readHubStock(@PathVariable("hubId") UUID hubId, @PathVariable("productId") UUID productId);
 
 	// 허브관리자ID로 허브ID 조회
 	@GetMapping("/hub-id/{hubManagerId}")

@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
 		// 주문상품 ID
 		UUID orderProductId = orderRequestDto.getOrderProductId();
 		// 허브 재고 조회
-		CommonResponse<HubStockResponseDto> hubStockInfo = hubServiceClient.readHubStock(supplyCompanyHubId, orderProductId);
+		HubStockResponseDto hubStockInfo = hubServiceClient.readHubStock(supplyCompanyHubId, orderProductId);
 		// 재고 부족 예외 처리
 		if (hubStockInfo.getData() != null || hubStockInfo.getData().getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
 			throw new CustomApiException(OrderException.HUB_INSUFFICIENT_STOCK);
@@ -72,11 +72,11 @@ public class OrderServiceImpl implements OrderService {
 		// 배송 생성 요청
 		// 주문자(수령업체) 업체 조회
 		UUID receiveCompanyId = orderRequestDto.getOrderReceiveCompanyId();	// 수령업체 ID
-		CompanyInfoDto receiveCompanyInfo = Objects.requireNonNull(
-			companyServiceClient.getCompany(receiveCompanyId)).getData();
+		CompanyInfoDto.CompanyData receiveCompanyInfo = Objects.requireNonNull(
+			companyServiceClient.getCompany(receiveCompanyId).getData());
 		// 주문자(수령업체) 업체담당자 유저 정보 조회
-		UserResponseDto receiveCompanyManagerInfo = Objects.requireNonNull(
-			userServiceClient.getUser(receiveCompanyInfo.getCompanyManagerId())).getData();
+		UserResponseDto.UserData receiveCompanyManagerInfo = Objects.requireNonNull(
+			userServiceClient.getUser(receiveCompanyInfo.getCompanyManagerId()).getData());
 		// 배송 생성
 		DeliveryRequestDto deliveryRequestDto = DeliveryRequestDto.builder()
 			.orderId(order.getOrderId())
@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
 			.deliveryReceiverCompanyManagerName(receiveCompanyManagerInfo.getUserNickname())
 			.receiverSlackId(receiveCompanyManagerInfo.getUserSlackId())
 			.build();
-		CommonResponse<DeliveryResponseDto> deliveryInfo = deliveryServiceClient.createdDelivery(deliveryRequestDto);
+		DeliveryResponseDto deliveryInfo = deliveryServiceClient.createDelivery(deliveryRequestDto);
 		// 생성된 배송ID 받아 저장
 		order.saveOrderDeliveryId(deliveryInfo.getData().getDeliveryId());
 

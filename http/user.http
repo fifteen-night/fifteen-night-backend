@@ -1,0 +1,22 @@
+### 회원가입
+POST http://localhost:19091/api/auth/signUp
+Content-Type: application/json
+
+{
+  "userName": "companymg",
+  "userPassword": "Test!1234",
+  "userNickname": "오애순",
+  "userSlackId": "U0G9QF9C6",
+  "userRole": "COMPANY_MANAGER",
+  "userPhone": "01012345678",
+  "userEmail": "company@example.com"
+}
+
+### 로그인
+POST http://localhost:19091/api/auth/signIn
+Content-Type: application/json
+
+{
+  "userName": "master",
+  "userPassword": "Test@1234"
+}
