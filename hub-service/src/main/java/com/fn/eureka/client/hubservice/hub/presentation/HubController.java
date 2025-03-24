@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -44,6 +45,7 @@ public class HubController {
 
 	// 허브 관련 시작
 	@PostMapping
+	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<CommonResponse<CreateHubResponse>> createHub(@RequestBody CreateHubRequest request) {
 
 		CreateHubResponse response = hubService.createHub(request);
@@ -73,6 +75,7 @@ public class HubController {
 	}
 
 	@PatchMapping("/{hubId}")
+	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<CommonResponse<UpdateHubResponse>> updateHub(@PathVariable("hubId") UUID hubId,
 		@RequestBody UpdateHubRequest request) {
 
@@ -83,6 +86,7 @@ public class HubController {
 	}
 
 	@DeleteMapping("/{hubId}")
+	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<Void> deleteHub(@PathVariable("hubId") UUID hubId) {
 
 		hubService.deleteHub(hubId);
@@ -93,6 +97,7 @@ public class HubController {
 
 	// 허브 재고 관련 시작
 	@PostMapping("/{hubId}/stock")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<CreateHubStockResponse>> createHubStock(@PathVariable("hubId") UUID hubId,
 		@RequestBody CreateHubStockRequest request) {
 
@@ -103,6 +108,7 @@ public class HubController {
 	}
 
 	@GetMapping("/{hubId}/stock/{productId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<ReadHubStockResponse>> readHubStock(@PathVariable("hubId") UUID hubId,
 		@PathVariable("productId") UUID productId) {
 
@@ -113,6 +119,7 @@ public class HubController {
 	}
 
 	@GetMapping("/{hubId}/stock")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonPageResponse<ReadHubStockResponse>> searchHubStock(
 		@PathVariable("hubId") UUID hubId,
 		@PageableDefault(size = 10) Pageable pageable,
@@ -128,6 +135,7 @@ public class HubController {
 	}
 
 	@PatchMapping("/{hubId}/stock/{productId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<UpdateHubStockResponse>> updateHubStock(
 		@PathVariable("hubId") UUID hubId,
 		@PathVariable("productId") UUID productId,
@@ -139,6 +147,7 @@ public class HubController {
 	}
 
 	@DeleteMapping("/{hubId}/stock/{productId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<Void> deleteHubStock(
 		@PathVariable("hubId") UUID hubId,
 		@PathVariable("productId") UUID productId

@@ -1,4 +1,4 @@
-package com.fn.eureka.client.hubservice.hub.config;
+package com.fn.eureka.client.hubservice.hub.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
