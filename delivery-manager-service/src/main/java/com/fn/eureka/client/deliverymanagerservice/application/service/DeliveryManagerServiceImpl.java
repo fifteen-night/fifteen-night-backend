@@ -118,6 +118,11 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 		// 3) 사용자 존재 여부 확인
 		validateUserExists(requestDto.getDmUserId());
 
+		// 3-1) 이미 배송담당자로 등록된 유저인지 확인
+		if (deliveryManagerRepository.existsByDmUserId(requestDto.getDmUserId())) {
+			throw new CustomApiException(DeliveryManagerException.DUPLICATE_MANAGER);
+		}
+
 		// 4) 허브 존재 여부 확인
 		// validateHubExists(requestDto.getDmHubId(), requestDto.getDmUserId());
 

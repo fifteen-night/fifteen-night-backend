@@ -53,4 +53,6 @@ public interface DeliveryManagerRepository extends JpaRepository<DeliveryManager
           AND d.isDeleted = false
         """)
 	Optional<DeliveryManager> findActiveByDmUserId(UUID dmUserId);
+
+	boolean existsByDmUserId(UUID dmUserId);
 }
