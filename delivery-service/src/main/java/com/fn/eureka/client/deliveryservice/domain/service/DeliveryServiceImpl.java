@@ -42,6 +42,8 @@ import com.fn.eureka.client.deliveryservice.domain.util.Node;
 import com.fn.eureka.client.deliveryservice.domain.util.PqFormat;
 import com.fn.eureka.client.deliveryservice.domain.util.TimeUtils;
 import com.fn.eureka.client.deliveryservice.exception.DeliveryException;
+import com.fn.eureka.client.deliveryservice.infrastructure.client.HubServiceClient;
+import com.fn.eureka.client.deliveryservice.presentation.dto.response.HubClientResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +58,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 	private final DeliveryRouteRepository deliveryRouteRepository;
 	private final DeliveryRouteSequenceRepository deliveryRouteSequenceRepository;
 	private final HubToHubRepository hubToHubRepository;
+	private final HubServiceClient hubServiceClient;
 
 	@Override
 	@Transactional
@@ -196,14 +199,20 @@ public class DeliveryServiceImpl implements DeliveryService {
 		return targetDelivery;
 	}
 
+	private String findHubName(UUID hubId){
+		HubClientResponseDto hubResponse = hubServiceClient.findHub(hubId);
+
+		return hubResponse.getHubAddress();
+	}
+
 	private List<DeliveryRouteSequence> startAlgorithm(DeliveryRoute deliveryRoute, boolean iscreate) {
 
 		UUID departureHubId = deliveryRoute.getDepartureHubAddress();
 		UUID destinationHubId = deliveryRoute.getDestinationHubAddress();
 
 		// TODO : 아직 연결을 못해서 강제로 허브 주소로 변환
-		// String departureHubName = findHubName(departureHubId);
-		// String destinationHubName = findHubName(departureHubName);
+		String departureHubName = findHubName(departureHubId);
+		String destinationHubName = findHubName(destinationHubId);
 
 		// 모든 허브 루트 불러오기
 		List<HubToHub> hubRoutes = hubToHubRepository.findAllByIsDeletedIsFalse();
@@ -213,7 +222,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
 		// 그래프를 가지고 다익스트라 최단경로 알고리즘 수행
 		// TODO : 현재는 페인클라이언트 통신이 이루어지지않아서 고정값으로 테스트함
-		List<String> result = dijkstra("경기도 고양시 덕양구 권율대로 570", "울산광역시 남구 중앙로 201", graph);
+		List<String> result = dijkstra(departureHubName, destinationHubName, graph);
 
 		log.info("result: {}", result);
 

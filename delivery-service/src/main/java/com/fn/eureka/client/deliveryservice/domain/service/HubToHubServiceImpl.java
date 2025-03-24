@@ -23,7 +23,7 @@ import com.fn.eureka.client.deliveryservice.application.dto.route.response.GetHu
 import com.fn.eureka.client.deliveryservice.application.dto.route.response.UpdateHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.domain.model.route.HubToHub;
 import com.fn.eureka.client.deliveryservice.exception.HubToHubException;
-import com.fn.eureka.client.deliveryservice.infrastructure.NaverMapService;
+import com.fn.eureka.client.deliveryservice.infrastructure.client.NaverMapService;
 import com.fn.eureka.client.deliveryservice.presentation.dto.request.NaverMapDirReqestDto;
 import com.fn.eureka.client.deliveryservice.presentation.dto.response.NaverMapDirResponseDto;
 import com.fn.eureka.client.deliveryservice.presentation.dto.response.NaverMapGeoResponseDto;
