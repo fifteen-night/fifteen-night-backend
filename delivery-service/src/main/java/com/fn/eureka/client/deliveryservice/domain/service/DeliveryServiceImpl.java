@@ -42,6 +42,7 @@ import com.fn.eureka.client.deliveryservice.domain.util.Node;
 import com.fn.eureka.client.deliveryservice.domain.util.PqFormat;
 import com.fn.eureka.client.deliveryservice.domain.util.TimeUtils;
 import com.fn.eureka.client.deliveryservice.exception.DeliveryException;
+import com.fn.eureka.client.deliveryservice.infrastructure.client.DeliveryManagerServiceClient;
 import com.fn.eureka.client.deliveryservice.infrastructure.client.HubServiceClient;
 import com.fn.eureka.client.deliveryservice.presentation.dto.response.HubClientResponseDto;
 
@@ -59,13 +60,17 @@ public class DeliveryServiceImpl implements DeliveryService {
 	private final DeliveryRouteSequenceRepository deliveryRouteSequenceRepository;
 	private final HubToHubRepository hubToHubRepository;
 	private final HubServiceClient hubServiceClient;
+	private final DeliveryManagerServiceClient deliveryManagerServiceClient;
 
 	@Override
 	@Transactional
 	public CreateDeliveryResponseDto createDelivery(CreateDeliveryRequestDto createDeliveryRequestDto) {
 
 		// 1. 주문이 들어오면 자동으로 배송 생성
-		Delivery delivery = CreateDeliveryRequestDto.toDelivery(createDeliveryRequestDto);
+		UUID deliveryManagerId = deliveryManagerServiceClient.findCompanyDeliver(
+			createDeliveryRequestDto.getDepartureHubId());
+
+		Delivery delivery = CreateDeliveryRequestDto.toDelivery(createDeliveryRequestDto, deliveryManagerId);
 
 		if (deliveryRepository.existsByOrderIdAndIsDeletedIsFalse(delivery.getOrderId())) {
 			throw new CustomApiException(DeliveryException.ALREADY_EXISTS_DELIVERY);
@@ -161,6 +166,14 @@ public class DeliveryServiceImpl implements DeliveryService {
 				targetDelivery)
 			.orElseThrow(() -> new CustomApiException(DeliveryException.DELIVERY_ROUTE_NOT_FOUND));
 
+		targetDeliveryRoute.update(targetDelivery);
+
+		// 1. targetDeliveryRoute를 일단 업데이트 한다. 밑에서 사용
+
+		// 2. 두개를 다 업데이트 했는데 , 문제가 발생할 수 도 있음 하지만 , 이상태에서는 db가 실제로 업데이트가 안된상태이다.
+		// 쓰기 지연저장소 저장 되어있다가 쿼리 날라감
+		// 쿼리 순서 문제가 발생할 경우에는 , flush() 수동으로 update() 이후 , 왠만한 경우에는 문제가 없을 것 같다.
+
 		List<DeliveryRouteSequence> deliveryRouteSequences = null;
 
 		int totalTime = 0;
@@ -182,13 +195,19 @@ public class DeliveryServiceImpl implements DeliveryService {
 			updateDeliveryRequestDto.getDeliveryRouteStatus()
 		);
 
-		return UpdateDeliveryResponseDto.fromDelivery(targetDelivery , targetDeliveryRoute);
+		return UpdateDeliveryResponseDto.fromDelivery(targetDelivery, targetDeliveryRoute);
 	}
 
 	private boolean validateChangeLocation(UpdateDeliveryRequestDto updateDeliveryRequestDto, Delivery targetDelivery) {
-
-		return updateDeliveryRequestDto.getDepartureHubId().equals(targetDelivery.getDepartureHubId()) ||
-			updateDeliveryRequestDto.getDestinationHubId().equals(targetDelivery.getDestinationHubId());
+		/*
+			변경되면 T 안되면 F
+			출발 T 도착 T -> T
+			출발 T 도착 F -> T
+			출발 F 도착 F -> T
+			출발 F 도착 F -> F
+		 */
+		return !updateDeliveryRequestDto.getDepartureHubId().equals(targetDelivery.getDepartureHubId()) ||
+			!updateDeliveryRequestDto.getDestinationHubId().equals(targetDelivery.getDestinationHubId());
 	}
 
 	private Delivery findDeliveryById(UUID deliveryId) {
@@ -199,18 +218,17 @@ public class DeliveryServiceImpl implements DeliveryService {
 		return targetDelivery;
 	}
 
-	private String findHubName(UUID hubId){
+	private String findHubName(UUID hubId) {
 		HubClientResponseDto hubResponse = hubServiceClient.findHub(hubId);
 
-		return hubResponse.getHubAddress();
+		return hubResponse.getData().getHubAddress();
 	}
 
-	private List<DeliveryRouteSequence> startAlgorithm(DeliveryRoute deliveryRoute, boolean iscreate) {
+	private List<DeliveryRouteSequence> startAlgorithm(DeliveryRoute deliveryRoute, boolean isCreate) {
 
 		UUID departureHubId = deliveryRoute.getDepartureHubAddress();
 		UUID destinationHubId = deliveryRoute.getDestinationHubAddress();
 
-		// TODO : 아직 연결을 못해서 강제로 허브 주소로 변환
 		String departureHubName = findHubName(departureHubId);
 		String destinationHubName = findHubName(destinationHubId);
 
@@ -221,7 +239,6 @@ public class DeliveryServiceImpl implements DeliveryService {
 		Map<String, List<Node>> graph = createGraph(hubRoutes);
 
 		// 그래프를 가지고 다익스트라 최단경로 알고리즘 수행
-		// TODO : 현재는 페인클라이언트 통신이 이루어지지않아서 고정값으로 테스트함
 		List<String> result = dijkstra(departureHubName, destinationHubName, graph);
 
 		log.info("result: {}", result);
@@ -236,7 +253,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 				if (hubRoute.getDepartureHubAddress().equals(result.get(i - 1)) &&
 					hubRoute.getArrivalHubAddress().equals(result.get(i))) {
 
-					if (iscreate) {
+					if (isCreate) {
 
 						CreateSequenceRequestDto sequence = CreateSequenceRequestDto.builder()
 							.deliveryRoute(deliveryRoute)
@@ -247,13 +264,16 @@ public class DeliveryServiceImpl implements DeliveryService {
 							.distance(hubRoute.getHthDistance())
 							.build();
 
-						DeliveryRouteSequence deliveryRouteSequence = CreateSequenceRequestDto.toSequence(sequence);
-						// 여기서 허브 배송자 넣어주기
+						UUID hubDeliver = deliveryManagerServiceClient.findHubDeliver();
+
+						DeliveryRouteSequence deliveryRouteSequence = CreateSequenceRequestDto.toSequence(sequence,
+							hubDeliver);
 
 						deliveryRouteSequenceRepository.save(deliveryRouteSequence);
 
 						deliveryRouteSequences.add(deliveryRouteSequence);
 					} else {
+
 						DeliveryRouteSequence existingSequence = deliveryRouteSequenceRepository
 							.findByDeliveryRouteAndSequenceNumber(deliveryRoute, i)
 							.orElseThrow(

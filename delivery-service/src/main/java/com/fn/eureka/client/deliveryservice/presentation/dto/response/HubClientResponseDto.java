@@ -12,11 +12,19 @@ import lombok.Getter;
 @AllArgsConstructor
 public class HubClientResponseDto {
 
-	private UUID hubId;
-	private String hubName;
-	private String hubAddress;
-	private String hubType;
-	private UUID hubManagerId;
-	private BigDecimal hubLatitude;
-	private BigDecimal hubLongitude;
+	private String message;
+	private HubData data;
+
+	@Builder
+	@Getter
+	@AllArgsConstructor
+	public static class HubData {
+		private UUID hubId;
+		private String hubName;
+		private String hubAddress;
+		private String hubType;
+		private UUID hubManagerId;
+		private BigDecimal hubLatitude;
+		private BigDecimal hubLongitude;
+	}
 }

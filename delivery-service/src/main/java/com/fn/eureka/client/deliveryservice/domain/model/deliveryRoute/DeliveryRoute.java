@@ -98,7 +98,12 @@ public class DeliveryRoute extends BaseEntity {
 	) {
 		this. estimatedTime = estimatedTime;
 		this.estimatedDistance = estimatedDistance;
-		this.routeSequences = deliveryRouteSequences;
+		Optional.ofNullable(deliveryRouteSequences).ifPresent(value -> this.routeSequences = value);
 		Optional.ofNullable(currentStatus).ifPresent(value -> this.currentStatus = value);
+	}
+
+	public void update(Delivery targetDelivery) {
+		this.departureHubAddress = targetDelivery.getDepartureHubId();
+		this.destinationHubAddress = targetDelivery.getDestinationHubId();
 	}
 }

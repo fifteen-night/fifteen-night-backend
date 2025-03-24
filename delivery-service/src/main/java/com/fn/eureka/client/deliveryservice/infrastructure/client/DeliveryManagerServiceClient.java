@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fn.common.global.config.FeignInterceptor;
-import com.fn.eureka.client.deliveryservice.presentation.dto.response.HubClientResponseDto;
 
-@FeignClient(name = "hub-service", path = "/api/hubs" , configuration = FeignInterceptor.class)
-public interface HubServiceClient {
+@FeignClient(name = "delivery-manager-service", path = "/api/delivery-managers" , configuration = FeignInterceptor.class)
+public interface DeliveryManagerServiceClient {
 
-	@GetMapping("/{hubId}")
-	HubClientResponseDto findHub(@PathVariable UUID hubId);
+	@GetMapping("/assign/company/{hubId}")
+	UUID findCompanyDeliver(@PathVariable UUID hubId);
+
+	@GetMapping("/assign/hub")
+	UUID findHubDeliver();
 }

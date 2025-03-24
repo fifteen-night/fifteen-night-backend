@@ -34,7 +34,7 @@ public class CreateDeliveryRequestDto {
 	@NotNull
 	private UUID receiverSlackId;
 
-	public static Delivery toDelivery(CreateDeliveryRequestDto createDeliveryRequestDto) {
+	public static Delivery toDelivery(CreateDeliveryRequestDto createDeliveryRequestDto , UUID deliveryHubId) {
 
 		return Delivery.builder()
 			.orderId(createDeliveryRequestDto.getOrderId())
@@ -44,6 +44,7 @@ public class CreateDeliveryRequestDto {
 			.receiverName(createDeliveryRequestDto.getReceiverName())
 			.receiverSlackId(createDeliveryRequestDto.getReceiverSlackId())
 			.status(DeliveryStatus.PENDING)	// 배송이 생성되면 기본적으로 PENDING상태
+			.cdmId(deliveryHubId)
 			.build();
 	}
 }
