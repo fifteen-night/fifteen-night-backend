@@ -56,6 +56,9 @@ dependencies {
 	// FeignClient 설정
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+	// security 설정
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	compileOnly 'org.projectlombok:lombok'

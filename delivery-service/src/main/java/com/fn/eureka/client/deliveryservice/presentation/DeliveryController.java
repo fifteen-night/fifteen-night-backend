@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +47,7 @@ public class DeliveryController {
 
 	@PostMapping("/deliveries")
 	@Operation(summary = "배송 생성", description = "배송 생성은 'MASTER'만 가능")
+	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<CommonResponse<CreateDeliveryResponseDto>> createDelivery(
 		@RequestBody @Validated CreateDeliveryRequestDto createDeliveryRequestDto) {
 
@@ -64,6 +66,7 @@ public class DeliveryController {
 
 	@GetMapping("/deliveries/{deliveryId}")
 	@Operation(summary = "배송 단건 조회" , description = "배송 단건 조회는 'ALL' 가능")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<GetDeliveryResponseDto>> getDelivery(@PathVariable UUID deliveryId){
 
 		GetDeliveryResponseDto deliveryResponseDto = deliveryService.searchOneDelivery(deliveryId);
@@ -74,6 +77,7 @@ public class DeliveryController {
 
 	@GetMapping("/deliveries")
 	@Operation(summary = "모든 배송 조회" , description = "모든 배송 조회는 'ALL' 가능")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<CommonPageResponse<GetAllDeliveryResponseDto>>> getAllDelivery(
 		@PageableDefault(size = 10, sort = "createdAt" , direction = Sort.Direction.ASC) Pageable pageable
 	){
@@ -87,6 +91,7 @@ public class DeliveryController {
 
 	@DeleteMapping("/deliveries/{deliveryId}")
 	@Operation(summary = "배송 소프트 삭제" , description = "배송삭제는 'MASTER' , 'HUB_MANAGER' 만 가능")
+	@PreAuthorize("hasAnyRole('MASTER' , 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<DeleteDeliveryResponseDto>> deleteDelivery(@PathVariable UUID deliveryId) {
 
 		deliveryService.deleteDelivery(deliveryId);
@@ -98,6 +103,7 @@ public class DeliveryController {
 
 	@PatchMapping("/deliveries/{deliveryId}")
 	@Operation(summary = "배송 수정하기" , description = "배송 수정은 'MASTER' , 'HUB_MANAGER' , 'DELIVERY_MANAGER' 만 가능")
+	@PreAuthorize("hasAnyRole('MASTER' , 'HUB_MANAGER' , 'DELIVERY_MANAGER')")
 	public ResponseEntity<CommonResponse<UpdateDeliveryResponseDto>> updateDelivery(
 		@PathVariable UUID deliveryId,
 		@RequestBody UpdateDeliveryRequestDto updateDeliveryRequestDto){

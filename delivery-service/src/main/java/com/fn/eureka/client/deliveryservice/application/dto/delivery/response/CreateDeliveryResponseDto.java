@@ -24,7 +24,7 @@ public class CreateDeliveryResponseDto {
 	private String address;
 	private String receiverName;
 	private UUID receiverSlackId;
-	private UUID cmdId;
+	private UUID cdmId;
 	private CreateDeliveryRouteResponseDto deliveryRoute;
 
 
@@ -39,7 +39,7 @@ public class CreateDeliveryResponseDto {
 			.address(savedDelivery.getAddress())
 			.receiverName(savedDelivery.getReceiverName())
 			.receiverSlackId(savedDelivery.getReceiverSlackId())
-			.cmdId(savedDelivery.getCdmId())
+			.cdmId(savedDelivery.getCdmId())
 			.deliveryRoute(savedDeliveryRoute != null
 			? CreateDeliveryRouteResponseDto.fromDeliveryRoute(savedDeliveryRoute)
 			: null)

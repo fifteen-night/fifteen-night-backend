@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,7 @@ public class HubToHubController {
 
 	@PostMapping("/hub-to-hubs")
 	@Operation(summary = "허브관계 등록", description = "허브 등록은 'MASTER' 만 가능")
+	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<CommonResponse<CreateHubToHubResponseDto>> createRoute(
 		@RequestBody @Validated CreateHubToHubRequestDto createHubToHubRequestDto
 	) {
@@ -66,6 +68,7 @@ public class HubToHubController {
 
 	@GetMapping("/hub-to-hubs/{hubToHubId}")
 	@Operation(summary = "허브관계 단건 조회", description = "허브 조회는 '모두' 가능")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<GetHubToHubResponseDto>> getRoute(@PathVariable UUID hubToHubId) {
 
 		log.info("Controller UUID : {}", hubToHubId);
@@ -78,6 +81,7 @@ public class HubToHubController {
 
 	@GetMapping("/hub-to-hubs")
 	@Operation(summary = "허브관계 모든 조회" , description = "허브 조회는 '모두' 가능")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<CommonPageResponse<GetAllHubToHubResponseDto>>> getAllRoute(
 		@PageableDefault(size = 10, sort = "createdAt" , direction = Sort.Direction.ASC) Pageable pageable
 	){
@@ -92,6 +96,7 @@ public class HubToHubController {
 
 	@DeleteMapping("/hub-to-hubs/{hubToHubId}")
 	@Operation(summary = "허브관계 삭제" , description = "허브 삭제는 'MASTER' 만 가능")
+	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<CommonResponse<DeleteHubToHubResponseDto>> deleteRoute(@PathVariable UUID hubToHubId){
 
 		hubToHubService.softDeleteHubToHub(hubToHubId);
@@ -103,6 +108,7 @@ public class HubToHubController {
 
 	@PatchMapping("/hub-to-hubs/{hubToHubId}")
 	@Operation(summary = "허브관계 수정" , description = "허브 수정은 'MASTER' 만 가능")
+	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<CommonResponse<UpdateHubToHubResponseDto>> updateRoute(
 		@PathVariable UUID hubToHubId,
 		@RequestBody @Validated UpdateHubToHubRequestDto updateHubToHubRequestDto
