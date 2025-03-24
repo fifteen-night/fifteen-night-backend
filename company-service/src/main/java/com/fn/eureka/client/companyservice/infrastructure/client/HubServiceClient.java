@@ -17,7 +17,7 @@ public interface HubServiceClient {
 
 	// 허브 조회
 	@GetMapping("/{hubId}")
-	HubResponseDto readHub(@PathVariable("hubId") UUID hubId);
+	CommonResponse<HubResponseDto> readHub(@PathVariable("hubId") UUID hubId);
 
 	// 허브관리자ID로 허브ID 조회
 	@GetMapping("/hub-id/{hubManagerId}")

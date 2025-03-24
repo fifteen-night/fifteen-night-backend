@@ -2,6 +2,7 @@ package com.fn.eureka.client.productservice.infrastructure.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
@@ -48,7 +50,8 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	public ProductResponseDto addProduct(ProductRequestDto productRequestDto, String userRole, UUID userId) {
 		// 업체 조회
-		CompanyInfoDto companyInfo= companyServiceClient.getCompany(productRequestDto.getProductCompanyId());
+		CompanyInfoDto companyInfo = Objects.requireNonNull(
+			companyServiceClient.getCompany(productRequestDto.getProductCompanyId())).getData();
 		switch(userRole) {
 			// MASTER 어디든 상품 생성 가능
 			case "MASTER" :
@@ -142,9 +145,9 @@ public class ProductServiceImpl implements ProductService {
 		// 허브에 입고하는 건 마스터, 허브관리자, 업체담당자만 가능
 		validateUserPermission(product, userRole, userId);
 		// 이미 허브에 상품이 있으면 수량 추가되고, 없으면 생성
-		HubStockResponseDto hubStockResponseDto = hubServiceClient.createHubStock(hubId, hubStockRequestDto);
+		CommonResponse<HubStockResponseDto> hubStockResponseDto = hubServiceClient.createHubStock(hubId, hubStockRequestDto);
 		product.updateProductQuantity(hubStockRequestDto.getQuantity());
-		return hubStockResponseDto;
+		return hubStockResponseDto.getData();
 	}
 
 	// 주문 수정 삭제는 마스터, 허브 관리자(담당 허브일 경우)만 가능

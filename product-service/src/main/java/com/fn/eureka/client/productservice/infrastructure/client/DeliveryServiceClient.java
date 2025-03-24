@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "delivery-service", path = "/api/deliveries")
 public interface DeliveryServiceClient {
 
-	// TODO 메서드 이름 같은지 확인하기!!
 	@GetMapping("/delivery-manager/{deliveryManagerId}")
 	List<UUID> readDeliveriesByDeliveryManagerId(@PathVariable("deliveryManagerId") UUID deliveryManagerId);
 

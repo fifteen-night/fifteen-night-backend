@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fn.common.global.dto.CommonResponse;
 import com.fn.eureka.client.productservice.application.dto.HubStockRequestDto;
 import com.fn.eureka.client.productservice.application.dto.HubStockResponseDto;
 
@@ -18,11 +19,7 @@ public interface HubServiceClient {
 	@GetMapping("/hub-id/{hubManagerId}")
 	UUID readHubIdByHubManagerId(@PathVariable("hubManagerId") UUID hubManagerId);
 
-	// 허브 재고 조회
-	@GetMapping("/{hubId}/stock/{productId}")
-	HubStockResponseDto readHubStock(@PathVariable("hubId") UUID hubId, @PathVariable("productId") UUID productId);
-
 	// 허브 재고 생성
 	@PostMapping("/{hubId}/stock")
-	HubStockResponseDto createHubStock(@PathVariable("hubId") UUID hubId, @RequestBody HubStockRequestDto hubStockRequestDto);
+	CommonResponse<HubStockResponseDto> createHubStock(@PathVariable("hubId") UUID hubId, @RequestBody HubStockRequestDto hubStockRequestDto);
 }

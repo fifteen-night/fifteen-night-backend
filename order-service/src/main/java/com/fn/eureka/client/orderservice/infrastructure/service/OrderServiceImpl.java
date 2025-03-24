@@ -2,6 +2,7 @@ package com.fn.eureka.client.orderservice.infrastructure.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.orderservice.application.dto.CompanyInfoDto;
@@ -58,9 +60,9 @@ public class OrderServiceImpl implements OrderService {
 		// 주문상품 ID
 		UUID orderProductId = orderRequestDto.getOrderProductId();
 		// 허브 재고 조회
-		HubStockResponseDto hubStockInfo = hubServiceClient.readHubStock(supplyCompanyHubId, orderProductId);
+		CommonResponse<HubStockResponseDto> hubStockInfo = hubServiceClient.readHubStock(supplyCompanyHubId, orderProductId);
 		// 재고 부족 예외 처리
-		if (hubStockInfo.getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
+		if (hubStockInfo.getData() != null || hubStockInfo.getData().getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
 			throw new CustomApiException(OrderException.HUB_INSUFFICIENT_STOCK);
 		}
 
@@ -70,9 +72,11 @@ public class OrderServiceImpl implements OrderService {
 		// 배송 생성 요청
 		// 주문자(수령업체) 업체 조회
 		UUID receiveCompanyId = orderRequestDto.getOrderReceiveCompanyId();	// 수령업체 ID
-		CompanyInfoDto receiveCompanyInfo = companyServiceClient.getCompany(receiveCompanyId);
+		CompanyInfoDto receiveCompanyInfo = Objects.requireNonNull(
+			companyServiceClient.getCompany(receiveCompanyId)).getData();
 		// 주문자(수령업체) 업체담당자 유저 정보 조회
-		UserResponseDto receiveCompanyManagerInfo = userServiceClient.getUser(receiveCompanyInfo.getCompanyManagerId());
+		UserResponseDto receiveCompanyManagerInfo = Objects.requireNonNull(
+			userServiceClient.getUser(receiveCompanyInfo.getCompanyManagerId())).getData();
 		// 배송 생성
 		DeliveryRequestDto deliveryRequestDto = DeliveryRequestDto.builder()
 			.orderId(order.getOrderId())
@@ -82,9 +86,9 @@ public class OrderServiceImpl implements OrderService {
 			.deliveryReceiverCompanyManagerName(receiveCompanyManagerInfo.getUserNickname())
 			.receiverSlackId(receiveCompanyManagerInfo.getUserSlackId())
 			.build();
-		DeliveryResponseDto deliveryInfo = deliveryServiceClient.createdDelivery(deliveryRequestDto);
+		CommonResponse<DeliveryResponseDto> deliveryInfo = deliveryServiceClient.createdDelivery(deliveryRequestDto);
 		// 생성된 배송ID 받아 저장
-		order.saveOrderDeliveryId(deliveryInfo.getDeliveryId());
+		order.saveOrderDeliveryId(deliveryInfo.getData().getDeliveryId());
 
 		return OrderResponseDto.from(order);
 	}

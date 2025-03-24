@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
@@ -41,13 +42,13 @@ public class CompanyServiceImpl implements CompanyService {
 	public CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto, String userRole, UUID userId) {
 		// TODO kafka를 이용해서 메세징 - 나 company 데이터 받았으니까 맞는지 확인해줘! 메세지 보내고 업체 생성하되 만약에 데이터가 안 맞는다는 메세지가 온다? 하면 바로 삭제
 		if ("MASTER".equals(userRole) || "HUB_MANAGER".equals(userRole)) {
-			HubResponseDto hubInfo = hubServiceClient.readHub(companyRequestDto.getCompanyHubId());
-			if (hubInfo == null) {
+			CommonResponse<HubResponseDto> hubInfo = hubServiceClient.readHub(companyRequestDto.getCompanyHubId());
+			if (hubInfo.getData() == null) {
 				throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
 			}
 			// 허브 관리자의 경우, 업체담당자ID가 존재하는 유저 ID인지 확인
-			UserResponseDto userInfo = userServiceClient.getUser(companyRequestDto.getCompanyManagerId());
-			if (userInfo == null){
+			CommonResponse<UserResponseDto> userInfo = userServiceClient.getUser(companyRequestDto.getCompanyManagerId());
+			if (userInfo.getData() == null){
 				throw new CustomApiException(CompanyException.COMPANY_UNAUTHORIZED);
 			}
 		}
