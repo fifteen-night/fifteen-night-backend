@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -70,6 +71,7 @@ public class OrderController {
 
 	// 주문 수정
 	@PatchMapping("/{orderId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<OrderResponseDto>> updateOrder(
 		@PathVariable("orderId") UUID orderId,
 		@RequestBody Map<String, Object> updates,
@@ -81,6 +83,7 @@ public class OrderController {
 
 	// 주문 삭제
 	@DeleteMapping("/{orderId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse> deleteOrder(
 		@PathVariable("orderId") UUID orderId,
 		@RequestHeader("X-User-Role") String userRole,

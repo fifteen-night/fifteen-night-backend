@@ -8,9 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients
 @EnableDiscoveryClient
-@SpringBootApplication(
-	scanBasePackages = {"com.fn.eureka.client.companyservice", "com.fn.common"},
-	exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication(scanBasePackages = {"com.fn.eureka.client.companyservice", "com.fn.common"})
 public class CompanyServiceApplication {
 
 	public static void main(String[] args) {

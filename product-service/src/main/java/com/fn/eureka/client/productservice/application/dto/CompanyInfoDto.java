@@ -8,11 +8,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CompanyInfoDto {
-	private UUID companyId;
-	private String companyName;
-	private String companyAddress;
-	private String companyType;
+	private String message;
+	private CompanyData data;
 
-	private UUID companyHubId;
-	private UUID companyManagerId;
+	@Getter
+	public static class CompanyData {
+		private UUID companyId;
+		private String companyName;
+		private String companyAddress;
+		private String companyType;
+
+		private UUID companyHubId;
+		private UUID companyManagerId;
+	}
 }
