@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fn.common.global.config.FeignInterceptor;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.eureka.client.slackservice.application.dto.response.OrderInfoDto;
 
-@FeignClient(name = "order-service", path = "/api/orders")
+@FeignClient(name = "order-service", path = "/api/orders", configuration = FeignInterceptor.class)
 public interface OrderServiceClient {
 
 	@GetMapping("/{orderId}")

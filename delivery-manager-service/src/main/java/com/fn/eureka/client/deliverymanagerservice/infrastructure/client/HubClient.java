@@ -6,7 +6,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "hub-service", path = "/api/hubs")
+import com.fn.common.global.config.FeignInterceptor;
+
+@FeignClient(name = "hub-service", path = "/api/hubs", configuration = FeignInterceptor.class)
 public interface HubClient {
 	// 허브 존재 여부 확인
 	@GetMapping("/{hubId}/check")

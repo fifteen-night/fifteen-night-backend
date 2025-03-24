@@ -5,12 +5,11 @@ import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fn.common.global.dto.CommonResponse;
+import com.fn.common.global.config.FeignInterceptor;
 import com.fn.eureka.client.orderservice.application.dto.HubStockResponseDto;
 
-@FeignClient(name = "hub-service", path = "/api/hubs")
+@FeignClient(name = "hub-service", path = "/api/hubs", configuration = FeignInterceptor.class)
 public interface HubServiceClient {
 
 	// 허브 재고 조회

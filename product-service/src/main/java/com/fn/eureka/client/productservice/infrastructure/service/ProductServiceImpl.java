@@ -141,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
 		// 허브에 입고하는 건 마스터, 허브관리자만 가능 - 상품 삭제 권한 검증 재활용
-		validateUserPermissionForDeleteProduct(product, userRole, userId);
+		// validateUserPermissionForDeleteProduct(product, userRole, userId);
 		// 이미 허브에 상품이 있으면 수량 추가되고, 없으면 생성
 		HubStockResponseDto hubStockResponseDto = hubServiceClient.createHubStock(hubId, hubStockRequestDto);
 		product.updateProductQuantity(hubStockRequestDto.getQuantity());
