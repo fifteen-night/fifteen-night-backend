@@ -24,7 +24,7 @@ public class Slack extends BaseEntity {
 	private UUID slackId;
 
 	private String SlackReceiverId;
-	@Column(length = 255)
+	@Column(columnDefinition = "TEXT")
 	private String slackMessage;
 
 	// 정적 팩토리 메서드
