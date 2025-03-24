@@ -21,8 +21,8 @@ public class CreateDeliveryRouteRequestDto {
 
 		return DeliveryRoute.builder()
 			.delivery(delivery)
-			.destinationHubAddress(delivery.getDepartureHubId())
-			.departureHubAddress(delivery.getDestinationHubId())
+			.destinationHubAddress(delivery.getDestinationHubId())
+			.departureHubAddress(delivery.getDepartureHubId())
 			.build();
 	}
 }
