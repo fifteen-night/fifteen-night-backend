@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.success.SuccessCode;
-import com.fn.eureka.client.deliverymanagerservice.application.dto.request.CheckHubManagerRequest;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerCreateRequestDto;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerSearchCondition;
 import com.fn.eureka.client.deliverymanagerservice.application.dto.request.DeliveryManagerUpdateRequestDto;
@@ -124,7 +123,7 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 		}
 
 		// 4) 허브 존재 여부 확인
-		// validateHubExists(requestDto.getDmHubId(), requestDto.getDmUserId());
+		validateHubExists(requestDto.getDmHubId());
 
 		// 5) 순번 계산 (Turn: 동일 허브 및 타입 내 최대값 + 1)
 		int newTurn = Optional.ofNullable(
@@ -324,18 +323,18 @@ public class DeliveryManagerServiceImpl implements DeliveryManagerService {
 		}
 	}
 
-	// 허브 존재 여부 確因
-	private void validateHubExists(UUID hubId, UUID userId) {
-		CheckHubManagerRequest request = new CheckHubManagerRequest(hubId, userId);
+	// 허브 존재 여부 확인
+	private void validateHubExists(UUID hubId) {
 		try {
-			boolean isManager = hubClient.checkHubManager(request);
-			if (!Boolean.TRUE.equals(isManager)) {
+			boolean exists = hubClient.checkHub(hubId);
+			if (!exists) {
 				throw new CustomApiException(DeliveryManagerException.HUB_NOT_FOUND);
 			}
 		} catch (Exception e) {
 			throw new CustomApiException(DeliveryManagerException.HUB_SERVICE_UNAVAILABLE);
 		}
 	}
+
 
 
 	// 허브 관리자 권한자의 접근 권한 검사
