@@ -11,7 +11,9 @@ import com.fn.eureka.client.hubservice.hub.infrastructure.repository.HubReposito
 public interface HubRepository extends JpaRepository<Hub, UUID>, HubRepositoryCustom {
 	Optional<Hub> findByHubIdAndIsDeletedIsFalse(UUID hubId);
 
-	boolean existsByHubAddress(String address);
+	boolean existsByHubAddressAndIsDeletedIsFalse(String address);
+
+	boolean existsByHubIdAndIsDeletedIsFalse(UUID hubId);
 
 	Optional<Hub> findByHubManagerIdAndIsDeletedIsFalse(UUID hubManagerId);
 }

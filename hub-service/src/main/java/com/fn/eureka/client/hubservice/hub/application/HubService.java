@@ -29,10 +29,6 @@ public interface HubService {
 
 	void deleteHub(UUID hubId);
 
-	boolean checkHubManager(CheckHubManagerRequest request);
-
-	UUID readHubIdByHubManagerId(UUID hubManagerId);
-
 	CreateHubStockResponse createHubStock(UUID hubId, CreateHubStockRequest request);
 
 	ReadHubStockResponse readHubStock(UUID HubId, UUID productId);
@@ -43,4 +39,10 @@ public interface HubService {
 	UpdateHubStockResponse updateHubStock(UUID hubId, UUID productId, UpdateHubStockRequest request);
 
 	void deleteHubStock(UUID hubId, UUID productId);
+
+	boolean checkHubManager(CheckHubManagerRequest request);
+
+	boolean checkHub(UUID hubId);
+
+	UUID readHubIdByHubManagerId(UUID hubManagerId);
 }

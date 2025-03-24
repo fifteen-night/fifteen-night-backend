@@ -72,13 +72,6 @@ public class HubController {
 			.body(new CommonPageResponse<>(response));
 	}
 
-	// 외부 서비스용
-	@PostMapping("/hub-manager")
-	public boolean checkHubManager(@RequestBody CheckHubManagerRequest request) {
-
-		return hubService.checkHubManager(request);
-	}
-
 	@PatchMapping("/{hubId}")
 	public ResponseEntity<CommonResponse<UpdateHubResponse>> updateHub(@PathVariable("hubId") UUID hubId,
 		@RequestBody UpdateHubRequest request) {
@@ -95,13 +88,6 @@ public class HubController {
 		hubService.deleteHub(hubId);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
-
-	// 외부 서비스용
-	@GetMapping("/hub-id/{hubManagerId}")
-	public UUID readHubIdByHubManagerId(@PathVariable("hubManagerId") UUID hubManagerId) {
-
-		return hubService.readHubIdByHubManagerId(hubManagerId);
 	}
 	// 허브 관련 끝
 
@@ -162,4 +148,25 @@ public class HubController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	// 허브 재고 관련 끝
+
+	// 외부 서비스용
+	@PostMapping("/hub-manager")
+	public boolean checkHubManager(@RequestBody CheckHubManagerRequest request) {
+
+		return hubService.checkHubManager(request);
+	}
+
+	// 외부 서비스용
+	@GetMapping("/hub-id/{hubManagerId}")
+	public UUID readHubIdByHubManagerId(@PathVariable("hubManagerId") UUID hubManagerId) {
+
+		return hubService.readHubIdByHubManagerId(hubManagerId);
+	}
+
+	// 외부 서비스용
+	@GetMapping("{hubId}/check")
+	public boolean checkHub(@PathVariable("hubId") UUID hubId) {
+
+		return hubService.checkHub(hubId);
+	}
 }
