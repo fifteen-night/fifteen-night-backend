@@ -81,4 +81,17 @@ public class DeliveryManagerController {
 			.body(response);
 	}
 
+	@GetMapping("/assign/hub")
+	public ResponseEntity<UUID> assignHubDeliveryManager() {
+		UUID assignedId = deliveryManagerService.assignHubDeliveryManager();
+		return ResponseEntity.ok(assignedId);
+	}
+
+	@GetMapping("/assign/company/{hubId}")
+	public ResponseEntity<UUID> assignCompanyDeliveryManager(@PathVariable UUID hubId) {
+		UUID assignedId = deliveryManagerService.assignCompanyDeliveryManager(hubId);
+		return ResponseEntity.ok(assignedId);
+	}
+
+
 }

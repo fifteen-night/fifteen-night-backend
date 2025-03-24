@@ -10,7 +10,9 @@ public enum DeliveryManagerException implements ExceptionType {
 	NO_HUB_MANAGER(HttpStatus.NOT_FOUND, "허브 배송 담당자가 없습니다.", "E_DM_NO_HUB_MANAGER"),
 	MANAGER_NOT_FOUND(HttpStatus.NOT_FOUND, "배송 관리자를 찾을 수 없습니다.", "E_MANAGER_NOT_FOUND"),
 	INVALID_AUTHENTICATION(HttpStatus.UNAUTHORIZED, "인증 정보가 유효하지 않습니다.", "E_DM_INVALID_AUTHENTICATION"),
-	ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", "E_DM_ACCESS_DENIED")
+	ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", "E_DM_ACCESS_DENIED"),
+	NO_MANAGER_FOUND(HttpStatus.NOT_FOUND, "배정 가능한 배송 담당자가 없습니다.", "E_DM_NO_MANAGER_FOUND"),
+	HUB_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "허브 서비스와의 연결에 실패했습니다.", "E_DM_HUB_SERVICE_UNAVAILABLE")
 	;
 
 	private final HttpStatus httpStatus;
