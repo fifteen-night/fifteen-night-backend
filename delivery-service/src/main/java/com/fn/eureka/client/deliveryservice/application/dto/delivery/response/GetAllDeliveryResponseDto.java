@@ -3,6 +3,7 @@ package com.fn.eureka.client.deliveryservice.application.dto.delivery.response;
 import java.util.UUID;
 
 import com.fn.eureka.client.deliveryservice.application.dto.deliveryRoute.response.CreateDeliveryRouteResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.deliveryRoute.response.GetAllDeliveryRouteResponseDto;
 import com.fn.eureka.client.deliveryservice.domain.model.delivery.Delivery;
 import com.fn.eureka.client.deliveryservice.domain.model.delivery.DeliveryStatus;
 
@@ -24,7 +25,7 @@ public class GetAllDeliveryResponseDto {
 	private String receiverName;
 	private UUID receiverSlackId;
 	private UUID cdmId;
-	private CreateDeliveryRouteResponseDto deliveryRoute;
+	private GetAllDeliveryRouteResponseDto deliveryRoute;
 
 	public static GetAllDeliveryResponseDto fromDelivery(Delivery delivery) {
 
@@ -38,9 +39,7 @@ public class GetAllDeliveryResponseDto {
 			.receiverName(delivery.getReceiverName())
 			.receiverSlackId(delivery.getReceiverSlackId())
 			.cdmId(delivery.getCdmId())
-			.deliveryRoute(delivery != null
-				? CreateDeliveryRouteResponseDto.fromDeliveryRoute(delivery.getDeliveryRoute())
-				: null)
+			.deliveryRoute(GetAllDeliveryRouteResponseDto.fromDeliveryRoute(delivery.getDeliveryRoute()))
 			.build();
 	}
 }
