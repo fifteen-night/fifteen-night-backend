@@ -61,7 +61,7 @@ public class GeminiService {
 		GeminiResponseDto geminiResponseDto = geminiClient.getCompletion(modelName, apiKey, geminiRequestDto);
 		// 슬랙메세지로 보내기
 		SlackMessageRequestDto slackMessageRequestDto = SlackMessageRequestDto.builder()
-			.SlackReceiverId("https://hooks.slack.com/services/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")
+			.SlackReceiverId(slackAddress)
 			.text(geminiResponseDto.extractText())
 			.build();
 		slackService.sendSlackMessage(slackMessageRequestDto);
