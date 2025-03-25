@@ -1,4 +1,4 @@
-package com.fn.eureka.client.deliveryservice.infrastructure;
+package com.fn.eureka.client.deliveryservice.infrastructure.client;
 
 import java.util.Optional;
 

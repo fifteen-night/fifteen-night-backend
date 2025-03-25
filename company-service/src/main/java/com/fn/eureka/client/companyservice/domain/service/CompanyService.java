@@ -12,7 +12,8 @@ import com.fn.eureka.client.companyservice.application.dto.CompanyResponseDto;
 
 public interface CompanyService {
 
-	CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto, String userRole, UUID userId);
+	// CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto, String userRole, UUID userId, String userName);
+	CompanyResponseDto addCompany(CompanyRequestDto companyRequestDto);
 
 	CompanyResponseDto findTheCompany(UUID companyId);
 

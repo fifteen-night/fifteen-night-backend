@@ -1,0 +1,24 @@
+### 회원가입
+
+### 로그인
+POST http://localhost:19091/api/auth/signIn
+Content-Type: application/json
+
+{
+  "userName": "hubmng",
+  "userPassword": "Test@1234"
+}
+
+### 주문 생성
+POST http://localhost:19091/api/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIzZGY5NjZmMC1lNGI1LTQ5YTItYmQ1YS1lZTNjOWIyY2YxZDMiLCJ1c2VyTmFtZSI6Imh1Ym1uZyIsInJvbGUiOiJIVUJfTUFOQUdFUiIsImV4cCI6MTc0MjgzNTk2MSwiaWF0IjoxNzQyODM1MzYxfQ.hL1bCwBo2MEiZOi2FW0MkzpeL1Qj8Ci3DuNxXs78D0o
+
+{
+  "orderSupplyCompanyId": "4cc3db25-c8d0-4676-b334-f642607727b7",
+  "orderReceiveCompanyId": "1fa4970f-641e-4d0e-8fda-0786e30a725a",
+  "orderProductId": "c3d4e5f6-a7b8-4901-cdef-3456789abcde",
+  "orderProductQuantity": 50,
+  "orderDeadline": "2025-03-31T12:00:00.000Z",
+  "orderRequirement": "포장 꼼꼼히 해주세요."
+}

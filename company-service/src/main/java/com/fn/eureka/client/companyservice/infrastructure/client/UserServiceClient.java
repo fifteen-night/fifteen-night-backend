@@ -6,11 +6,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.fn.common.global.config.FeignInterceptor;
 import com.fn.eureka.client.companyservice.application.dto.UserResponseDto;
 
-import feign.FeignException;
-
-@FeignClient(name = "user-service", path = "/api/users")
+@FeignClient(name = "user-service", path = "/api/users", configuration = FeignInterceptor.class)
 public interface UserServiceClient {
 
 	// 유저 조회

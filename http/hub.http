@@ -1,0 +1,12 @@
+### 허브 조회
+GET http://localhost:19091/api/hubs/2c4dd270-708a-4619-a4cd-0f41365335cb
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIzOWVlMGZiZS1kOWZlLTQyM2UtODYxNC05NTRjM2QzZmZkMzciLCJ1c2VyTmFtZSI6Imh1Ym1uZyIsInJvbGUiOiJIVUJfTUFOQUdFUiIsImV4cCI6MTc0MjgxNzQyNCwiaWF0IjoxNzQyODE2ODI0fQ.5Uq7PVNFY4utemRRjG3bloKZEct420oxSOe8gBryikU
+
+### 허브 수정
+PATCH http://localhost:19091/api/hubs/2c4dd270-708a-4619-a4cd-0f41365335cb
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJlMDBiOTc2OS0wNDc1LTRhMzMtOWQxOS1mZGY2NWJlZTQ3ZWUiLCJ1c2VyTmFtZSI6Im1hc3RlciIsInJvbGUiOiJNQVNURVIiLCJleHAiOjE3NDI4MTgxNDYsImlhdCI6MTc0MjgxNzU0Nn0.rYkfNBngiC48MzAMRXUxJFz8UbNRZhYl64KPcZBAuSw
+
+{
+  "hubName" : "경기 북부 센터"
+}

@@ -2,6 +2,7 @@ package com.fn.eureka.client.deliveryservice.application.dto.deliveryRouteSequen
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.UUID;
 
 import com.fn.eureka.client.deliveryservice.domain.model.deliveryRoute.DeliveryRoute;
 import com.fn.eureka.client.deliveryservice.domain.model.deliveryRouteSequence.DeliveryRouteSequence;
@@ -34,7 +35,7 @@ public class CreateSequenceRequestDto {
 	@NotNull
 	private BigDecimal distance;
 
-	public static DeliveryRouteSequence toSequence(CreateSequenceRequestDto sequence) {
+	public static DeliveryRouteSequence toSequence(CreateSequenceRequestDto sequence , UUID hubDeliver) {
 
 		return DeliveryRouteSequence.builder()
 			.deliveryRoute(sequence.getDeliveryRoute())
@@ -43,6 +44,7 @@ public class CreateSequenceRequestDto {
 			.arrivalHubAddress(sequence.getArrivalHubAddress())
 			.quantity(sequence.getQuantity())
 			.distance(sequence.getDistance())
+			.hubDeliveryManagerId(hubDeliver)
 			.build();
 	}
 }

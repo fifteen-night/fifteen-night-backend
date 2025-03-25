@@ -2,6 +2,7 @@ package com.fn.eureka.client.productservice.infrastructure.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.exception.NotFoundException;
 import com.fn.common.global.util.PageUtils;
@@ -41,14 +43,13 @@ public class ProductServiceImpl implements ProductService {
 	private final DeliveryServiceClient deliveryServiceClient;
 	private final OrderServiceClient orderServiceClient;
 
-	// TODO userDetails 변경
-
 	// 상품 생성
 	@Override
 	@Transactional
 	public ProductResponseDto addProduct(ProductRequestDto productRequestDto, String userRole, UUID userId) {
 		// 업체 조회
-		CompanyInfoDto companyInfo= companyServiceClient.getCompany(productRequestDto.getProductCompanyId());
+		CompanyInfoDto.CompanyData companyInfo = Objects.requireNonNull(
+			companyServiceClient.getCompany(productRequestDto.getProductCompanyId()).getData());
 		switch(userRole) {
 			// MASTER 어디든 상품 생성 가능
 			case "MASTER" :
@@ -117,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
 	public ProductResponseDto modifyProduct(UUID productId, Map<String, Object> updates, String userRole, UUID userId) {
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
-		validateUserPermission(product, userRole, userId);
+		validateUserPermissionForUpdateProduct(product, userRole, userId);
 		updates.forEach((key, value) -> product.modifyProductInfo(key, value, userRole));
 		return ProductResponseDto.from(product);
 	}
@@ -128,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
 	public void removeProduct(UUID productId, String userRole, UUID userId) {
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
-		validateUserPermission(product, userRole, userId);
+		validateUserPermissionForDeleteProduct(product, userRole, userId);
 		product.markAsDeleted();
 	}
 
@@ -139,16 +140,16 @@ public class ProductServiceImpl implements ProductService {
 		UUID productId = hubStockRequestDto.getProductId();
 		Product product = productRepository.findByProductIdAndIsDeletedFalse(productId)
 			.orElseThrow(() -> new CustomApiException(ProductException.PRODUCT_NOT_FOUND));
-		// 허브에 입고하는 건 마스터, 허브관리자, 업체담당자만 가능
-		validateUserPermission(product, userRole, userId);
+		// 허브에 입고하는 건 마스터, 허브관리자만 가능 - 상품 삭제 권한 검증 재활용
+		// validateUserPermissionForDeleteProduct(product, userRole, userId);
 		// 이미 허브에 상품이 있으면 수량 추가되고, 없으면 생성
 		HubStockResponseDto hubStockResponseDto = hubServiceClient.createHubStock(hubId, hubStockRequestDto);
 		product.updateProductQuantity(hubStockRequestDto.getQuantity());
 		return hubStockResponseDto;
 	}
 
-	// 주문 수정 삭제는 마스터, 허브 관리자(담당 허브일 경우)만 가능
-	private void validateUserPermission(Product product, String userRole, UUID userId) {
+	// 상품 수정 권한 검증 (마스터, 허브관리자, 업체담당자)
+	private void validateUserPermissionForUpdateProduct(Product product, String userRole, UUID userId) {
 		if ("MASTER".equals(userRole)) {
 			return;
 		}
@@ -168,6 +169,22 @@ public class ProductServiceImpl implements ProductService {
 			UUID companyId = companyServiceClient.readCompanyIdByCompanyManagerId(userId);
 			// 상품이 소속된 업체가 아닌 경우 권한 없음
 			if (!companyId.equals(product.getProductCompanyId())) {
+				throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
+			}
+			return;
+		}
+		throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
+	}
+
+	// 상품 삭제 권한 검증 (마스터, 허브관리자만 가능)
+	private void validateUserPermissionForDeleteProduct(Product product, String userRole, UUID userId) {
+		if ("MASTER".equals(userRole)) {
+			return;
+		}
+		if ("HUB_MANAGER".equals(userRole)) {
+			UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
+			UUID companyHubId = companyServiceClient.readHubIdByCompanyId(product.getProductCompanyId());
+			if (!hubId.equals(companyHubId)) {
 				throw new CustomApiException(ProductException.PRODUCT_UNAUTHORIZED);
 			}
 			return;

@@ -2,11 +2,15 @@ package com.fn.eureka.client.slackservice.presentation.controller;
 
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
+import com.fn.eureka.client.slackservice.application.dto.request.DeliveryInfoDto;
+import com.fn.eureka.client.slackservice.application.dto.request.GeminiRequestDto;
 import com.fn.eureka.client.slackservice.application.dto.request.SlackMessageRequestDto;
 import com.fn.eureka.client.slackservice.application.dto.request.SlackUpdateRequestDto;
+import com.fn.eureka.client.slackservice.application.dto.response.GeminiResponseDto;
 import com.fn.eureka.client.slackservice.application.dto.response.SlackGetResponseDto;
 import com.fn.eureka.client.slackservice.application.dto.response.SlackMessageResponseDto;
 import com.fn.eureka.client.slackservice.application.dto.response.SlackUpdateResponseDto;
+import com.fn.eureka.client.slackservice.application.service.GeminiService;
 import com.fn.eureka.client.slackservice.application.service.SlackService;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +27,7 @@ import java.util.UUID;
 public class SlackController {
 
 	private final SlackService slackService;
+	private final GeminiService geminiService;
 
 	@PostMapping
 	public ResponseEntity<CommonResponse<SlackMessageResponseDto>> sendSlackMessage(
@@ -63,5 +68,11 @@ public class SlackController {
 		CommonResponse<Void> response = slackService.deleteSlackMessage(slackId);
 
 		return ResponseEntity.status(SuccessCode.SLACK_MESSAGE_DELETED.getStatusCode()).body(response);
+	}
+
+	@PostMapping("/ai")
+	public GeminiResponseDto sendAiMessage(@RequestBody DeliveryInfoDto deliveryInfoDto) {
+		GeminiResponseDto geminiResponseDto = geminiService.requestAndResponse(deliveryInfoDto);
+		return geminiResponseDto;
 	}
 }

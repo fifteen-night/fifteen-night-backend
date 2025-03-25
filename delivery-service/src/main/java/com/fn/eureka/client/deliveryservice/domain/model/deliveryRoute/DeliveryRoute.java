@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.fn.common.global.BaseEntity;
@@ -89,10 +90,20 @@ public class DeliveryRoute extends BaseEntity {
 		this.managerId = managerId;
 	}
 
-	public void updateDeliverySequence(List<DeliveryRouteSequence> deliveryRouteSequences , LocalTime estimatedTime , BigDecimal estimatedDistance) {
-		this.currentStatus = DeliveryRouteStatus.WAITING;	// 초기는 WAITING
+	public void updateDeliverySequence(
+		List<DeliveryRouteSequence> deliveryRouteSequences ,
+		LocalTime estimatedTime ,
+		BigDecimal estimatedDistance ,
+		DeliveryRouteStatus currentStatus
+	) {
 		this. estimatedTime = estimatedTime;
 		this.estimatedDistance = estimatedDistance;
-		this.routeSequences = deliveryRouteSequences;
+		Optional.ofNullable(deliveryRouteSequences).ifPresent(value -> this.routeSequences = value);
+		Optional.ofNullable(currentStatus).ifPresent(value -> this.currentStatus = value);
+	}
+
+	public void update(Delivery targetDelivery) {
+		this.departureHubAddress = targetDelivery.getDepartureHubId();
+		this.destinationHubAddress = targetDelivery.getDestinationHubId();
 	}
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,6 +44,7 @@ public class ProductController {
 
 	// 상품 생성
 	@PostMapping
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER', 'COMPANY_MANAGER')")
 	public ResponseEntity<CommonResponse<ProductResponseDto>> createProduct(
 		@RequestBody ProductRequestDto productRequestDto,
 		@RequestHeader("X-User-Role") String userRole,
@@ -77,6 +79,7 @@ public class ProductController {
 
 	// 상품 수정
 	@PatchMapping("/{productId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER', 'COMPANY_MANAGER')")
 	public ResponseEntity<CommonResponse<ProductResponseDto>> updateProduct(
 		@PathVariable("productId") UUID productId,
 		@RequestBody Map<String, Object> updates,
@@ -88,6 +91,7 @@ public class ProductController {
 
 	// 상품 삭제
 	@DeleteMapping("/{productId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse> deleteProduct(
 		@PathVariable("productId") UUID productId,
 		@RequestHeader("X-User-Role") String userRole,
@@ -97,7 +101,7 @@ public class ProductController {
 	}
 
 	// 허브에 상품 입고 요청
-	@PostMapping("/store-hub/{hubId}/{productId}")
+	@PostMapping("/store-hub/{hubId}")
 	public ResponseEntity<CommonResponse<HubStockResponseDto>> storeProductInHub(
 		@PathVariable("hubId") UUID hubId,
 		@RequestBody HubStockRequestDto hubStockRequestDto,

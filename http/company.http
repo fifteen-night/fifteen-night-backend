@@ -1,0 +1,22 @@
+### 업체 생성
+POST http://localhost:19091/api/companies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJlMDBiOTc2OS0wNDc1LTRhMzMtOWQxOS1mZGY2NWJlZTQ3ZWUiLCJ1c2VyTmFtZSI6Im1hc3RlciIsInJvbGUiOiJNQVNURVIiLCJleHAiOjE3NDI4MjI5ODksImlhdCI6MTc0MjgyMjM4OX0.xluURSbOIN3JG6Rz4kPj3yl_jKlTKthSS855eQqA1lQ
+
+{
+  "companyName": "십오야",
+  "companyAddress": "부산 부산진구 전포대로209번길 21",
+  "companyType": "RECEIVER",
+  "companyHubId": "31b65d04-51cb-4608-b256-231c4cf28c75",
+  "companyManagerId": "1085ec81-ed06-447b-9b23-4d2cce4fd561"
+}
+
+
+### 업체 조회
+GET http://localhost:19091/api/companies/4cc3db25-c8d0-4676-b334-f642607727b7
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJlMDBiOTc2OS0wNDc1LTRhMzMtOWQxOS1mZGY2NWJlZTQ3ZWUiLCJ1c2VyTmFtZSI6Im1hc3RlciIsInJvbGUiOiJNQVNURVIiLCJleHAiOjE3NDI4MTk0NzYsImlhdCI6MTc0MjgxODg3Nn0.QC71zeCK8-uZrEzViSnYKK-GrDcgnPA0DRcdrOfeUnA
+
+### 업체 리스트 조회
+GET http://localhost:19094/api/companies?hubId=&type=keyword=&page=&size=&sortDirection=&sortBy=
+X-User-Role: MASTER
+
