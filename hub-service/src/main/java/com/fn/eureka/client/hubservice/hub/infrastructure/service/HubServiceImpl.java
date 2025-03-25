@@ -37,7 +37,6 @@ import com.fn.eureka.client.hubservice.hub_stock.domain.repository.HubStockRepos
 import com.fn.eureka.client.hubservice.hub_stock.exception.HubStockException;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -120,7 +119,6 @@ public class HubServiceImpl implements HubService {
 	@Transactional
 	public CreateHubStockResponse createHubStock(UUID hubId, CreateHubStockRequest request) {
 		Hub hub = findHubById(hubId);
-		log.info("상품 ID : {}", request.getProductId());
 		if (!productClientService.checkProductIfPresent(request.getProductId())) {
 			throw new CustomApiException(HubException.PRODUCT_NOT_FOUND);
 		}

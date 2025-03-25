@@ -6,11 +6,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserSignUpRequestDto {
 	@NotBlank(message = "유저 아이디는 필수 입력값입니다.")
 	@Size(min = 4, max = 10, message = "유저 아이디는 4~10자여야 합니다.")
