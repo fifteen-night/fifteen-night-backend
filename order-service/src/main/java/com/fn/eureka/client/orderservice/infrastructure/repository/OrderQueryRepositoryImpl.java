@@ -35,7 +35,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
 	// List<UUID> companies, List<UUID> deliveries,
 	public Page<OrderResponseDto> findAllOrdersByRole(
-		String keyword, Pageable pageable, String userRole, UUID userId, UUID companyId, List<UUID> companies,
+		String keyword, Pageable pageable, String userRole, UUID userId, UUID companyId, List<UUID> companies, List<UUID> deliveries,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy) {
 		QOrder order = QOrder.order;
 		BooleanBuilder builder = new BooleanBuilder();
@@ -49,10 +49,10 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 				.or(order.orderReceiveCompanyId.in(companies)));
 		}
 
-		// // 배송담당자별 조회
-		// if ("DELIVERY_MANAGER".equals(userRole) && deliveries != null && !deliveries.isEmpty()) {
-		// 	builder.and(order.orderDeliveryId.in(deliveries));
-		// }
+		// 배송담당자별 조회
+		if ("DELIVERY_MANAGER".equals(userRole) && deliveries != null && !deliveries.isEmpty()) {
+			builder.and(order.orderDeliveryId.in(deliveries));
+		}
 
 		// 업체별 조회
 		if ("COMPANY_MANAGER".equals(userRole) && companyId != null) {
