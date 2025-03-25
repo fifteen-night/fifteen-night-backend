@@ -24,9 +24,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.common.global.util.PageUtils;
+import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 import com.fn.eureka.client.orderservice.domain.service.OrderService;
 import com.fn.eureka.client.orderservice.presentation.request.OrderRequestDto;
-import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class OrderController {
 
 	// 주문 조회
 	@GetMapping("/{orderId}")
-	public ResponseEntity<CommonResponse<OrderResponseDto>> readOrder(@PathVariable("orderId")UUID orderId) {
+	public ResponseEntity<CommonResponse<OrderResponseDto>> readOrder(@PathVariable("orderId") UUID orderId) {
 		OrderResponseDto orderResponseDto = orderService.findOrder(orderId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_SEARCH_ONE, orderResponseDto));
 	}
@@ -65,7 +65,8 @@ public class OrderController {
 		@RequestHeader("X-User-Role") String userRole,
 		@RequestHeader("X-User-Id") UUID userId
 	) {
-		Page<OrderResponseDto> orders = orderService.findAllOrdersByRole(keyword, page, size, sortDirection, sortBy, userRole, userId);
+		Page<OrderResponseDto> orders = orderService.findAllOrdersByRole(keyword, page, size, sortDirection, sortBy,
+			userRole, userId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_SEARCH_ALL, orders));
 	}
 
@@ -89,7 +90,8 @@ public class OrderController {
 		@RequestHeader("X-User-Role") String userRole,
 		@RequestHeader("X-User-Id") UUID userId) {
 		orderService.removeOrder(orderId, userRole, userId);
-		return ResponseEntity.status(SuccessCode.ORDER_DELETE.getStatusCode()).body(new CommonResponse<>(SuccessCode.ORDER_DELETE, orderId));
+		return ResponseEntity.status(SuccessCode.ORDER_DELETE.getStatusCode())
+			.body(new CommonResponse<>(SuccessCode.ORDER_DELETE, orderId));
 	}
 
 	// for other services...

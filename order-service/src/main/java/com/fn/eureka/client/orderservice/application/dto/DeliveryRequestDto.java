@@ -9,21 +9,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class DeliveryRequestDto {
-	private UUID deliveryOrderId;
-	private UUID deliveryDepartureHubId;
-	private UUID deliveryDestinationHubId;
-	private String deliveryAddress;
-	private String deliveryReceiverCompanyManagerName;
-	private UUID deliveryReceiverSlackId;
+	private UUID orderId;
+	private UUID departureHubId;
+	private UUID destinationHubId;
+	private String address;
+	private String receiverName;
+	private String receiverSlackId;
 
 	@Builder
-	public DeliveryRequestDto(UUID orderId, UUID supplyCompanyHubId, UUID receiveCompanyHubId, String receiveCompanyAddress, String deliveryReceiverCompanyManagerName, UUID receiverSlackId) {
-		this.deliveryOrderId = orderId;
-		this.deliveryDepartureHubId = supplyCompanyHubId;
-		this.deliveryDestinationHubId = receiveCompanyHubId;
-		this.deliveryAddress = receiveCompanyAddress;
-		this.deliveryReceiverCompanyManagerName = deliveryReceiverCompanyManagerName;
-		this.deliveryReceiverSlackId = receiverSlackId;
+	public DeliveryRequestDto(UUID orderId, UUID supplyCompanyHubId, UUID receiveCompanyHubId,
+		String receiveCompanyAddress, String receiverName, String receiverSlackId) {
+		this.orderId = orderId;
+		this.departureHubId = supplyCompanyHubId;
+		this.destinationHubId = receiveCompanyHubId;
+		this.address = receiveCompanyAddress;
+		this.receiverName = receiverName;
+		this.receiverSlackId = receiverSlackId;
 	}
 }
-

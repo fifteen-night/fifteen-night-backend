@@ -19,7 +19,7 @@ public class UpdateDeliveryRequestDto {
 	private UUID destinationHubId;
 	private String address;
 	private String receiverName;
-	private UUID receiverSlackId;
+	private String receiverSlackId;
 	private UUID cdmId;
 	private DeliveryStatus deliveryStatus;
 	private DeliveryRouteStatus deliveryRouteStatus;

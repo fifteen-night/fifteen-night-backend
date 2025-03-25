@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.fn.common.global.config.FeignInterceptor;
 import com.fn.eureka.client.deliveryservice.presentation.dto.response.HubClientResponseDto;
 
-@FeignClient(name = "hub-service", path = "/api/hubs" , configuration = FeignInterceptor.class)
+@FeignClient(name = "hub-service", path = "/api/hubs", configuration = FeignInterceptor.class)
 public interface HubServiceClient {
 
 	@GetMapping("/{hubId}")
-	HubClientResponseDto findHub(@PathVariable UUID hubId);
+	HubClientResponseDto findHub(@PathVariable("hubId") UUID hubId);
 }

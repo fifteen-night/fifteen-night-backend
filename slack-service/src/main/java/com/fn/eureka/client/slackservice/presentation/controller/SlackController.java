@@ -1,9 +1,23 @@
 package com.fn.eureka.client.slackservice.presentation.controller;
 
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
 import com.fn.eureka.client.slackservice.application.dto.request.DeliveryInfoDto;
-import com.fn.eureka.client.slackservice.application.dto.request.GeminiRequestDto;
 import com.fn.eureka.client.slackservice.application.dto.request.SlackMessageRequestDto;
 import com.fn.eureka.client.slackservice.application.dto.request.SlackUpdateRequestDto;
 import com.fn.eureka.client.slackservice.application.dto.response.GeminiResponseDto;
@@ -12,15 +26,9 @@ import com.fn.eureka.client.slackservice.application.dto.response.SlackMessageRe
 import com.fn.eureka.client.slackservice.application.dto.response.SlackUpdateResponseDto;
 import com.fn.eureka.client.slackservice.application.service.GeminiService;
 import com.fn.eureka.client.slackservice.application.service.SlackService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -40,7 +48,7 @@ public class SlackController {
 	}
 
 	@GetMapping("/{slackId}")
-	public ResponseEntity<CommonResponse<SlackGetResponseDto>> getSlackMessage(@PathVariable UUID slackId) {
+	public ResponseEntity<CommonResponse<SlackGetResponseDto>> getSlackMessage(@PathVariable("slackId") UUID slackId) {
 		CommonResponse<SlackGetResponseDto> response = slackService.getSlackMessage(slackId);
 
 		return ResponseEntity.status(SuccessCode.SLACK_MESSAGE_FOUND.getStatusCode()).body(response);
@@ -57,7 +65,7 @@ public class SlackController {
 
 	@PatchMapping("/{slackId}")
 	public ResponseEntity<CommonResponse<SlackUpdateResponseDto>> updateSlackMessage(
-		@PathVariable UUID slackId,
+		@PathVariable("slackId") UUID slackId,
 		@RequestBody SlackUpdateRequestDto requestDto) {
 
 		CommonResponse<SlackUpdateResponseDto> response = slackService.updateSlackMessage(slackId, requestDto);
@@ -66,7 +74,7 @@ public class SlackController {
 	}
 
 	@DeleteMapping("/{slackId}")
-	public ResponseEntity<CommonResponse<Void>> deleteSlackMessage(@PathVariable UUID slackId) {
+	public ResponseEntity<CommonResponse<Void>> deleteSlackMessage(@PathVariable("slackId") UUID slackId) {
 		CommonResponse<Void> response = slackService.deleteSlackMessage(slackId);
 
 		return ResponseEntity.status(SuccessCode.SLACK_MESSAGE_DELETED.getStatusCode()).body(response);

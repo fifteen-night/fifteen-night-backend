@@ -6,9 +6,11 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class HubClientResponseDto {
 
@@ -17,6 +19,7 @@ public class HubClientResponseDto {
 
 	@Builder
 	@Getter
+	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class HubData {
 		private UUID hubId;

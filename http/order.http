@@ -1,12 +1,13 @@
 ### 주문 생성
-POST http://localhost:19096/api/orders
+POST http://localhost:19091/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ1c2VyTmFtZSI6Im1hc3RlciIsInJvbGUiOiJNQVNURVIiLCJleHAiOjE3NDg4ODUwNzQsImlhdCI6MTc0Mjg4NTA3NH0.m8B9HRAn4u-zQKMlwnb7wpQ_ZtrB7b4nbpHoKWhI8I8
 Content-Type: application/json
 
 {
-  "orderSupplyCompanyId": "6fa459ea-ee8a-3ca4-894e-db77e160355e",
-  "orderReceiveCompanyId": "ee789c62-5c1d-44d4-9dc1-3a4f58e63bb5",
-  "orderProductId": "d4e5f6a7-b8c9-4012-def0-456789abcdef",
-  "orderProductQuantity": 20,
+  "orderSupplyCompanyId": "20000000-0000-0000-0000-000000000001",
+  "orderReceiveCompanyId": "20000000-0000-0000-0000-000000000002",
+  "orderProductId": "30000000-0000-0000-0000-000000000001",
+  "orderProductQuantity": 40,
   "orderDeadline": "2025-03-23T12:00:00.000Z",
   "orderRequirement": "포장 꼼꼼히 해주세요."
 }
@@ -26,7 +27,7 @@ X-User-Role: MASTER
 X-User-Id: 423e4567-e89b-12d3-a456-426614174003
 
 {
-"orderRequirement": "포장 뭐 대~~~~충 해주세요."
+  "orderRequirement": "포장 뭐 대~~~~충 해주세요."
 }
 
 ### 주문 삭제

@@ -23,10 +23,9 @@ public class CreateDeliveryResponseDto {
 	private DeliveryStatus status;
 	private String address;
 	private String receiverName;
-	private UUID receiverSlackId;
+	private String receiverSlackId;
 	private UUID cdmId;
 	private CreateDeliveryRouteResponseDto deliveryRoute;
-
 
 	public static CreateDeliveryResponseDto fromDelivery(Delivery savedDelivery, DeliveryRoute savedDeliveryRoute) {
 
@@ -41,8 +40,8 @@ public class CreateDeliveryResponseDto {
 			.receiverSlackId(savedDelivery.getReceiverSlackId())
 			.cdmId(savedDelivery.getCdmId())
 			.deliveryRoute(savedDeliveryRoute != null
-			? CreateDeliveryRouteResponseDto.fromDeliveryRoute(savedDeliveryRoute)
-			: null)
+				? CreateDeliveryRouteResponseDto.fromDeliveryRoute(savedDeliveryRoute)
+				: null)
 			.build();
 	}
 }

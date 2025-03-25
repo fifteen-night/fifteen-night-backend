@@ -33,7 +33,7 @@ public class UserController {
 
 	@GetMapping("/{userId}")
 	public ResponseEntity<CommonResponse<UserGetResponseDto>> getUser(
-		@PathVariable UUID userId) {
+		@PathVariable("userId") UUID userId) {
 
 		CommonResponse<UserGetResponseDto> response = userService.getUser(userId);
 
@@ -50,10 +50,9 @@ public class UserController {
 		return ResponseEntity.status(SuccessCode.USER_LIST_FOUND.getStatusCode()).body(response);
 	}
 
-
 	@PatchMapping("/{userId}")
 	public ResponseEntity<CommonResponse<UserUpdateResponseDto>> updateUser(
-		@PathVariable UUID userId,
+		@PathVariable("userId") UUID userId,
 		@Valid @RequestBody UserUpdateRequestDto requestDto) {
 
 		CommonResponse<UserUpdateResponseDto> response = userService.updateUser(userId, requestDto);
@@ -63,7 +62,7 @@ public class UserController {
 
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<CommonResponse<Void>> deleteUser(
-		@PathVariable UUID userId
+		@PathVariable("userId") UUID userId
 	) {
 		CommonResponse<Void> response = userService.deleteUser(userId);
 		return ResponseEntity.status(SuccessCode.USER_DELETED.getStatusCode()).body(response);
@@ -71,10 +70,9 @@ public class UserController {
 
 	// FeignClient용 유저 존재 여부 확인 메서드
 	@GetMapping("/internal/{userId}")
-	public ResponseEntity<Boolean> checkUserExists(@PathVariable UUID userId) {
+	public ResponseEntity<Boolean> checkUserExists(@PathVariable("userId") UUID userId) {
 		boolean exists = userService.checkUserExists(userId);
 		return ResponseEntity.ok(exists);
 	}
-
 
 }

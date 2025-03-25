@@ -10,9 +10,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class CreateDeliveryRequestDto {
 
@@ -32,9 +34,9 @@ public class CreateDeliveryRequestDto {
 	private String receiverName;
 
 	@NotNull
-	private UUID receiverSlackId;
+	private String receiverSlackId;
 
-	public static Delivery toDelivery(CreateDeliveryRequestDto createDeliveryRequestDto , UUID deliveryHubId) {
+	public static Delivery toDelivery(CreateDeliveryRequestDto createDeliveryRequestDto, UUID deliveryHubId) {
 
 		return Delivery.builder()
 			.orderId(createDeliveryRequestDto.getOrderId())
@@ -43,7 +45,7 @@ public class CreateDeliveryRequestDto {
 			.address(createDeliveryRequestDto.getAddress())
 			.receiverName(createDeliveryRequestDto.getReceiverName())
 			.receiverSlackId(createDeliveryRequestDto.getReceiverSlackId())
-			.status(DeliveryStatus.PENDING)	// 배송이 생성되면 기본적으로 PENDING상태
+			.status(DeliveryStatus.PENDING)    // 배송이 생성되면 기본적으로 PENDING상태
 			.cdmId(deliveryHubId)
 			.build();
 	}

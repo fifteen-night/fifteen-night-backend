@@ -55,11 +55,11 @@ Content-Type: application/json
 ]
 
 ### 허브에 입고 요청
-POST http://localhost:19091/api/products/store-hub/fd8c9c66-b391-4609-ac73-4faa8f6306f2
+POST http://localhost:19091/api/products/store-hub/10000000-0000-0000-0000-000000000002
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIzZGY5NjZmMC1lNGI1LTQ5YTItYmQ1YS1lZTNjOWIyY2YxZDMiLCJ1c2VyTmFtZSI6Imh1Ym1uZyIsInJvbGUiOiJIVUJfTUFOQUdFUiIsImV4cCI6MTc0MjgzNTI5OCwiaWF0IjoxNzQyODM0Njk4fQ.uRVfuSHPTQpwY2eW5xpcHrjQcoIi5rdaOHSMvdqxTTY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ1c2VyTmFtZSI6Im1hc3RlciIsInJvbGUiOiJNQVNURVIiLCJleHAiOjE3NDg4ODUwNzQsImlhdCI6MTc0Mjg4NTA3NH0.m8B9HRAn4u-zQKMlwnb7wpQ_ZtrB7b4nbpHoKWhI8I8
 
 {
-  "productId" : "c3d4e5f6-a7b8-4901-cdef-3456789abcde",
-  "quantity": 30
+  "productId": "30000000-0000-0000-0000-000000000001",
+  "quantity": 100
 }

@@ -40,14 +40,16 @@ public class DeliveryManagerController {
 	public ResponseEntity<CommonResponse<DeliveryManagerGetResponseDto>> createDeliveryManager(
 		@Valid @RequestBody DeliveryManagerCreateRequestDto requestDto) {
 
-		CommonResponse<DeliveryManagerGetResponseDto> response = deliveryManagerService.createDeliveryManager(requestDto);
+		CommonResponse<DeliveryManagerGetResponseDto> response = deliveryManagerService.createDeliveryManager(
+			requestDto);
 		return ResponseEntity.status(SuccessCode.DELIVERY_MANAGER_CREATED.getStatusCode()).body(response);
 	}
 
 	// [READ] 배송 담당자 단건 조회 - 모두 가능 (MASTER, HUB_MANAGER, 본인)
 	@GetMapping("/{dmId}")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<CommonResponse<DeliveryManagerGetResponseDto>> getDeliveryManager(@PathVariable UUID dmId) {
+	public ResponseEntity<CommonResponse<DeliveryManagerGetResponseDto>> getDeliveryManager(
+		@PathVariable("dmId") UUID dmId) {
 		CommonResponse<DeliveryManagerGetResponseDto> response = deliveryManagerService.getDeliveryManager(dmId);
 		return ResponseEntity.status(SuccessCode.DELIVERY_MANAGER_FOUND.getStatusCode()).body(response);
 	}
@@ -71,7 +73,7 @@ public class DeliveryManagerController {
 	@PatchMapping("/{dmId}")
 	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<DeliveryManagerUpdateResponseDto>> updateDeliveryManager(
-		@PathVariable UUID dmId,
+		@PathVariable("dmId") UUID dmId,
 		@Valid @RequestBody DeliveryManagerUpdateRequestDto requestDto) {
 
 		CommonResponse<DeliveryManagerUpdateResponseDto> response =
@@ -83,7 +85,7 @@ public class DeliveryManagerController {
 	// [DELETE] 배송 담당자 삭제 - MASTER, HUB_MANAGER
 	@DeleteMapping("/{dmId}")
 	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
-	public ResponseEntity<CommonResponse<Void>> deleteDeliveryManager(@PathVariable UUID dmId) {
+	public ResponseEntity<CommonResponse<Void>> deleteDeliveryManager(@PathVariable("dmId") UUID dmId) {
 		CommonResponse<Void> response = deliveryManagerService.deleteDeliveryManager(dmId);
 		return ResponseEntity
 			.status(SuccessCode.DELIVERY_MANAGER_DELETED.getStatusCode())
@@ -99,9 +101,8 @@ public class DeliveryManagerController {
 
 	// [ROUND-ROBIN] 업체 배송 담당자 배정 - MASTER만 가능
 	@GetMapping("/assign/company/{hubId}")
-	public ResponseEntity<UUID> assignCompanyDeliveryManager(@PathVariable UUID hubId) {
+	public ResponseEntity<UUID> assignCompanyDeliveryManager(@PathVariable("hubId") UUID hubId) {
 		UUID assignedId = deliveryManagerService.assignCompanyDeliveryManager(hubId);
 		return ResponseEntity.ok(assignedId);
 	}
 }
-

@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fn.common.global.config.FeignInterceptor;
 
-@FeignClient(name = "delivery-manager-service", path = "/api/delivery-managers" , configuration = FeignInterceptor.class)
+@FeignClient(name = "delivery-manager-service", path = "/api/delivery-managers", configuration = FeignInterceptor.class)
 public interface DeliveryManagerServiceClient {
 
 	@GetMapping("/assign/company/{hubId}")
-	UUID findCompanyDeliver(@PathVariable UUID hubId);
+	UUID findCompanyDeliver(@PathVariable("hubId") UUID hubId);
 
 	@GetMapping("/assign/hub")
 	UUID findHubDeliver();

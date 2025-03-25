@@ -11,10 +11,6 @@ spring:
     password: ${DB_PASSWORD}
     hikari:
       schema: hub
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
   jpa:
     hibernate:
       ddl-auto: create

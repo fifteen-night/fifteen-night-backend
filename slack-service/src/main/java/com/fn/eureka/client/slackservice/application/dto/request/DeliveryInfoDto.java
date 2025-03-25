@@ -20,7 +20,7 @@ public class DeliveryInfoDto {
 		private String status;
 		private String address;
 		private String receiverName;
-		private UUID receiverSlackId;
+		private String receiverSlackId;
 		private UUID cdmId;
 		private DeliveryRoute deliveryRoute;
 	}

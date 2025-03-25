@@ -9,8 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.orderservice.application.dto.CompanyInfoDto;
@@ -18,19 +18,19 @@ import com.fn.eureka.client.orderservice.application.dto.DeliveryRequestDto;
 import com.fn.eureka.client.orderservice.application.dto.DeliveryResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.GeminiResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.HubStockResponseDto;
+import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.UserResponseDto;
 import com.fn.eureka.client.orderservice.domain.model.Order;
-import com.fn.eureka.client.orderservice.domain.service.OrderService;
-import com.fn.eureka.client.orderservice.infrastructure.client.SlackServiceClient;
-import com.fn.eureka.client.orderservice.infrastructure.repository.OrderQueryRepositoryImpl;
 import com.fn.eureka.client.orderservice.domain.repository.OrderRepository;
-import com.fn.eureka.client.orderservice.infrastructure.exception.OrderException;
+import com.fn.eureka.client.orderservice.domain.service.OrderService;
 import com.fn.eureka.client.orderservice.infrastructure.client.CompanyServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.client.DeliveryServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.client.HubServiceClient;
+import com.fn.eureka.client.orderservice.infrastructure.client.SlackServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.client.UserServiceClient;
+import com.fn.eureka.client.orderservice.infrastructure.exception.OrderException;
+import com.fn.eureka.client.orderservice.infrastructure.repository.OrderQueryRepositoryImpl;
 import com.fn.eureka.client.orderservice.presentation.request.OrderRequestDto;
-import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,8 @@ public class OrderServiceImpl implements OrderService {
 		// 허브 재고 조회
 		HubStockResponseDto hubStockInfo = hubServiceClient.readHubStock(supplyCompanyHubId, orderProductId);
 		// 재고 부족 예외 처리
-		if (hubStockInfo.getData() == null || hubStockInfo.getData().getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
+		if (hubStockInfo.getData() == null
+			|| hubStockInfo.getData().getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
 			throw new CustomApiException(OrderException.HUB_INSUFFICIENT_STOCK);
 		}
 
@@ -73,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
 
 		// 배송 생성 요청
 		// 주문자(수령업체) 업체 조회
-		UUID receiveCompanyId = orderRequestDto.getOrderReceiveCompanyId();	// 수령업체 ID
+		UUID receiveCompanyId = orderRequestDto.getOrderReceiveCompanyId();    // 수령업체 ID
 		CompanyInfoDto.CompanyData receiveCompanyInfo = Objects.requireNonNull(
 			companyServiceClient.getCompany(receiveCompanyId).getData());
 		UUID receiveCompanyManagerId = receiveCompanyInfo.getCompanyManagerId();
@@ -86,13 +87,20 @@ public class OrderServiceImpl implements OrderService {
 			.supplyCompanyHubId(supplyCompanyHubId)
 			.receiveCompanyHubId(receiveCompanyInfo.getCompanyHubId())
 			.receiveCompanyAddress(receiveCompanyInfo.getCompanyAddress())
-			.deliveryReceiverCompanyManagerName(receiveCompanyManagerInfo.getData().getUserNickname())
+			.receiverName(receiveCompanyManagerInfo.getData().getUserNickname())
 			.receiverSlackId(receiveCompanyManagerInfo.getData().getUserSlackId())
 			.build();
 		DeliveryResponseDto deliveryInfo = deliveryServiceClient.createDelivery(deliveryRequestDto);
-		GeminiResponseDto geminiResponseDto = slackServiceClient.sendAiMessage(deliveryInfo);
 		// 생성된 배송ID 받아 저장
 		order.saveOrderDeliveryId(deliveryInfo.getData().getDeliveryId());
+
+		TransactionSynchronizationManager.registerSynchronization(
+			new org.springframework.transaction.support.TransactionSynchronization() {
+				@Override
+				public void afterCommit() {
+					GeminiResponseDto geminiResponseDto = slackServiceClient.sendAiMessage(deliveryInfo);
+				}
+			});
 
 		return OrderResponseDto.from(order);
 	}
@@ -113,25 +121,27 @@ public class OrderServiceImpl implements OrderService {
 		// List<UUID> deliveries = null;
 		UUID companyId = null;
 		switch (userRole) {
-			case "MASTER" :
+			case "MASTER":
 				break;
-			case "HUB_MANAGER" :
+			case "HUB_MANAGER":
 				// 로그인 유저가 허브관리자인 경우, 유저ID(허브관리자ID)로 허브ID 조회
 				UUID hubId = hubServiceClient.readHubIdByHubManagerId(userId);
 				// 허브에 소속된 업체ID 목록 - 공급업체ID/수령업체ID 중에 해당되는 주문 리스트 조회
 				companies = companyServiceClient.readCompaniesByHubId(hubId);
 				break;
-			case "DELIVERY_MANAGER" :
+			case "DELIVERY_MANAGER":
 				// // 로그인 유저(배송담당자)가 담당하는 배송ID 리스트 받기
 				// deliveries = deliveryServiceClient.readDeliveriesByDeliveryManagerId(userId);
 				break;
-			case "COMPANY_MANAGER" :
+			case "COMPANY_MANAGER":
 				// 공급업체ID/수령업체ID 중에 해당되는 주문 리스트 조회
 				companyId = companyServiceClient.readCompanyIdByCompanyManagerId(userId);
 				break;
-			default: throw new CustomApiException(OrderException.ORDER_NOT_FOUND);
+			default:
+				throw new CustomApiException(OrderException.ORDER_NOT_FOUND);
 		}
-		Page<OrderResponseDto> orders = orderQueryRepository.findAllOrdersByRole(keyword, PageUtils.pageable(page, size), userRole, userId, companyId, companies, sortDirection, sortBy);
+		Page<OrderResponseDto> orders = orderQueryRepository.findAllOrdersByRole(keyword,
+			PageUtils.pageable(page, size), userRole, userId, companyId, companies, sortDirection, sortBy);
 		return orders;
 	}
 

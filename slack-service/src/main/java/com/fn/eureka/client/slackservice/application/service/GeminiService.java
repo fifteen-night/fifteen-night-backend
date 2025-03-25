@@ -61,7 +61,7 @@ public class GeminiService {
 		GeminiResponseDto geminiResponseDto = geminiClient.getCompletion(modelName, apiKey, geminiRequestDto);
 		// 슬랙메세지로 보내기
 		SlackMessageRequestDto slackMessageRequestDto = SlackMessageRequestDto.builder()
-			.SlackReceiverId(slackAddress)
+			.SlackReceiverId("https://hooks.slack.com/services/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")
 			.text(geminiResponseDto.extractText())
 			.build();
 		slackService.sendSlackMessage(slackMessageRequestDto);
@@ -90,7 +90,8 @@ public class GeminiService {
 			.collect(Collectors.joining(", "))
 			: "없음"; // 경유지가 없으면 "없음" 처리
 		log.info("waypoints: {}", waypoints);
-		DeliveryManagerInfoDto cdmInfo = deliveryManagerServiceClient.getDeliveryManager(deliveryInfoDto.getData().getCdmId());
+		DeliveryManagerInfoDto cdmInfo = deliveryManagerServiceClient.getDeliveryManager(
+			deliveryInfoDto.getData().getCdmId());
 		UUID cdmUserId = cdmInfo.getData().getDmUserId();
 		UserInfoDto userInfo = userServiceClient.readUser(cdmUserId);
 		String cdmName = userInfo.getData().getUserNickname();
@@ -105,7 +106,7 @@ public class GeminiService {
 				"- 주문시각: %s\n" +
 				"- 납품기한: %s\n" +
 				"- 출발지: %s\n" +
-				"- 경유지: %s\n" +	// 경유지 여러개일 수도 있음
+				"- 경유지: %s\n" +    // 경유지 여러개일 수도 있음
 				"- 도착지: %s\n" +
 				"- 배송담당자: %s\n\n" +
 				"다음 정보를 포함하여 물류 담당자가 이해하기 쉬운 형식으로 간략하게 답변해주세요(강조 기호 없이):\n" +

@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Delivery extends BaseEntity {
-	
+
 	// 최대한 사람이 알아볼수있는 컬럼명을 짓자
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -54,7 +54,7 @@ public class Delivery extends BaseEntity {
 	private String receiverName;
 
 	@Column(nullable = false)
-	private UUID receiverSlackId;
+	private String receiverSlackId;
 
 	@OneToOne(mappedBy = "delivery", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private DeliveryRoute deliveryRoute;
@@ -71,7 +71,7 @@ public class Delivery extends BaseEntity {
 		UUID destinationHubId,
 		String address,
 		String receiverName,
-		UUID receiverSlackId,
+		String receiverSlackId,
 		UUID cdmId) {
 
 		this.orderId = orderId;
@@ -88,11 +88,14 @@ public class Delivery extends BaseEntity {
 
 		Optional.ofNullable(updateDeliveryRequestDto.getOrderId()).ifPresent(value -> this.orderId = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getDeliveryStatus()).ifPresent(value -> this.status = value);
-		Optional.ofNullable(updateDeliveryRequestDto.getDepartureHubId()).ifPresent(value -> this.departureHubId = value);
-		Optional.ofNullable(updateDeliveryRequestDto.getDestinationHubId()).ifPresent(value -> this.destinationHubId = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getDepartureHubId())
+			.ifPresent(value -> this.departureHubId = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getDestinationHubId())
+			.ifPresent(value -> this.destinationHubId = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getAddress()).ifPresent(value -> this.address = value);
 		Optional.ofNullable(updateDeliveryRequestDto.getReceiverName()).ifPresent(value -> this.receiverName = value);
-		Optional.ofNullable(updateDeliveryRequestDto.getReceiverSlackId()).ifPresent(value -> this.receiverSlackId = value);
+		Optional.ofNullable(updateDeliveryRequestDto.getReceiverSlackId())
+			.ifPresent(value -> this.receiverSlackId = value);
 
 	}
 

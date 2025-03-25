@@ -22,7 +22,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fn.common.global.dto.CommonPageResponse;
 import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.success.SuccessCode;
-import com.fn.eureka.client.deliveryservice.application.service.HubToHubService;
 import com.fn.eureka.client.deliveryservice.application.dto.route.request.CreateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.route.request.UpdateHubToHubRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.route.response.CreateHubToHubResponseDto;
@@ -30,6 +29,7 @@ import com.fn.eureka.client.deliveryservice.application.dto.route.response.Delet
 import com.fn.eureka.client.deliveryservice.application.dto.route.response.GetAllHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.route.response.GetHubToHubResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.route.response.UpdateHubToHubResponseDto;
+import com.fn.eureka.client.deliveryservice.application.service.HubToHubService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -69,7 +69,8 @@ public class HubToHubController {
 	@GetMapping("/hub-to-hubs/{hubToHubId}")
 	@Operation(summary = "허브관계 단건 조회", description = "허브 조회는 '모두' 가능")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<CommonResponse<GetHubToHubResponseDto>> getRoute(@PathVariable UUID hubToHubId) {
+	public ResponseEntity<CommonResponse<GetHubToHubResponseDto>> getRoute(
+		@PathVariable("hubToHubId") UUID hubToHubId) {
 
 		log.info("Controller UUID : {}", hubToHubId);
 		GetHubToHubResponseDto getHubToHubResponseDto = hubToHubService.searchOneHubToHub(hubToHubId);
@@ -80,45 +81,46 @@ public class HubToHubController {
 	}
 
 	@GetMapping("/hub-to-hubs")
-	@Operation(summary = "허브관계 모든 조회" , description = "허브 조회는 '모두' 가능")
+	@Operation(summary = "허브관계 모든 조회", description = "허브 조회는 '모두' 가능")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<CommonPageResponse<GetAllHubToHubResponseDto>>> getAllRoute(
-		@PageableDefault(size = 10, sort = "createdAt" , direction = Sort.Direction.ASC) Pageable pageable
-	){
+		@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
+	) {
 
 		CommonPageResponse<GetAllHubToHubResponseDto> getAllHubToHubResponseDtoCommonPageResponse
 			= hubToHubService.searchAllHubToHub(pageable);
 
 		return ResponseEntity
 			.ok()
-			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SEARCH_ALL , getAllHubToHubResponseDtoCommonPageResponse));
+			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SEARCH_ALL, getAllHubToHubResponseDtoCommonPageResponse));
 	}
 
 	@DeleteMapping("/hub-to-hubs/{hubToHubId}")
-	@Operation(summary = "허브관계 삭제" , description = "허브 삭제는 'MASTER' 만 가능")
+	@Operation(summary = "허브관계 삭제", description = "허브 삭제는 'MASTER' 만 가능")
 	@PreAuthorize("hasRole('MASTER')")
-	public ResponseEntity<CommonResponse<DeleteHubToHubResponseDto>> deleteRoute(@PathVariable UUID hubToHubId){
+	public ResponseEntity<CommonResponse<DeleteHubToHubResponseDto>> deleteRoute(
+		@PathVariable("hubToHubId") UUID hubToHubId) {
 
 		hubToHubService.softDeleteHubToHub(hubToHubId);
 
 		return ResponseEntity
 			.ok()
-			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SOFT_DELETE , null));
+			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_SOFT_DELETE, null));
 	}
 
 	@PatchMapping("/hub-to-hubs/{hubToHubId}")
-	@Operation(summary = "허브관계 수정" , description = "허브 수정은 'MASTER' 만 가능")
+	@Operation(summary = "허브관계 수정", description = "허브 수정은 'MASTER' 만 가능")
 	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<CommonResponse<UpdateHubToHubResponseDto>> updateRoute(
-		@PathVariable UUID hubToHubId,
+		@PathVariable("hubToHubId") UUID hubToHubId,
 		@RequestBody @Validated UpdateHubToHubRequestDto updateHubToHubRequestDto
-	){
+	) {
 
 		UpdateHubToHubResponseDto updateHubToHubResponseDto
-			= hubToHubService.updateHubToHub(hubToHubId , updateHubToHubRequestDto);
+			= hubToHubService.updateHubToHub(hubToHubId, updateHubToHubRequestDto);
 
 		return ResponseEntity
 			.ok()
-			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_UPDATE , updateHubToHubResponseDto));
+			.body(new CommonResponse<>(SuccessCode.HUBTOHUB_UPDATE, updateHubToHubResponseDto));
 	}
 }

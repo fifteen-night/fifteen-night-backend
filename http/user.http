@@ -3,8 +3,8 @@ POST http://localhost:19091/api/auth/signUp
 Content-Type: application/json
 
 {
-  "userName": "companymg",
-  "userPassword": "Test!1234",
+  "userName": "companymg2",
+  "userPassword": "Test@1234",
   "userNickname": "오애순",
   "userSlackId": "U0G9QF9C6",
   "userRole": "COMPANY_MANAGER",

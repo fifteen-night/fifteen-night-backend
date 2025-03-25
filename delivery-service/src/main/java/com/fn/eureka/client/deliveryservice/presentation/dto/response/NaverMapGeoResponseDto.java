@@ -5,10 +5,12 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class NaverMapGeoResponseDto {
 
 	private String status;
@@ -18,6 +20,7 @@ public class NaverMapGeoResponseDto {
 
 	@Getter
 	@Builder
+	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class Meta {
 		private int totalCount;
@@ -27,6 +30,7 @@ public class NaverMapGeoResponseDto {
 
 	@Getter
 	@Builder
+	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class AddressDto {
 		private String roadAddress;
@@ -39,6 +43,7 @@ public class NaverMapGeoResponseDto {
 
 	@Getter
 	@Builder
+	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class AddressElementDto {
 		private List<String> types;
