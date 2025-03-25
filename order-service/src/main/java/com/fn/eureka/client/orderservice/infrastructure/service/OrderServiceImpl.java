@@ -16,10 +16,12 @@ import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.orderservice.application.dto.CompanyInfoDto;
 import com.fn.eureka.client.orderservice.application.dto.DeliveryRequestDto;
 import com.fn.eureka.client.orderservice.application.dto.DeliveryResponseDto;
+import com.fn.eureka.client.orderservice.application.dto.GeminiResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.HubStockResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.UserResponseDto;
 import com.fn.eureka.client.orderservice.domain.model.Order;
 import com.fn.eureka.client.orderservice.domain.service.OrderService;
+import com.fn.eureka.client.orderservice.infrastructure.client.SlackServiceClient;
 import com.fn.eureka.client.orderservice.infrastructure.repository.OrderQueryRepositoryImpl;
 import com.fn.eureka.client.orderservice.domain.repository.OrderRepository;
 import com.fn.eureka.client.orderservice.infrastructure.exception.OrderException;
@@ -45,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
 	private final CompanyServiceClient companyServiceClient;
 	private final HubServiceClient hubServiceClient;
 	private final DeliveryServiceClient deliveryServiceClient;
-
+	private final SlackServiceClient slackServiceClient;
 
 	// 주문 생성
 	@Override
@@ -74,19 +76,21 @@ public class OrderServiceImpl implements OrderService {
 		UUID receiveCompanyId = orderRequestDto.getOrderReceiveCompanyId();	// 수령업체 ID
 		CompanyInfoDto.CompanyData receiveCompanyInfo = Objects.requireNonNull(
 			companyServiceClient.getCompany(receiveCompanyId).getData());
+		UUID receiveCompanyManagerId = receiveCompanyInfo.getCompanyManagerId();
 		// 주문자(수령업체) 업체담당자 유저 정보 조회
-		UserResponseDto.UserData receiveCompanyManagerInfo = Objects.requireNonNull(
-			userServiceClient.getUser(receiveCompanyInfo.getCompanyManagerId()).getData());
+		UserResponseDto receiveCompanyManagerInfo = Objects.requireNonNull(
+			userServiceClient.getUser(receiveCompanyManagerId));
 		// 배송 생성
 		DeliveryRequestDto deliveryRequestDto = DeliveryRequestDto.builder()
 			.orderId(order.getOrderId())
 			.supplyCompanyHubId(supplyCompanyHubId)
 			.receiveCompanyHubId(receiveCompanyInfo.getCompanyHubId())
 			.receiveCompanyAddress(receiveCompanyInfo.getCompanyAddress())
-			.deliveryReceiverCompanyManagerName(receiveCompanyManagerInfo.getUserNickname())
-			.receiverSlackId(receiveCompanyManagerInfo.getUserSlackId())
+			.deliveryReceiverCompanyManagerName(receiveCompanyManagerInfo.getData().getUserNickname())
+			.receiverSlackId(receiveCompanyManagerInfo.getData().getUserSlackId())
 			.build();
 		DeliveryResponseDto deliveryInfo = deliveryServiceClient.createDelivery(deliveryRequestDto);
+		GeminiResponseDto geminiResponseDto = slackServiceClient.sendAiMessage(deliveryInfo);
 		// 생성된 배송ID 받아 저장
 		order.saveOrderDeliveryId(deliveryInfo.getData().getDeliveryId());
 

@@ -13,5 +13,5 @@ import com.fn.eureka.client.slackservice.application.dto.response.DeliveryManage
 @FeignClient(name = "delivery-manager-service", path = "/api/delivery-managers", configuration = FeignInterceptor.class)
 public interface DeliveryManagerServiceClient {
 	@GetMapping("/{dmId}")
-	CommonResponse<DeliveryManagerInfoDto> getDeliveryManager(@PathVariable UUID dmId);
+	DeliveryManagerInfoDto getDeliveryManager(@PathVariable UUID dmId);
 }

@@ -17,5 +17,5 @@ import com.fn.eureka.client.slackservice.application.dto.response.OrderInfoDto;
 public interface OrderServiceClient {
 
 	@GetMapping("/{orderId}")
-	CommonResponse<OrderInfoDto> readOrder(@PathVariable("orderId")UUID orderId);
+	OrderInfoDto readOrder(@PathVariable("orderId")UUID orderId);
 }

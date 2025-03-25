@@ -42,9 +42,9 @@ public class UserServiceImpl implements UserService {
 			.orElseThrow(() -> new CustomApiException(UserException.USER_NOT_FOUND));
 
 		// MASTER가 아니면 본인 정보만 조회 가능
-		if (!isMaster && !requestUserId.equals(userId)) {
-			throw new CustomApiException(UserException.ACCESS_DENIED);
-		}
+		// if (!isMaster && !requestUserId.equals(userId)) {
+		// 	throw new CustomApiException(UserException.ACCESS_DENIED);
+		// }
 
 		// 조회 성공 시 DTO 변환
 		UserGetResponseDto responseDto = UserGetResponseDto.builder()

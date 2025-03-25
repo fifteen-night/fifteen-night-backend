@@ -1,49 +1,53 @@
-POST http://localhost:19099/api/slack/ai
+POST http://localhost:19091/api/slack/ai
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJmZDRlMWY5Yy1iZjg5LTRkZTMtODEwMi05ZjJmZjNjZjZkNDYiLCJ1c2VyTmFtZSI6Im1hc3RlciIsInJvbGUiOiJNQVNURVIiLCJleHAiOjE3NDg4NjI4NDUsImlhdCI6MTc0Mjg2Mjg0NX0.mXlZ3xQfKhlRVfE79kAwjefSEvjr6zbQDkcMdFKfFb8
 
 {
   "data": {
-    "deliveryId": "bfc71ea8-b5b5-417d-99c4-be365e5b460b",
-    "orderId": "a821517e-e3d2-42f7-9ef1-b07a2c27b81b",
-    "departureHubId": "2d2fe858-8ff7-44d0-933e-7b78b35175d0",
-    "destinationHubId": "b0ac35ac-e5fd-44ed-b56b-472fb7e4da0b",
-    "status": "PENDING",
-    "address": "123 Main St, Cityville, Country",
-    "receiverName": "John Doe",
+    "deliveryId": "f46ed69b-bd2f-48f0-82c9-c4e277037d48",
+    "orderId": "95f55622-e950-4b42-85ca-245ecc1387d2",
+    "departureHubId": "2c4dd270-708a-4619-a4cd-0f41365335cb",
+    "destinationHubId": "422d988e-4ad9-42f4-93e1-d72bb65f0cda",
+    "status": "TRANSIT",
+    "address": "부산 부산진구 전포대로209번길 21",
+    "receiverName": "받는사람이름",
     "receiverSlackId": "b0ac35ac-e5fd-44ed-b56b-472fb7e4da0c",
-    "cdmId": null,
+    "cdmId": "b3f1c066-2574-44c9-a7e4-4be31bee153f",
     "deliveryRoute": {
-      "deliveryRouteId": "1e28f181-6c99-4dd9-a4e8-057b4f002f8f",
+      "deliveryRouteId": "d4506c17-e55b-4eb4-8f35-32fff2c291f4",
       "sequence": [
         {
-          "sequenceId": "720ec499-6305-4963-a419-96c1283e175d",
+          "sequenceId": "244aac70-898c-47da-91bd-a13da9017130",
           "sequenceNumber": 1,
           "departureHubAddress": "경기도 고양시 덕양구 권율대로 570",
           "arrivalHubAddress": "경기도 이천시 덕평로 257-21",
           "quantity": "02:08:57",
-          "distance": 102264.00
+          "distance": 102264.00,
+          "hubDeliveryManagerId": "af63852a-3923-4be6-8149-53b8f0524c46"
         },
         {
-          "sequenceId": "210a9733-c14f-462c-96fa-96ad2f9cf158",
+          "sequenceId": "4809dc04-0f65-4901-8144-c262601093d0",
           "sequenceNumber": 2,
           "departureHubAddress": "경기도 이천시 덕평로 257-21",
           "arrivalHubAddress": "대구광역시 북구 태평로 161",
           "quantity": "02:53:12",
-          "distance": 244431.00
+          "distance": 244431.00,
+          "hubDeliveryManagerId": "a152fcb3-3f19-478d-b0c8-c68e59fa2272"
         },
         {
-          "sequenceId": "fdc6fca1-87a6-44e0-8d09-b674270cf512",
+          "sequenceId": "18ba7b0d-9569-400e-abab-873ee1eece97",
           "sequenceNumber": 3,
           "departureHubAddress": "대구광역시 북구 태평로 161",
           "arrivalHubAddress": "울산광역시 남구 중앙로 201",
           "quantity": "01:48:32",
-          "distance": 121088.00
+          "distance": 121088.00,
+          "hubDeliveryManagerId": "24eec26b-041e-419a-a04f-aebe0e183a26"
         }
       ],
       "totalTime": "06:50:41",
       "totalDistance": 467783.00,
-      "status": "WAITING"
+      "status": "DELIVERING"
     }
   },
-  "message": "배송이 성공적으로 생성되었습니다."
+  "message": "배송이 성공적으로 수정되었습니다."
 }

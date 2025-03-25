@@ -8,11 +8,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserInfoDto {
-	private UUID userId;
-	private String userName;
-	private String userNickname;
-	private String userEmail;
-	private String userRole;
-	private String userPhone;
-	private String userSlackId;
+	private String message;
+	private UserData data;
+	@Getter
+	public static class UserData {
+		private UUID userId;
+		private String userName;
+		private String userNickname;
+		private String userEmail;
+		private String userRole;
+		private String userPhone;
+		private String userSlackId;
+	}
 }

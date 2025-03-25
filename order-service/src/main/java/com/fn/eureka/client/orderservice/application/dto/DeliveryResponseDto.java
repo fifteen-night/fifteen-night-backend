@@ -1,5 +1,6 @@
 package com.fn.eureka.client.orderservice.application.dto;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.Getter;
@@ -11,14 +12,39 @@ public class DeliveryResponseDto {
 
 	private String message;
 	private DeliveryData data;
+
 	@Getter
+	@NoArgsConstructor
 	public static class DeliveryData {
 		private UUID deliveryId;
-		private String deliveryStatus;
-		private UUID deliveryDepartureHubId;
-		private UUID deliveryDestinationHubId;
-		private String deliveryAddress;
-		private UUID deliveryReceiverSlackId;
-		private UUID deliveryCdmId;
+		private UUID orderId;
+		private String status;
+		private String address;
+		private String receiverName;
+		private UUID receiverSlackId;
+		private UUID cdmId;
+		private DeliveryRoute deliveryRoute;
+	}
+
+	@Getter
+	@NoArgsConstructor
+	public static class DeliveryRoute {
+		private String deliveryRouteId;
+		private List<Sequence> sequence;
+		private String totalTime;
+		private double totalDistance;
+		private String status;
+	}
+
+	@Getter
+	@NoArgsConstructor
+	public static class Sequence {
+		private UUID sequenceId;
+		private int sequenceNumber;
+		private String departureHubAddress;
+		private String arrivalHubAddress;
+		private String quantity;
+		private double distance;
+		private UUID hubDeliveryManagerId;
 	}
 }

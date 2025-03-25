@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fn.eureka.client.slackservice.application.dto.request.GeminiRequestDto;
 import com.fn.eureka.client.slackservice.application.dto.response.GeminiResponseDto;
 
-@FeignClient(name = "geminiClient", url = "https://api.example.com/v1beta/models")
+@FeignClient(name = "geminiClient"
+	, url = "https://generativelanguage.googleapis.com/v1beta/models")
 public interface GeminiClient {
 	@PostMapping("/{model}:generateContent")
 	GeminiResponseDto getCompletion(

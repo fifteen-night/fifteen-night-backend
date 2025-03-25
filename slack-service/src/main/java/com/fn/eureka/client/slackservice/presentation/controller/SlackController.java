@@ -13,6 +13,7 @@ import com.fn.eureka.client.slackservice.application.dto.response.SlackUpdateRes
 import com.fn.eureka.client.slackservice.application.service.GeminiService;
 import com.fn.eureka.client.slackservice.application.service.SlackService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/slack")
 @RequiredArgsConstructor
@@ -72,6 +74,7 @@ public class SlackController {
 
 	@PostMapping("/ai")
 	public GeminiResponseDto sendAiMessage(@RequestBody DeliveryInfoDto deliveryInfoDto) {
+		log.info("DeliveryID : {} ", deliveryInfoDto.getData().getDeliveryId());
 		GeminiResponseDto geminiResponseDto = geminiService.requestAndResponse(deliveryInfoDto);
 		return geminiResponseDto;
 	}
