@@ -11,7 +11,6 @@ public class RequestUserDetails implements UserDetails {
 
 	@Getter
 	private final String userId;
-	@Getter
 	private final String userName;
 	private final Collection<? extends GrantedAuthority> authorities;
 

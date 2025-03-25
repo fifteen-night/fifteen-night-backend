@@ -13,7 +13,7 @@ import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 public interface OrderQueryRepository {
 
 	Page<OrderResponseDto> findAllOrdersByRole(
-		String keyword, Pageable pageable, String userRole, UUID userId, UUID companyId, List<UUID> companies,
+		String keyword, Pageable pageable, String userRole, UUID userId, UUID companyId, List<UUID> companies, List<UUID> deliveries,
 		Sort.Direction sortDirection, PageUtils.CommonSortBy sortBy);
 
 	List<UUID> findOrderProductIdListByDeliveryId(List<UUID> deliveries);

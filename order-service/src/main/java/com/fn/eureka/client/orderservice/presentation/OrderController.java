@@ -41,6 +41,7 @@ public class OrderController {
 
 	// 주문 생성
 	@PostMapping
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<OrderResponseDto>> createOrder(@RequestBody OrderRequestDto orderRequestDto) {
 		OrderResponseDto orderResponseDto = orderService.addOrder(orderRequestDto);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/orders").build().toUri();
@@ -49,6 +50,7 @@ public class OrderController {
 
 	// 주문 조회
 	@GetMapping("/{orderId}")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<OrderResponseDto>> readOrder(@PathVariable("orderId") UUID orderId) {
 		OrderResponseDto orderResponseDto = orderService.findOrder(orderId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_SEARCH_ONE, orderResponseDto));
@@ -56,6 +58,7 @@ public class OrderController {
 
 	// 주문 리스트 조회(전체, 허브별, 배송담당자별, 업체별) + 검색
 	@GetMapping
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<Page<OrderResponseDto>>> readOrders(
 		@RequestParam(required = false) String keyword,
 		@RequestParam(defaultValue = "0", required = false) int page,
@@ -97,6 +100,7 @@ public class OrderController {
 	// for other services...
 
 	@PostMapping("/order-products")
+	@PreAuthorize("isAuthenticated()")
 	List<UUID> readOrderProductIdListByDeliveryId(@RequestBody List<UUID> deliveries) {
 		log.info("Deliveries : ", deliveries);
 		return orderService.findOrderProductIdListByDeliveryId(deliveries);
