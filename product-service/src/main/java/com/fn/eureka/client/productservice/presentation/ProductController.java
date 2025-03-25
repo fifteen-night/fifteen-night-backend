@@ -57,6 +57,7 @@ public class ProductController {
 
 	// 상품 조회
 	@GetMapping("/{productId}")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<ProductResponseDto>> getProduct(@PathVariable("productId") UUID productId) {
 		ProductResponseDto productResponseDto = productService.findProduct(productId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.ORDER_SEARCH_ONE, productResponseDto));
@@ -64,6 +65,7 @@ public class ProductController {
 
 	// 상품 리스트 조회 (전체, 허브별, 업체별)
 	@GetMapping
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<Page<ProductResponseDto>>> getProducts(
 		@RequestParam(required = false) String keyword,
 		@RequestParam(defaultValue = "0", required = false) int page,
@@ -102,6 +104,7 @@ public class ProductController {
 
 	// 허브에 상품 입고 요청
 	@PostMapping("/store-hub/{hubId}")
+	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<HubStockResponseDto>> storeProductInHub(
 		@PathVariable("hubId") UUID hubId,
 		@RequestBody HubStockRequestDto hubStockRequestDto,
@@ -114,6 +117,7 @@ public class ProductController {
 	// for other services...
 
 	@PostMapping("/product-list")
+	@PreAuthorize("isAuthenticated()")
 	public List<ProductResponseDto> readProductListByProductIdList(@RequestBody List<UUID> products) {
 		return productService.findProductListByProductIdList(products);
 	}

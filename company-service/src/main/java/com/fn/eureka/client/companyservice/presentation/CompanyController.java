@@ -58,6 +58,7 @@ public class CompanyController {
 
 	// 업체 조회
 	@GetMapping("/{companyId}")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<CompanyResponseDto>> getCompany(@PathVariable("companyId") UUID companyId) {
 		CompanyResponseDto companyResponseDto = companyService.findTheCompany(companyId);
 		return ResponseEntity.ok().body(new CommonResponse<>(SuccessCode.COMPANY_SEARCH_ONE, companyResponseDto));
@@ -65,6 +66,7 @@ public class CompanyController {
 
 	// 업체 리스트 조회 + 검색
 	@GetMapping
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<CommonResponse<Page<CompanyResponseDto>>> getCompanies(
 		@RequestParam(required = false) UUID hubId,
 		@RequestParam(defaultValue = "whole", required = false) String type,
@@ -106,18 +108,21 @@ public class CompanyController {
 
 	// 허브에 소속된 업체ID 목록 조회
 	@GetMapping("/company-list/{hubId}")
+	@PreAuthorize("isAuthenticated()")
 	public List<UUID> readCompaniesByHubId(@PathVariable("hubId") UUID hubId) {
 		return companyService.findAllCompaniesByHubId(hubId);
 	}
 
 	// 업체담당자ID로 업체 조회
 	@GetMapping("/company-manager/{companyManagerId}")
+	@PreAuthorize("isAuthenticated()")
 	UUID readCompanyIdByCompanyManagerId(@PathVariable("companyManagerId")UUID companyManagerId) {
 		return companyService.findCompanyIdByCompanyManagerId(companyManagerId);
 	}
 
 	// 업체ID로 허브ID 반환
 	@GetMapping("/hub/{companyId}")
+	@PreAuthorize("isAuthenticated()")
 	UUID readCompanyIdByHubId(@PathVariable("companyId") UUID companyId) {
 		return companyService.findHubIdByCompanyId(companyId);
 	}

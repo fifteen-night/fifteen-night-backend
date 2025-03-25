@@ -1,5 +1,6 @@
 package com.fn.eureka.client.orderservice.infrastructure.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,6 +15,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.common.global.util.PageUtils;
 import com.fn.eureka.client.orderservice.application.dto.CompanyInfoDto;
+import com.fn.eureka.client.orderservice.application.dto.DeliveriesUUIDDto;
 import com.fn.eureka.client.orderservice.application.dto.DeliveryRequestDto;
 import com.fn.eureka.client.orderservice.application.dto.DeliveryResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.GeminiResponseDto;
@@ -118,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
 	public Page<OrderResponseDto> findAllOrdersByRole(String keyword, int page, int size, Sort.Direction sortDirection,
 		PageUtils.CommonSortBy sortBy, String userRole, UUID userId) {
 		List<UUID> companies = null;
-		// List<UUID> deliveries = null;
+		List<UUID> deliveries = new ArrayList<>();
 		UUID companyId = null;
 		switch (userRole) {
 			case "MASTER":
@@ -130,8 +132,14 @@ public class OrderServiceImpl implements OrderService {
 				companies = companyServiceClient.readCompaniesByHubId(hubId);
 				break;
 			case "DELIVERY_MANAGER":
-				// // 로그인 유저(배송담당자)가 담당하는 배송ID 리스트 받기
-				// deliveries = deliveryServiceClient.readDeliveriesByDeliveryManagerId(userId);
+				// 로그인 유저(배송담당자)가 담당하는 배송ID 리스트 받기
+				DeliveriesUUIDDto deliveriesId = deliveryServiceClient.queryAllDeliveries(userId);
+				if (deliveriesId.getData() == null) {
+					throw new CustomApiException(OrderException.DELIVERY_NOT_FOUND);
+				}
+				for (UUID id : deliveriesId.getData().getDeliveryIds()) {
+					deliveries.add(id);
+				}
 				break;
 			case "COMPANY_MANAGER":
 				// 공급업체ID/수령업체ID 중에 해당되는 주문 리스트 조회
@@ -141,7 +149,7 @@ public class OrderServiceImpl implements OrderService {
 				throw new CustomApiException(OrderException.ORDER_NOT_FOUND);
 		}
 		Page<OrderResponseDto> orders = orderQueryRepository.findAllOrdersByRole(keyword,
-			PageUtils.pageable(page, size), userRole, userId, companyId, companies, sortDirection, sortBy);
+			PageUtils.pageable(page, size), userRole, userId, companyId, companies, deliveries, sortDirection, sortBy);
 		return orders;
 	}
 
