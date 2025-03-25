@@ -35,6 +35,7 @@ import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.Create
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.ReadHubStockResponse;
 import com.fn.eureka.client.hubservice.hub_stock.application.dto.response.UpdateHubStockResponse;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -46,7 +47,7 @@ public class HubController {
 	// 허브 관련 시작
 	@PostMapping
 	@PreAuthorize("hasRole('MASTER')")
-	public ResponseEntity<CommonResponse<CreateHubResponse>> createHub(@RequestBody CreateHubRequest request) {
+	public ResponseEntity<CommonResponse<CreateHubResponse>> createHub(@Valid @RequestBody CreateHubRequest request) {
 
 		CreateHubResponse response = hubService.createHub(request);
 
@@ -77,7 +78,7 @@ public class HubController {
 	@PatchMapping("/{hubId}")
 	@PreAuthorize("hasRole('MASTER')")
 	public ResponseEntity<CommonResponse<UpdateHubResponse>> updateHub(@PathVariable("hubId") UUID hubId,
-		@RequestBody UpdateHubRequest request) {
+		@Valid @RequestBody UpdateHubRequest request) {
 
 		UpdateHubResponse response = hubService.updateHub(hubId, request);
 
@@ -99,7 +100,7 @@ public class HubController {
 	@PostMapping("/{hubId}/stock")
 	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<CommonResponse<CreateHubStockResponse>> createHubStock(@PathVariable("hubId") UUID hubId,
-		@RequestBody CreateHubStockRequest request) {
+		@Valid @RequestBody CreateHubStockRequest request) {
 
 		CreateHubStockResponse response = hubService.createHubStock(hubId, request);
 
@@ -139,7 +140,7 @@ public class HubController {
 	public ResponseEntity<CommonResponse<UpdateHubStockResponse>> updateHubStock(
 		@PathVariable("hubId") UUID hubId,
 		@PathVariable("productId") UUID productId,
-		@RequestBody UpdateHubStockRequest request
+		@Valid @RequestBody UpdateHubStockRequest request
 	) {
 		UpdateHubStockResponse response = hubService.updateHubStock(hubId, productId, request);
 
