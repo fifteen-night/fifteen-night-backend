@@ -12,7 +12,7 @@ Content-Type: application/json
 ### 주문 생성
 POST http://localhost:19091/api/orders
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIzZGY5NjZmMC1lNGI1LTQ5YTItYmQ1YS1lZTNjOWIyY2YxZDMiLCJ1c2VyTmFtZSI6Imh1Ym1uZyIsInJvbGUiOiJIVUJfTUFOQUdFUiIsImV4cCI6MTc0MjgzNTk2MSwiaWF0IjoxNzQyODM1MzYxfQ.hL1bCwBo2MEiZOi2FW0MkzpeL1Qj8Ci3DuNxXs78D0o
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJmZDRlMWY5Yy1iZjg5LTRkZTMtODEwMi05ZjJmZjNjZjZkNDciLCJ1c2VyTmFtZSI6Imh1Ym1uZyIsInJvbGUiOiJIVUJfTUFOQUdFUiIsImV4cCI6MTc0ODgzODM4OSwiaWF0IjoxNzQyODM4Mzg5fQ.o9cOY2xMe_4zna-i7TDOXv2f9GGJ5CNdnXJhSkPlhS0
 
 {
   "orderSupplyCompanyId": "4cc3db25-c8d0-4676-b334-f642607727b7",

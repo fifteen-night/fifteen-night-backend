@@ -9,15 +9,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class DeliveryInfoDto {
+	private String message;
+	private DeliveryData data;
 
-	private UUID deliveryId;
-	private UUID orderId;
-	private String status;
-	private String address;
-	private String receiverName;
-	private UUID receiverSlackId;
-	private UUID cdmId;
-	private DeliveryRoute deliveryRoute;
+	@Getter
+	@NoArgsConstructor
+	public static class DeliveryData {
+		private UUID deliveryId;
+		private UUID orderId;
+		private String status;
+		private String address;
+		private String receiverName;
+		private UUID receiverSlackId;
+		private UUID cdmId;
+		private DeliveryRoute deliveryRoute;
+	}
 
 	@Getter
 	@NoArgsConstructor
@@ -38,5 +44,6 @@ public class DeliveryInfoDto {
 		private String arrivalHubAddress;
 		private String quantity;
 		private double distance;
+		private UUID hubDeliveryManagerId;
 	}
 }

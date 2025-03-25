@@ -1,6 +1,7 @@
 package com.fn.eureka.client.orderservice.application.dto;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fn.eureka.client.orderservice.domain.model.Order;
@@ -23,6 +24,7 @@ public class OrderResponseDto {
 	private Integer orderProductQuantity;
 	private Timestamp orderDeadline;
 	private String orderRequirement;
+	private String orderCreatedAt;
 
 	public static OrderResponseDto from(Order order) {
 		return OrderResponseDto.builder()
@@ -34,6 +36,7 @@ public class OrderResponseDto {
 			.orderProductQuantity(order.getOrderProductQuantity())
 			.orderDeadline(order.getOrderDeadline())
 			.orderRequirement(order.getOrderRequirement())
+			.orderCreatedAt(String.valueOf(order.getCreatedAt()))
 			.build();
 	}
 }

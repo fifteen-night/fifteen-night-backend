@@ -14,5 +14,5 @@ import com.fn.eureka.client.slackservice.application.dto.response.UserInfoDto;
 public interface UserServiceClient {
 
 	@GetMapping("/{userId}")
-	CommonResponse<UserInfoDto> readUser(@PathVariable("userId") UUID userId);
+	UserInfoDto readUser(@PathVariable("userId") UUID userId);
 }
