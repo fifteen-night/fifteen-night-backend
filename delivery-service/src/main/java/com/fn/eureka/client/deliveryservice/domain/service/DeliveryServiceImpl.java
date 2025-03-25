@@ -24,6 +24,7 @@ import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.Upd
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.CreateDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.GetAllDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.GetDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.QueryAllDeliveriesResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.UpdateDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.deliveryRoute.request.CreateDeliveryRouteRequestDto;
 import com.fn.eureka.client.deliveryservice.application.dto.deliveryRouteSequence.request.CreateSequenceRequestDto;
@@ -198,16 +199,16 @@ public class DeliveryServiceImpl implements DeliveryService {
 		return UpdateDeliveryResponseDto.fromDelivery(targetDelivery, targetDeliveryRoute);
 	}
 
-	private boolean validateChangeLocation(UpdateDeliveryRequestDto updateDeliveryRequestDto, Delivery targetDelivery) {
-		/*
-			변경되면 T 안되면 F
-			출발 T 도착 T -> T
-			출발 T 도착 F -> T
-			출발 F 도착 F -> T
-			출발 F 도착 F -> F
-		 */
-		return !updateDeliveryRequestDto.getDepartureHubId().equals(targetDelivery.getDepartureHubId()) ||
-			!updateDeliveryRequestDto.getDestinationHubId().equals(targetDelivery.getDestinationHubId());
+	@Override
+	public QueryAllDeliveriesResponseDto getAllDeliveries(UUID deliveryManagerId) {
+
+		List<UUID> deliveryIds = deliveryRepository.findAllDeliveryIdsByCdmId(deliveryManagerId);
+
+		if (deliveryIds == null || deliveryIds.isEmpty()) {
+			throw new CustomApiException(DeliveryException.DELIVERY_NOT_FOUND);
+		}
+
+		return QueryAllDeliveriesResponseDto.fromQuery(deliveryIds);
 	}
 
 	private Delivery findDeliveryById(UUID deliveryId) {
@@ -218,10 +219,16 @@ public class DeliveryServiceImpl implements DeliveryService {
 		return targetDelivery;
 	}
 
-	private String findHubName(UUID hubId) {
-		HubClientResponseDto hubResponse = hubServiceClient.findHub(hubId);
-
-		return hubResponse.getData().getHubAddress();
+	private boolean validateChangeLocation(UpdateDeliveryRequestDto updateDeliveryRequestDto, Delivery targetDelivery) {
+		/*
+			변경되면 T 안되면 F
+			출발 T 도착 T -> T
+			출발 T 도착 F -> T
+			출발 F 도착 F -> T
+			출발 F 도착 F -> F
+		 */
+		return !updateDeliveryRequestDto.getDepartureHubId().equals(targetDelivery.getDepartureHubId()) ||
+			!updateDeliveryRequestDto.getDestinationHubId().equals(targetDelivery.getDestinationHubId());
 	}
 
 	private List<DeliveryRouteSequence> startAlgorithm(DeliveryRoute deliveryRoute, boolean isCreate) {
@@ -299,6 +306,12 @@ public class DeliveryServiceImpl implements DeliveryService {
 		}
 
 		return deliveryRouteSequences;
+	}
+
+	private String findHubName(UUID hubId) {
+		HubClientResponseDto hubResponse = hubServiceClient.findHub(hubId);
+
+		return hubResponse.getData().getHubAddress();
 	}
 
 	private Map<String, List<Node>> createGraph(List<HubToHub> hubRoutes) {

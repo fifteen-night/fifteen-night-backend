@@ -10,6 +10,7 @@ import com.fn.eureka.client.deliveryservice.application.dto.delivery.request.Upd
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.CreateDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.GetAllDeliveryResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.GetDeliveryResponseDto;
+import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.QueryAllDeliveriesResponseDto;
 import com.fn.eureka.client.deliveryservice.application.dto.delivery.response.UpdateDeliveryResponseDto;
 
 public interface DeliveryService {
@@ -23,4 +24,5 @@ public interface DeliveryService {
 
 	UpdateDeliveryResponseDto updateDelivery(UUID deliveryId, UpdateDeliveryRequestDto updateDeliveryRequestDto);
 
+	QueryAllDeliveriesResponseDto getAllDeliveries(UUID deliveryManagerId);
 }
