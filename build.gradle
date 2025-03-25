@@ -4,6 +4,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
+group = 'com.fn.eureka.client'
+
 allprojects {
     repositories {
         mavenCentral()
@@ -20,15 +22,16 @@ subprojects { // 각 모듈에 적용할 공통 설정
         annotationProcessor 'org.projectlombok:lombok'
     }
 
-    tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
-        enabled = false
+    tasks.named('bootJar') {
+        enabled = true // 필요한 프로젝트에서만 활성화
     }
 
-    tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
-        enabled = true
+    tasks.named('jar') {
+        enabled = false  // Spring Boot 프로젝트에서는 jar 대신 bootJar 사용
     }
 
     tasks.named('test') {
         useJUnitPlatform()
     }
+
 }

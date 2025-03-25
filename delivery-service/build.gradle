@@ -75,3 +75,7 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+springBoot {
+	mainClass.set('com.fn.eureka.client.deliveryservice.DeliveryServiceApplication')
+}
