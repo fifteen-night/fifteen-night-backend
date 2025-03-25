@@ -20,6 +20,7 @@ import com.fn.eureka.client.orderservice.application.dto.DeliveryRequestDto;
 import com.fn.eureka.client.orderservice.application.dto.DeliveryResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.GeminiResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.HubStockResponseDto;
+import com.fn.eureka.client.orderservice.application.dto.HubStockUpdateDto;
 import com.fn.eureka.client.orderservice.application.dto.OrderResponseDto;
 import com.fn.eureka.client.orderservice.application.dto.UserResponseDto;
 import com.fn.eureka.client.orderservice.domain.model.Order;
@@ -70,6 +71,11 @@ public class OrderServiceImpl implements OrderService {
 			|| hubStockInfo.getData().getHsQuantity() < orderRequestDto.getOrderProductQuantity()) {
 			throw new CustomApiException(OrderException.HUB_INSUFFICIENT_STOCK);
 		}
+		// 허브 재고 업데이트
+		HubStockUpdateDto hubStockUpdateDto = HubStockUpdateDto.builder()
+			.quantity(-orderRequestDto.getOrderProductQuantity())
+			.build();
+		HubStockResponseDto updatedHubStockInfo = hubServiceClient.updateHubStock(supplyCompanyHubId, orderProductId, hubStockUpdateDto);
 
 		// 주문 생성
 		Order order = orderRepository.save(Order.from(orderRequestDto));
