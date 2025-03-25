@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fn.common.global.success.SuccessCode;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CommonResponse<T> {
 
 	private String message;
@@ -15,7 +17,7 @@ public class CommonResponse<T> {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private T data;
 
-	public CommonResponse(SuccessCode successCode, T data){
+	public CommonResponse(SuccessCode successCode, T data) {
 		this.message = successCode.getMessage();
 		this.data = data;
 	}
