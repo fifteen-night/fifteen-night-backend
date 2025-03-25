@@ -23,5 +23,6 @@ public class OrderInfoDto {
 		private Integer orderProductQuantity;
 		private Timestamp orderDeadline;
 		private String orderRequirement;
+		private String orderCreatedAt;
 	}
 }

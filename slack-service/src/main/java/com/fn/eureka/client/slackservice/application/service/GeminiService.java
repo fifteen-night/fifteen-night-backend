@@ -1,14 +1,14 @@
 package com.fn.eureka.client.slackservice.application.service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.fn.common.global.dto.CommonResponse;
 import com.fn.common.global.exception.CustomApiException;
 import com.fn.eureka.client.slackservice.application.dto.request.DeliveryInfoDto;
 import com.fn.eureka.client.slackservice.application.dto.request.GeminiRequestDto;
@@ -72,7 +72,10 @@ public class GeminiService {
 	public String getDeliveryTimeRecommendation(DeliveryInfoDto deliveryInfoDto) {
 		OrderInfoDto orderInfo = orderServiceClient.readOrder(deliveryInfoDto.getData().getOrderId());
 		Integer quantity = orderInfo.getData().getOrderProductQuantity();
-		String deadline = orderInfo.getData().getOrderDeadline();
+		Timestamp deadlineTimestamp = orderInfo.getData().getOrderDeadline();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String deadline = dateFormat.format(deadlineTimestamp);
+		String orderCreatedAt = orderInfo.getData().getOrderCreatedAt();
 
 		ProductInfoDto productInfo = productServiceClient.readProduct(orderInfo.getData().getOrderProductId());
 		String productName = productInfo.getData().getProductName();
