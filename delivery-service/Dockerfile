@@ -1,35 +1,35 @@
-# Base image
+# Eclipse Temurin JDK 17(자바 17 지원)을 기반 이미지로 사용
 FROM eclipse-temurin:17-jdk
 
-# Set working directory
+#모든 작업이 /app 디렉토리에서 수행됨
 WORKDIR /app
 
-# Copy Gradle files
+# 컨테이너에서 Gradle 을 사용할 수 있게 복사
 COPY gradlew /app/
 COPY gradle /app/gradle/
 COPY build.gradle settings.gradle /app/
 
-## Modify the build.gradle to include mainClass (if not already set)
-#RUN sed -i '/springBoot {/a \ \ mainClass = "com.fn.eureka.client.deliveryservice.DeliveryServiceApplication"' /app/build.gradle
+# build.gradle 메인 클래스 지정
+RUN sed -i '/springBoot {/a \ \ mainClass = "com.fn.eureka.client.deliveryservice.DeliveryServiceApplication"' /app/build.gradle
 
-# Copy common and delivery-service directories
+# 공통모듈과 배달서비스 전체 복사
 COPY common /app/common/
 COPY delivery-service /app/delivery-service/
 
-# Ensure gradlew is executable
+# 권한 수정
 RUN chmod +x /app/gradlew
 
-# Check if gradlew exists
+# 확인 로그용
 RUN /bin/sh -c "ls -l /app/gradlew"  # 확인용, gradlew가 있는지 확인
 
-# Build the application using gradlew
+# 애플리케이션 빌드(테스트 제외)
 RUN /app/gradlew build -x test --stacktrace
 
-# Copy the built JAR file to /app.jar
-RUN cp delivery-service/build/libs/delivery-service.jar /app.jar
+# jar파일 복사
+RUN cp /app/delivery-service/build/libs/delivery-service-0.0.1-SNAPSHOT-plain.jar /app.jar
 
-# Expose port
+# 컨테이너 내부 포트 설정
 EXPOSE 8080
 
-# Run the application
+# 애플리케이션 실행
 CMD ["java", "-jar", "/app.jar"]

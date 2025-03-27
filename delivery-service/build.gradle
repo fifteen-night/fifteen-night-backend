@@ -75,3 +75,15 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+//sourceSets {
+//	main {
+//		java {
+//			srcDirs = ['src/main/java']
+//		}
+//	}
+//}
+//
+//bootJar {
+//	mainClass.set("com.fn.eureka.client.deliveryservice.DeliveryServiceApplication")
+//}
